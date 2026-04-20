@@ -18,19 +18,21 @@ const heroAlt = settings?.heroImageAlt ?? 'Das Samedos-Team';
     <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-16 items-center">
 
       <!-- Text column -->
-      <div data-animate>
-        <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+      <div>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
           Arbeitsmedizin aus Bremen
         </p>
         <h1 class="text-[clamp(2.25rem,5vw,4rem)] mt-2 mb-6">
-          Arbeitsmedizin mit <span class="text-mint inline-block">Verantwortung.</span>
+          <span class="hero-word" style="animation-delay: 0.05s">Arbeitsmedizin</span>
+          <span class="hero-word" style="animation-delay: 0.18s">mit</span>
+          <span class="hero-word text-mint" style="animation-delay: 0.32s">Verantwortung.</span>
         </h1>
-        <p class="text-[1.15rem] text-muted mb-8 max-w-[520px]">
+        <p class="text-[1.15rem] text-muted mb-8 max-w-[520px]" data-animate data-delay="3">
           Samedos ist Ihr Partner für moderne Arbeitsmedizin nach DGUV Vorschrift&nbsp;2.
           Wir schützen die Gesundheit Ihrer Mitarbeitenden — mit persönlicher Betreuung,
           fachlicher Expertise und klaren Konzepten.
         </p>
-        <div class="flex gap-4 flex-wrap">
+        <div class="flex gap-4 flex-wrap" data-animate data-delay="4">
           <a
             href="/kontakt"
             class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
@@ -39,9 +41,15 @@ const heroAlt = settings?.heroImageAlt ?? 'Das Samedos-Team';
           </a>
           <a
             href="/leistungen"
-            class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border-[1.5px] border-navy text-navy font-medium text-[0.95rem] transition-all hover:bg-navy hover:text-white"
+            class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
           >
             Leistungen ansehen
+          </a>
+          <a
+            href="/kontakt#anfahrt"
+            class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+          >
+            Anfahrt
           </a>
         </div>
       </div>

@@ -1,4 +1,7 @@
 ---
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/';
+
 const navLinks = [
   { href: '/leistungen', label: 'Leistungen' },
   { href: '/preise', label: 'Preise' },
@@ -8,13 +11,18 @@ const navLinks = [
 ---
 
 <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md [backdrop-filter:saturate(160%)_blur(12px)] border-b border-border">
-  <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between py-4">
+  <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between py-3">
 
     <a href="/" class="flex items-center gap-2 shrink-0" aria-label="Samedos – Startseite">
-      <img src="/logo-new.svg" alt="Samedos" class="h-12 w-auto" />
+      <img src="/logo-new.svg" alt="Samedos" class="h-24 w-auto" />
     </a>
 
-    <nav class="flex items-center gap-8">
+    <nav class="flex items-center gap-6">
+      {!isHome && (
+        <a href="/" class="font-medium text-[0.95rem] text-navy transition-colors hover:text-mint hidden md:block">
+          Startseite
+        </a>
+      )}
       {navLinks.map((link) => (
         <a
           href={link.href}
@@ -45,20 +53,31 @@ const navLinks = [
   </div>
 </header>
 
-<!-- Mobile menu overlay -->
+<!-- Mobile menu overlay — z-[60] so it covers the sticky header (z-50) -->
 <div
   id="mobile-menu"
-  class="fixed inset-0 z-40 bg-white flex flex-col px-6 py-8 gap-6 translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+  class="fixed inset-0 z-[60] bg-white flex flex-col px-6 py-6 gap-5 translate-x-full transition-transform duration-300 ease-in-out md:hidden"
   aria-hidden="true"
 >
-  <div class="flex items-center justify-between mb-4">
-    <img src="/logo-new.svg" alt="Samedos" class="h-10 w-auto" />
-    <button id="menu-close" aria-label="Menü schließen" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-bg-soft transition-colors">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <div class="flex items-center justify-between mb-2">
+    <img src="/logo-new.svg" alt="Samedos" class="h-16 w-auto" />
+    <button
+      id="menu-close"
+      aria-label="Menü schließen"
+      onclick="document.getElementById('mobile-menu').classList.add('translate-x-full'); document.getElementById('mobile-menu').setAttribute('aria-hidden','true'); document.body.style.overflow='';"
+      class="w-12 h-12 flex items-center justify-center rounded-xl bg-bg-soft active:bg-border transition-colors"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <path d="M18 6 6 18M6 6l12 12"/>
       </svg>
     </button>
   </div>
+
+  {!isHome && (
+    <a href="/" class="text-navy font-heading font-bold text-[1.4rem] border-b border-border pb-4 hover:text-mint transition-colors">
+      Startseite
+    </a>
+  )}
   {navLinks.map((link) => (
     <a
       href={link.href}
@@ -78,7 +97,6 @@ const navLinks = [
 <script is:inline>
   (function () {
     var toggle = document.getElementById('menu-toggle');
-    var closeBtn = document.getElementById('menu-close');
     var menu = document.getElementById('mobile-menu');
     var bar1 = document.getElementById('bar1');
     var bar2 = document.getElementById('bar2');
@@ -93,22 +111,20 @@ const navLinks = [
       bar3.style.transform = 'translateY(-7px) rotate(-45deg)';
     }
 
-    function closeMenu() {
-      menu.classList.add('translate-x-full');
-      menu.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-      bar1.style.transform = '';
-      bar2.style.opacity = '';
-      bar3.style.transform = '';
-    }
-
     if (toggle) toggle.addEventListener('click', openMenu);
-    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 
     if (menu) {
       menu.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', closeMenu);
+        link.addEventListener('click', function () {
+          menu.classList.add('translate-x-full');
+          menu.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          bar1.style.transform = '';
+          bar2.style.opacity = '';
+          bar3.style.transform = '';
+        });
       });
     }
-  })();
+
+})();
 </script>

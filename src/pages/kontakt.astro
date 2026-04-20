@@ -7,13 +7,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Kontaktieren Sie Samedos: Timmersloher Str. 82, 28215 Bremen. Tel: 0421 63997761. Mo–Fr 08–15 Uhr. Auch außerhalb der Öffnungszeiten erreichbar."
 >
 
-  <section class="pt-20 pb-16 bg-bg-soft">
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
     <div class="max-w-[1200px] mx-auto px-6">
-      <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
         Kontakt
       </p>
-      <h1 class="text-[clamp(2rem,4vw,3rem)]" data-animate data-delay="1">Wir sind für Sie da</h1>
-      <p class="text-muted text-[1.1rem] mt-4 max-w-xl" data-animate data-delay="2">
+      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white" data-animate data-delay="1">Wir sind für Sie da</h1>
+      <p class="text-white/75 text-[1.1rem] mt-4 max-w-xl" data-animate data-delay="2">
         Rufen Sie an, schreiben Sie uns oder nutzen Sie das Formular — wir antworten schnell.
       </p>
     </div>
@@ -173,6 +173,85 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               * Pflichtfelder. Formulardaten werden nur zur Bearbeitung Ihrer Anfrage verwendet.
             </p>
           </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Anfahrt -->
+  <section class="py-16 bg-bg-soft" id="anfahrt">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          Anfahrt
+        </p>
+        <h2>So finden Sie uns</h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-8 items-start" data-animate data-delay="1">
+
+        <!-- Anfahrtsinfos -->
+        <div class="space-y-6">
+          <div class="bg-white border border-border rounded-2xl p-6">
+            <h3 class="text-[1.05rem] mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-mint-soft rounded-lg grid place-items-center text-mint shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                  <path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+              </span>
+              Adresse
+            </h3>
+            <p class="text-muted text-[0.95rem]">
+              Timmersloher Straße 82<br />
+              28215 Bremen (Findorff)
+            </p>
+          </div>
+
+          <div class="bg-white border border-border rounded-2xl p-6">
+            <h3 class="text-[1.05rem] mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-mint-soft rounded-lg grid place-items-center text-mint shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                  <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+              </span>
+              Mit dem ÖPNV
+            </h3>
+            <p class="text-muted text-[0.95rem]">
+              Haltestelle <strong class="text-navy">Hemmstraße</strong><br />
+              Linien <strong class="text-navy">25, 26, 28</strong><br />
+              ab Hauptbahnhof
+            </p>
+          </div>
+
+          <div class="bg-white border border-border rounded-2xl p-6">
+            <h3 class="text-[1.05rem] mb-4 flex items-center gap-2">
+              <span class="w-8 h-8 bg-mint-soft rounded-lg grid place-items-center text-mint shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+                  <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="16" r="1"/><circle cx="20" cy="16" r="1"/>
+                </svg>
+              </span>
+              Mit dem PKW
+            </h3>
+            <p class="text-muted text-[0.95rem]">
+              Parken in der Timmersloher Straße<br />
+              oder umliegenden Nebenstraßen.<br />
+              Keine reservierten Stellplätze.
+            </p>
+          </div>
+        </div>
+
+        <!-- Google Maps Iframe -->
+        <div class="rounded-2xl overflow-hidden border border-border shadow-sm h-[420px]">
+          <iframe
+            src="https://maps.google.com/maps?q=Timmersloher+Stra%C3%9Fe+82,+28215+Bremen&output=embed"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Samedos Standort auf Google Maps"
+          ></iframe>
         </div>
 
       </div>
