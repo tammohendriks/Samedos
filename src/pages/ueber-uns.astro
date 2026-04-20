@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Slideshow from '../components/Slideshow.astro';
-import { getTeamMembers } from '../sanity/client';
+import { getTeamMembers, getGalleryImages } from '../sanity/client';
 
-const team = await getTeamMembers();
+const [team, sanityGallery] = await Promise.all([getTeamMembers(), getGalleryImages()]);
 
-const galleryImages = [
+const localFallbackImages = [
   { src: '/images/gallery/ueber-uns.jpg', alt: 'Das Samedos-Team' },
   { src: '/images/gallery/ueber-uns-1.jpg', alt: 'Einblick in die Praxis' },
   { src: '/images/gallery/ueber-uns-2.jpg', alt: 'Einblick in die Praxis' },
@@ -13,6 +13,10 @@ const galleryImages = [
   { src: '/images/gallery/leistungen-1.jpg', alt: 'Untersuchung' },
   { src: '/images/gallery/leistungen-2.jpg', alt: 'Untersuchung' },
 ];
+
+const galleryImages = sanityGallery.length > 0
+  ? sanityGallery.map((img) => ({ src: img.image.asset.url, alt: img.alt }))
+  : localFallbackImages;
 
 const fallbackTeam = [
   { name: 'Dr. med. Jörg Janssen', position: 'Gründer & Geschäftsführer', photo: '/images/team/joerg-janssen.png' },

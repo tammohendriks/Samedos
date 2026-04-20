@@ -1,9 +1,9 @@
 ---
 const stats = [
-  { number: '+80', label: 'betreute Unternehmen' },
-  { number: '+800', label: 'betreute Mitarbeitende' },
-  { number: '36+', label: 'Jahre Erfahrung' },
-  { number: '100%', label: 'individuelle Konzepte' },
+  { number: '+80',  label: 'betreute Unternehmen',  prefix: '+', suffix: '',  target: 80  },
+  { number: '+800', label: 'betreute Mitarbeitende', prefix: '+', suffix: '',  target: 800 },
+  { number: '36+',  label: 'Jahre Erfahrung',        prefix: '',  suffix: '+', target: 36  },
+  { number: '100%', label: 'individuelle Konzepte',  prefix: '',  suffix: '%', target: 100 },
 ];
 ---
 
@@ -11,9 +11,17 @@ const stats = [
   <div class="max-w-[1200px] mx-auto px-6">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 text-center">
       {stats.map((stat) => (
-        <div>
-          <div class="font-heading font-extrabold text-mint leading-none mb-2"
-               style="font-size: clamp(2.2rem, 4vw, 3.2rem);">
+        <div
+          class="stat-item"
+          data-animate
+          data-target={stat.target}
+          data-prefix={stat.prefix}
+          data-suffix={stat.suffix}
+        >
+          <div
+            class="stat-number font-heading font-extrabold text-mint leading-none mb-2"
+            style="font-size: clamp(2.2rem, 4vw, 3.2rem);"
+          >
             {stat.number}
           </div>
           <div class="text-[0.95rem] text-muted font-medium">{stat.label}</div>
@@ -22,3 +30,44 @@ const stats = [
     </div>
   </div>
 </section>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('.stat-item');
+
+  function animateCounter(el: HTMLElement) {
+    const numEl = el.querySelector('.stat-number') as HTMLElement;
+    const target = parseInt(el.dataset.target ?? '0', 10);
+    const prefix = el.dataset.prefix ?? '';
+    const suffix = el.dataset.suffix ?? '';
+    const duration = 1400;
+    const start = performance.now();
+
+    function easeOut(t: number) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const value = Math.round(easeOut(progress) * target);
+      numEl.textContent = prefix + value + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target as HTMLElement);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  items.forEach((item) => observer.observe(item));
+</script>

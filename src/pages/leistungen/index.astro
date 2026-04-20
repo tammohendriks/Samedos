@@ -67,13 +67,13 @@ const categories = [
   <!-- Hero -->
   <section class="pt-20 pb-16 bg-bg-soft">
     <div class="max-w-[1200px] mx-auto px-6">
-      <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+      <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
         Unsere Leistungen
       </p>
-      <h1 class="text-[clamp(2rem,4vw,3rem)] max-w-2xl">
+      <h1 class="text-[clamp(2rem,4vw,3rem)] max-w-2xl" data-animate data-delay="1">
         Maßgeschneiderte Lösungen für gesunde Mitarbeitende
       </h1>
-      <p class="text-muted text-[1.1rem] mt-5 max-w-2xl">
+      <p class="text-muted text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
         Ob präventive Untersuchungen, individuelles Beratungskonzept oder arbeitsmedizinische
         Betreuung nach DGUV Vorschrift&nbsp;2 — wir finden die passende Lösung für Ihr Unternehmen.
       </p>
@@ -84,7 +84,7 @@ const categories = [
   <section class="py-20">
     <div class="max-w-[1200px] mx-auto px-6 space-y-16">
       {categories.map((cat, i) => (
-        <div class={`grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-12 items-start ${i % 2 === 1 ? 'lg:[direction:rtl]' : ''}`}>
+        <div data-animate class={`grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-12 items-start ${i % 2 === 1 ? 'lg:[direction:rtl]' : ''}`}>
           <div class={i % 2 === 1 ? 'lg:[direction:ltr]' : ''}>
             <span class="font-heading font-bold text-mint text-[1.1rem]">{cat.number}</span>
             <h2 class="mt-2 mb-4 text-[1.6rem]">{cat.title}</h2>

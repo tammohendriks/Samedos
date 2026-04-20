@@ -16,10 +16,10 @@ const jobs = await getActiveJobPostings();
       <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
         Karriere bei Samedos
       </p>
-      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white max-w-2xl">
+      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white max-w-2xl" data-animate>
         Werde Teil unseres Teams
       </h1>
-      <p class="text-white/75 text-[1.1rem] mt-5 max-w-xl">
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-xl" data-animate data-delay="1">
         Wir wachsen — und suchen Menschen, die moderne Arbeitsmedizin mit Herz
         und Verstand mitgestalten wollen.
       </p>
@@ -35,7 +35,7 @@ const jobs = await getActiveJobPostings();
         </p>
         <h2>Was uns als Arbeitgeber ausmacht</h2>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-animate>
         {[
           {
             title: 'Familiäres Team',

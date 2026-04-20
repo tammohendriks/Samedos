@@ -47,3 +47,33 @@ export async function getJobPosting(slug: string): Promise<JobPosting | null> {
     { slug }
   );
 }
+
+export interface GalleryImage {
+  _id: string;
+  title: string;
+  alt: string;
+  category: 'hero' | 'ueber-uns' | 'leistungen';
+  order?: number;
+  image: { asset: { url: string }; hotspot?: { x: number; y: number } };
+}
+
+export interface SiteSettings {
+  heroImage?: { asset: { url: string }; hotspot?: { x: number; y: number } };
+  heroImageAlt?: string;
+}
+
+export async function getGalleryImages(category?: string): Promise<GalleryImage[]> {
+  const filter = category
+    ? `*[_type == "galleryImage" && category == $category]`
+    : `*[_type == "galleryImage"]`;
+  return sanityClient.fetch(
+    `${filter} | order(order asc) { _id, title, alt, category, order, image { asset->{ url }, hotspot } }`,
+    category ? { category } : {}
+  );
+}
+
+export async function getSiteSettings(): Promise<SiteSettings | null> {
+  return sanityClient.fetch(
+    `*[_type == "siteSettings"][0] { heroImage { asset->{ url }, hotspot }, heroImageAlt }`
+  );
+}
