@@ -1,0 +1,91 @@
+---
+interface Props {
+  images: { src: string; alt: string }[];
+  id?: string;
+}
+
+const { images, id = 'slideshow-' + Math.random().toString(36).slice(2, 7) } = Astro.props;
+---
+
+<div class="slideshow-wrapper relative rounded-3xl overflow-hidden aspect-[16/10] shadow-[0_20px_60px_rgba(20,43,73,.15)]" id={id}>
+  {images.map((img, i) => (
+    <div
+      class={`slideshow-slide absolute inset-0 transition-opacity duration-700 ease-in-out ${i === 0 ? 'opacity-100' : 'opacity-0'}`}
+      data-index={i}
+    >
+      <img
+        src={img.src}
+        alt={img.alt}
+        class="w-full h-full object-cover"
+        loading={i === 0 ? 'eager' : 'lazy'}
+      />
+    </div>
+  ))}
+
+  <!-- dots -->
+  <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+    {images.map((_, i) => (
+      <button
+        class={`slideshow-dot w-2 h-2 rounded-full transition-all duration-300 ${i === 0 ? 'bg-white scale-125' : 'bg-white/50'}`}
+        data-target={i}
+        aria-label={`Bild ${i + 1}`}
+      />
+    ))}
+  </div>
+
+  <!-- prev/next arrows -->
+  {images.length > 1 && (
+    <>
+      <button class="slideshow-prev absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full grid place-items-center shadow transition-all z-10" aria-label="Vorheriges Bild">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button class="slideshow-next absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/80 hover:bg-white rounded-full grid place-items-center shadow transition-all z-10" aria-label="Nächstes Bild">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </>
+  )}
+</div>
+
+<script define:vars={{ slideshowId: id }}>
+  const wrapper = document.getElementById(slideshowId);
+  if (!wrapper) return;
+
+  const slides = wrapper.querySelectorAll('.slideshow-slide');
+  const dots = wrapper.querySelectorAll('.slideshow-dot');
+  let current = 0;
+  let timer;
+
+  function goTo(index) {
+    slides[current].classList.remove('opacity-100');
+    slides[current].classList.add('opacity-0');
+    dots[current].classList.remove('bg-white', 'scale-125');
+    dots[current].classList.add('bg-white/50');
+
+    current = (index + slides.length) % slides.length;
+
+    slides[current].classList.remove('opacity-0');
+    slides[current].classList.add('opacity-100');
+    dots[current].classList.remove('bg-white/50');
+    dots[current].classList.add('bg-white', 'scale-125');
+  }
+
+  function startTimer() {
+    timer = setInterval(() => goTo(current + 1), 4000);
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+  }
+
+  wrapper.addEventListener('mouseenter', stopTimer);
+  wrapper.addEventListener('mouseleave', startTimer);
+
+  wrapper.querySelector('.slideshow-prev')?.addEventListener('click', () => { stopTimer(); goTo(current - 1); startTimer(); });
+  wrapper.querySelector('.slideshow-next')?.addEventListener('click', () => { stopTimer(); goTo(current + 1); startTimer(); });
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => { stopTimer(); goTo(Number(dot.dataset.target)); startTimer(); });
+  });
+
+  if (slides.length > 1) startTimer();
+</script>

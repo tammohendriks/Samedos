@@ -1,8 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Slideshow from '../components/Slideshow.astro';
 import { getTeamMembers } from '../sanity/client';
 
 const team = await getTeamMembers();
+
+const galleryImages = [
+  { src: '/images/gallery/ueber-uns.jpg', alt: 'Das Samedos-Team' },
+  { src: '/images/gallery/ueber-uns-1.jpg', alt: 'Einblick in die Praxis' },
+  { src: '/images/gallery/ueber-uns-2.jpg', alt: 'Einblick in die Praxis' },
+  { src: '/images/gallery/leistungen.jpg', alt: 'Arbeitsmedizinische Leistungen' },
+  { src: '/images/gallery/leistungen-1.jpg', alt: 'Untersuchung' },
+  { src: '/images/gallery/leistungen-2.jpg', alt: 'Untersuchung' },
+];
+
+const fallbackTeam = [
+  { name: 'Dr. med. Jörg Janssen', position: 'Gründer & Geschäftsführer', photo: '/images/team/joerg-janssen.png' },
+  { name: 'Simone Janssen', position: 'Geschäftsführerin', photo: '/images/team/simone.png' },
+  { name: 'Sigrid', position: 'Medizinische Fachangestellte', photo: '/images/team/sigrid.png' },
+  { name: 'Claudia', position: 'Medizinische Fachangestellte', photo: '/images/team/claudia.png' },
+];
 ---
 
 <BaseLayout
@@ -53,18 +70,13 @@ const team = await getTeamMembers();
           </p>
         </div>
 
-        <!-- Foto-Platzhalter Gründer -->
-        <div
-          class="rounded-3xl overflow-hidden aspect-[4/5] grid place-items-center text-navy font-medium text-center p-10"
-          style="background: linear-gradient(135deg, #E8F6F2, #D6EEE7);"
-        >
-          <div>
-            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4">
-              <circle cx="12" cy="8" r="4"/>
-              <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
-            </svg>
-            [Platzhalter: Foto Dr. med. Jörg Janssen]
-          </div>
+        <!-- Foto Dr. Janssen -->
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] bg-mint-tint">
+          <img
+            src="/images/team/joerg-janssen.png"
+            alt="Dr. med. Jörg Janssen"
+            class="w-full h-full object-cover"
+          />
         </div>
       </div>
     </div>
@@ -80,56 +92,52 @@ const team = await getTeamMembers();
         <h2>Menschen hinter Samedos</h2>
       </div>
 
-      {team.length > 0 ? (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {team.map((member) => (
-            <div class="bg-white rounded-2xl overflow-hidden border border-border">
-              <div
-                class="aspect-square bg-mint-soft grid place-items-center"
-              >
-                {member.photo?.asset?.url ? (
-                  <img
-                    src={member.photo.asset.url}
-                    alt={member.name}
-                    class="w-full h-full object-cover"
-                  />
-                ) : (
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="text-mint opacity-50">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
-                  </svg>
-                )}
+      {(() => {
+        const displayTeam = team.length > 0
+          ? team.map((m) => ({ name: m.name, position: m.position, bio: m.bio ?? '', photo: m.photo?.asset?.url ?? null }))
+          : fallbackTeam.map((m) => ({ name: m.name, position: m.position, bio: '', photo: m.photo }));
+
+        return (
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {displayTeam.map((member, i) => (
+              <div class="bg-white rounded-2xl overflow-hidden border border-border hover:border-mint hover:-translate-y-1 transition-all duration-250" data-animate data-delay={String(i + 1)}>
+                <div class="aspect-square bg-mint-soft">
+                  {member.photo ? (
+                    <img src={member.photo} alt={member.name} class="w-full h-full object-cover" />
+                  ) : (
+                    <div class="w-full h-full grid place-items-center">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="text-mint opacity-40">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <div class="p-6">
+                  <h3 class="text-[1.1rem] mb-1">{member.name}</h3>
+                  <p class="text-mint font-medium text-[0.88rem] mb-2">{member.position}</p>
+                  {member.bio && <p class="text-muted text-[0.88rem]">{member.bio}</p>}
+                </div>
               </div>
-              <div class="p-6">
-                <h3 class="text-[1.15rem] mb-1">{member.name}</h3>
-                <p class="text-mint font-medium text-[0.9rem] mb-3">{member.position}</p>
-                {member.bio && <p class="text-muted text-[0.92rem]">{member.bio}</p>}
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <!-- Platzhalter wenn noch keine Team-Einträge in Sanity -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            { name: 'Dr. med. Jörg Janssen', position: 'Gründer & Geschäftsführer' },
-            { name: 'Simone Janssen', position: 'Geschäftsführerin' },
-          ].map((member) => (
-            <div class="bg-white rounded-2xl overflow-hidden border border-border">
-              <div class="aspect-square bg-mint-soft grid place-items-center">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="text-mint opacity-40">
-                  <circle cx="12" cy="8" r="4"/>
-                  <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
-                </svg>
-              </div>
-              <div class="p-6">
-                <h3 class="text-[1.15rem] mb-1">{member.name}</h3>
-                <p class="text-mint font-medium text-[0.9rem]">{member.position}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        );
+      })()}
+    </div>
+  </section>
+
+  <!-- Galerie / Diashow -->
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+          Einblicke
+        </p>
+        <h2>Unsere Praxis</h2>
+      </div>
+      <div data-animate data-delay="1">
+        <Slideshow images={galleryImages} id="gallery-slideshow" />
+      </div>
     </div>
   </section>
 

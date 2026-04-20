@@ -1,6 +1,7 @@
 ---
 const navLinks = [
   { href: '/leistungen', label: 'Leistungen' },
+  { href: '/preise', label: 'Preise' },
   { href: '/ueber-uns', label: 'Über uns' },
   { href: '/karriere', label: 'Karriere' },
 ];
@@ -9,13 +10,8 @@ const navLinks = [
 <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md [backdrop-filter:saturate(160%)_blur(12px)] border-b border-border">
   <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between py-4">
 
-    <a href="/" class="flex items-center gap-3 font-heading font-extrabold text-xl text-navy tracking-[0.04em]">
-      <span class="w-[38px] h-[38px] bg-navy rounded-full grid place-items-center text-white shrink-0">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <path d="M12 2v20M2 12h20"/>
-        </svg>
-      </span>
-      SAMEDOS
+    <a href="/" class="flex items-center gap-2 shrink-0">
+      <img src="/logo-samedos.svg" alt="Samedos" width="140" height="36" class="h-9 w-auto" />
     </a>
 
     <nav class="flex items-center gap-8">
@@ -29,11 +25,86 @@ const navLinks = [
       ))}
       <a
         href="/kontakt"
-        class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+        class="hidden md:inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
       >
         Kontakt
       </a>
+
+      <!-- Hamburger (mobile only) -->
+      <button
+        id="menu-toggle"
+        aria-label="Menü öffnen"
+        class="md:hidden flex flex-col justify-center items-center gap-[5px] w-10 h-10 rounded-lg hover:bg-bg-soft transition-colors"
+      >
+        <span class="block w-5 h-[2px] bg-navy rounded-full transition-all origin-center" id="bar1"></span>
+        <span class="block w-5 h-[2px] bg-navy rounded-full transition-all" id="bar2"></span>
+        <span class="block w-5 h-[2px] bg-navy rounded-full transition-all origin-center" id="bar3"></span>
+      </button>
     </nav>
 
   </div>
 </header>
+
+<!-- Mobile menu overlay -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-40 bg-white flex flex-col px-6 py-8 gap-6 translate-x-full transition-transform duration-300 ease-in-out md:hidden"
+  aria-hidden="true"
+>
+  <div class="flex items-center justify-between mb-4">
+    <img src="/logo-samedos.svg" alt="Samedos" width="120" height="32" class="h-8 w-auto" />
+    <button id="menu-close" aria-label="Menü schließen" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-bg-soft transition-colors">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+  {navLinks.map((link) => (
+    <a
+      href={link.href}
+      class="text-navy font-heading font-bold text-[1.4rem] border-b border-border pb-4 hover:text-mint transition-colors"
+    >
+      {link.label}
+    </a>
+  ))}
+  <a
+    href="/kontakt"
+    class="mt-2 inline-flex items-center justify-center gap-2 px-[22px] py-4 rounded-full bg-navy text-white font-medium text-[1rem]"
+  >
+    Kontakt →
+  </a>
+</div>
+
+<script>
+  const toggle = document.getElementById('menu-toggle')!;
+  const close = document.getElementById('menu-close')!;
+  const menu = document.getElementById('mobile-menu')!;
+  const bar1 = document.getElementById('bar1')!;
+  const bar2 = document.getElementById('bar2')!;
+  const bar3 = document.getElementById('bar3')!;
+
+  function openMenu() {
+    menu.classList.remove('translate-x-full');
+    menu.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    bar1.style.transform = 'translateY(7px) rotate(45deg)';
+    bar2.style.opacity = '0';
+    bar3.style.transform = 'translateY(-7px) rotate(-45deg)';
+  }
+
+  function closeMenu() {
+    menu.classList.add('translate-x-full');
+    menu.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    bar1.style.transform = '';
+    bar2.style.opacity = '';
+    bar3.style.transform = '';
+  }
+
+  toggle.addEventListener('click', openMenu);
+  close.addEventListener('click', closeMenu);
+
+  menu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+</script>

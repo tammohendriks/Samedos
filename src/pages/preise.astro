@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const tabs = [
+  { id: 'g-untersuchungen', label: 'G-Untersuchungen' },
+  { id: 'sonderuntersuchungen', label: 'Sonderuntersuchungen' },
+  { id: 'labor', label: 'Labor' },
+  { id: 'impfungen', label: 'Impfungen' },
+];
+---
+
+<BaseLayout
+  title="Preise — Samedos Arbeitsmedizin Bremen"
+  description="Transparente Preise für arbeitsmedizinische Untersuchungen bei Samedos: G-Untersuchungen, Labor, Impfungen und Sonderuntersuchungen in Bremen."
+>
+
+  <section class="pt-20 pb-16 bg-bg-soft">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Unsere Preise
+      </p>
+      <h1 class="text-[clamp(2rem,4vw,3rem)]" data-animate data-delay="1">Transparente Preisübersicht</h1>
+      <p class="text-muted text-[1.1rem] mt-4 max-w-xl" data-animate data-delay="2">
+        Alle Preise zzgl. der gesetzlichen Mehrwertsteuer. Bei Fragen stehen wir gerne zur Verfügung.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <!-- Tab navigation -->
+      <div class="flex flex-wrap gap-2 mb-10 border-b border-border pb-1" role="tablist" data-animate>
+        {tabs.map((tab, i) => (
+          <button
+            role="tab"
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-controls={`panel-${tab.id}`}
+            id={`tab-${tab.id}`}
+            class={`tab-btn px-5 py-2.5 rounded-t-xl font-medium text-[0.95rem] transition-all border-b-2 -mb-[1px] ${
+              i === 0
+                ? 'border-mint text-navy bg-mint-soft'
+                : 'border-transparent text-muted hover:text-navy hover:bg-bg-soft'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <!-- Tab panels -->
+      <div id="panel-g-untersuchungen" role="tabpanel" aria-labelledby="tab-g-untersuchungen">
+        <div class="mb-6" data-animate>
+          <h2 class="text-[1.4rem] mb-2">G-Untersuchungen</h2>
+          <p class="text-muted">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
+          <div class="p-8 text-center text-muted">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
+            <p class="text-[0.95rem]">Die vollständige Preisliste für G-Untersuchungen stellen wir auf Anfrage zur Verfügung.</p>
+            <a
+              href="mailto:info@samedos.de?subject=Preisanfrage G-Untersuchungen"
+              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Preisliste anfordern →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-sonderuntersuchungen" role="tabpanel" aria-labelledby="tab-sonderuntersuchungen" hidden>
+        <div class="mb-6" data-animate>
+          <h2 class="text-[1.4rem] mb-2">Einzelpreise Sonderuntersuchungen</h2>
+          <p class="text-muted">Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.</p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
+          <div class="p-8 text-center text-muted">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
+            <p class="text-[0.95rem]">Die vollständige Preisliste für Sonderuntersuchungen stellen wir auf Anfrage zur Verfügung.</p>
+            <a
+              href="mailto:info@samedos.de?subject=Preisanfrage Sonderuntersuchungen"
+              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Preisliste anfordern →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-labor" role="tabpanel" aria-labelledby="tab-labor" hidden>
+        <div class="mb-6" data-animate>
+          <h2 class="text-[1.4rem] mb-2">Laborleistungen</h2>
+          <p class="text-muted">Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.</p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
+          <div class="p-8 text-center text-muted">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
+            <p class="text-[0.95rem]">Die vollständige Preisliste für Laborleistungen stellen wir auf Anfrage zur Verfügung.</p>
+            <a
+              href="mailto:info@samedos.de?subject=Preisanfrage Labor"
+              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Preisliste anfordern →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-impfungen" role="tabpanel" aria-labelledby="tab-impfungen" hidden>
+        <div class="mb-6" data-animate>
+          <h2 class="text-[1.4rem] mb-2">Impfungen</h2>
+          <p class="text-muted">Schutzimpfungen im betriebsärztlichen Kontext.</p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
+          <div class="p-8 text-center text-muted">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
+            <p class="text-[0.95rem]">Die vollständige Preisliste für Impfungen stellen wir auf Anfrage zur Verfügung.</p>
+            <a
+              href="mailto:info@samedos.de?subject=Preisanfrage Impfungen"
+              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Preisliste anfordern →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+  const panels = document.querySelectorAll<HTMLElement>('[role="tabpanel"]');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const targetId = tab.getAttribute('aria-controls')!;
+
+      tabs.forEach((t) => {
+        t.setAttribute('aria-selected', 'false');
+        t.classList.remove('border-mint', 'text-navy', 'bg-mint-soft');
+        t.classList.add('border-transparent', 'text-muted');
+      });
+
+      panels.forEach((p) => p.setAttribute('hidden', ''));
+
+      tab.setAttribute('aria-selected', 'true');
+      tab.classList.add('border-mint', 'text-navy', 'bg-mint-soft');
+      tab.classList.remove('border-transparent', 'text-muted');
+
+      const panel = document.getElementById(targetId)!;
+      panel.removeAttribute('hidden');
+
+      panel.querySelectorAll('[data-animate]').forEach((el) => {
+        el.classList.remove('in-view');
+        setTimeout(() => el.classList.add('in-view'), 50);
+      });
+    });
+  });
+
+  // Trigger animation for visible panel on load
+  document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-animate]').forEach((el) => {
+    el.classList.add('in-view');
+  });
+</script>
