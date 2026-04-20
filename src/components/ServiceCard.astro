@@ -15,7 +15,7 @@ const { number, title, description, items } = Astro.props;
   </div>
   <h3 class="text-[1.35rem] mb-3">{title}</h3>
   <p class="text-muted mb-5">{description}</p>
-  <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
+  <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
     {items.map((item) => (
       <li class="relative text-[0.9rem] text-navy pl-[18px] before:absolute before:left-0 before:top-[9px] before:w-1.5 before:h-1.5 before:bg-mint before:rounded-full">
         {item}
