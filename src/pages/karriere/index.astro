@@ -1,13 +1,148 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getActiveJobPostings } from '../../sanity/client';
+
+const jobs = await getActiveJobPostings();
 ---
 
 <BaseLayout
-  title="Karriere — Samedos Arbeitsmedizin"
-  description="Offene Stellen bei Samedos: Werde Teil unseres Teams für moderne Arbeitsmedizin in Bremen."
+  title="Karriere — Samedos Arbeitsmedizin Bremen"
+  description="Offene Stellen bei Samedos: Werde Teil unseres Teams für moderne Arbeitsmedizin in Bremen. Jetzt bewerben."
 >
-  <div class="max-w-[1200px] mx-auto px-6 py-24">
-    <h1>Karriere</h1>
-    <p class="text-muted mt-4">Diese Seite wird in Phase 2 ausgebaut.</p>
-  </div>
+
+  <!-- Hero -->
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+        Karriere bei Samedos
+      </p>
+      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white max-w-2xl">
+        Werde Teil unseres Teams
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-xl">
+        Wir wachsen — und suchen Menschen, die moderne Arbeitsmedizin mit Herz
+        und Verstand mitgestalten wollen.
+      </p>
+    </div>
+  </section>
+
+  <!-- Warum Samedos -->
+  <section class="py-20 bg-bg-soft">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-12">
+        <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+          Warum Samedos
+        </p>
+        <h2>Was uns als Arbeitgeber ausmacht</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          {
+            title: 'Familiäres Team',
+            text: 'Kleines, eingespieltes Team mit flachen Hierarchien und echter Wertschätzung.',
+          },
+          {
+            title: 'Modernes Arbeiten',
+            text: 'Gut ausgestattete Praxis, digitale Prozesse, keine unnötige Bürokratie.',
+          },
+          {
+            title: 'Sinnvolle Tätigkeit',
+            text: 'Deine Arbeit hat direkten Einfluss auf die Gesundheit vieler Menschen.',
+          },
+          {
+            title: 'Planbare Arbeitszeiten',
+            text: 'Mo–Fr 08–15 Uhr, keine Notfallschichten — Beruf und Privatleben in Balance.',
+          },
+          {
+            title: 'Wachstumschancen',
+            text: 'Als junges Unternehmen bieten wir Raum für Eigenverantwortung und Entwicklung.',
+          },
+          {
+            title: 'Standort Bremen',
+            text: 'Gut erreichbar in 28215 Bremen, Parkplätze vorhanden.',
+          },
+        ].map((item) => (
+          <div class="bg-white border border-border rounded-2xl p-7 hover:border-mint hover:-translate-y-1 transition-all duration-250">
+            <h3 class="text-[1.1rem] mb-2">{item.title}</h3>
+            <p class="text-muted text-[0.95rem]">{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Offene Stellen -->
+  <section class="py-20" id="stellen">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-12">
+        <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+          Offene Stellen
+        </p>
+        <h2>Aktuelle Ausschreibungen</h2>
+      </div>
+
+      {jobs.length > 0 ? (
+        <div class="space-y-6">
+          {jobs.map((job) => (
+            <div class="bg-white border border-border rounded-2xl p-8 hover:border-mint hover:shadow-[0_8px_30px_rgba(20,43,73,.08)] transition-all">
+              <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h3 class="text-[1.25rem]">{job.title}</h3>
+                  <div class="flex flex-wrap gap-3 mt-2">
+                    {job.scope && (
+                      <span class="text-[0.85rem] bg-mint-soft text-navy px-3 py-1 rounded-full font-medium">
+                        {job.scope}
+                      </span>
+                    )}
+                    {job.location && (
+                      <span class="text-[0.85rem] text-muted">{job.location}</span>
+                    )}
+                  </div>
+                  {job.description && (
+                    <p class="text-muted mt-3 max-w-2xl">{job.description}</p>
+                  )}
+                </div>
+                <a
+                  href={`/karriere/${job.slug.current}`}
+                  class="shrink-0 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+                >
+                  Details →
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="bg-mint-soft rounded-2xl p-10 text-center">
+          <p class="text-navy font-medium text-[1.05rem]">Aktuell keine offenen Stellen ausgeschrieben.</p>
+          <p class="text-muted mt-2">Wir freuen uns aber jederzeit über Initiativbewerbungen!</p>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Initiativbewerbung CTA -->
+  <section class="max-w-[1200px] mx-auto px-6 pb-24" id="initiativ">
+    <div
+      class="relative rounded-[28px] px-12 py-16 text-center overflow-hidden"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] mb-4">Kein passendes Angebot dabei?</h2>
+      <p class="text-white/80 max-w-[520px] mx-auto mb-7">
+        Schick uns eine Initiativbewerbung — wir melden uns, sobald eine passende Stelle frei wird.
+      </p>
+      <a
+        href="mailto:info@samedos.de?subject=Initiativbewerbung"
+        class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+      >
+        Initiativ bewerben →
+      </a>
+    </div>
+  </section>
+
 </BaseLayout>

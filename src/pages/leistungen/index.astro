@@ -1,13 +1,138 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const categories = [
+  {
+    number: '01.',
+    title: 'Arbeitsmedizinische Vorsorge',
+    description:
+      'Gesetzlich vorgeschriebene Untersuchungen und Beratung nach ASiG und DGUV Vorschrift 2 — für Unternehmen jeder Größe.',
+    items: [
+      'Beratung nach dem Arbeitssicherheitsgesetz (ASiG)',
+      'Pflicht- und Angebotsvorsorge nach ArbMedVV',
+      'Wunschvorsorge',
+      'Gefährdungsbeurteilungen',
+      'Medizinische Check-ups',
+      'Begehungen und Betriebsbesuche',
+    ],
+  },
+  {
+    number: '02.',
+    title: 'Betriebliches Gesundheitsmanagement',
+    description:
+      'Ganzheitliche Konzepte zur langfristigen Gesunderhaltung Ihrer Belegschaft — von der Analyse bis zur Umsetzung.',
+    items: [
+      'Betriebliches Eingliederungsmanagement (BEM)',
+      'BGM-Konzepte & Gesundheitsförderung',
+      'Impfberatung & Betriebsimpfungen',
+      'Ergonomie am Arbeitsplatz',
+      'Suchtberatung',
+      'Erste-Hilfe-Ausbildung (Koordination)',
+    ],
+  },
+  {
+    number: '03.',
+    title: 'Spezialuntersuchungen',
+    description:
+      'Fachuntersuchungen für besondere Tätigkeiten und Branchen — national wie international anerkannt.',
+    items: [
+      'Offshore (OGUK/OLF, OGEPA/Hardanger, AWMF Deutschland)',
+      'Tauchmedizinische Untersuchungen',
+      'Strahlenschutz (Röntgen & ionisierende Strahlung)',
+      'Führerschein FEV (LKW, Taxi, Rettungsdienst)',
+      'Sportbootführerschein',
+      'Sportmedizinische Untersuchungen',
+    ],
+  },
+  {
+    number: '04.',
+    title: 'Psychologische Betreuung & Beratung',
+    description:
+      'Ergänzende Leistungen rund um mentale Gesundheit, Work-Life-Balance und Auslandseinsätze.',
+    items: [
+      'Psychosomatische Grundversorgung',
+      'Psychologische & familienzentrierte Beratung',
+      'Reiseimpfberatung',
+      'Akupunktur',
+    ],
+  },
+];
 ---
 
 <BaseLayout
-  title="Leistungen — Samedos Arbeitsmedizin"
-  description="Unsere Leistungen: Arbeitsmedizinische Vorsorge, BGM, Spezialuntersuchungen und psychologische Betreuung."
+  title="Leistungen — Samedos Arbeitsmedizin Bremen"
+  description="Unsere Leistungen: Arbeitsmedizinische Vorsorge, BGM, Spezialuntersuchungen (Offshore, Tauchmedizin, FEV) und psychologische Betreuung — aus Bremen, überregional tätig."
 >
-  <div class="max-w-[1200px] mx-auto px-6 py-24">
-    <h1>Unsere Leistungen</h1>
-    <p class="text-muted mt-4">Diese Seite wird in Phase 2 ausgebaut.</p>
-  </div>
+
+  <!-- Hero -->
+  <section class="pt-20 pb-16 bg-bg-soft">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+        Unsere Leistungen
+      </p>
+      <h1 class="text-[clamp(2rem,4vw,3rem)] max-w-2xl">
+        Maßgeschneiderte Lösungen für gesunde Mitarbeitende
+      </h1>
+      <p class="text-muted text-[1.1rem] mt-5 max-w-2xl">
+        Ob präventive Untersuchungen, individuelles Beratungskonzept oder arbeitsmedizinische
+        Betreuung nach DGUV Vorschrift&nbsp;2 — wir finden die passende Lösung für Ihr Unternehmen.
+      </p>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6 space-y-16">
+      {categories.map((cat, i) => (
+        <div class={`grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-12 items-start ${i % 2 === 1 ? 'lg:[direction:rtl]' : ''}`}>
+          <div class={i % 2 === 1 ? 'lg:[direction:ltr]' : ''}>
+            <span class="font-heading font-bold text-mint text-[1.1rem]">{cat.number}</span>
+            <h2 class="mt-2 mb-4 text-[1.6rem]">{cat.title}</h2>
+            <p class="text-muted">{cat.description}</p>
+            <a
+              href="/kontakt"
+              class="inline-flex items-center gap-2 mt-6 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Jetzt anfragen →
+            </a>
+          </div>
+          <div class={`bg-white border border-border rounded-2xl p-8 ${i % 2 === 1 ? 'lg:[direction:ltr]' : ''}`}>
+            <ul class="space-y-3">
+              {cat.items.map((item) => (
+                <li class="flex items-start gap-3 text-[0.95rem]">
+                  <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-[1200px] mx-auto px-6 pb-24">
+    <div
+      class="relative rounded-[28px] px-12 py-16 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] mb-4">Haben Sie Fragen zu unseren Leistungen?</h2>
+      <p class="text-white/80 max-w-[520px] mx-auto mb-7">
+        Wir beraten Sie gerne — unverbindlich und kostenlos. Nehmen Sie einfach Kontakt auf.
+      </p>
+      <a
+        href="/kontakt"
+        class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+      >
+        Kontakt aufnehmen →
+      </a>
+    </div>
+  </section>
+
 </BaseLayout>

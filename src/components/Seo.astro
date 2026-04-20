@@ -1,0 +1,55 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, ogImage = '/og-default.jpg', noindex = false } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+{noindex && <meta name="robots" content="noindex,nofollow" />}
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(ogImage, Astro.site)} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="de_DE" />
+
+<script type="application/ld+json">
+  {JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "MedicalBusiness",
+    "name": "Samedos GmbH",
+    "description": "Arbeitsmedizin mit Verantwortung — moderne Arbeitsmedizin nach DGUV Vorschrift 2",
+    "url": "https://samedos.de",
+    "telephone": "+494216399776",
+    "email": "info@samedos.de",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Timmersloher Straße 82",
+      "addressLocality": "Bremen",
+      "postalCode": "28215",
+      "addressCountry": "DE"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "08:00",
+        "closes": "15:00"
+      }
+    ],
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 53.0757,
+      "longitude": 8.8107
+    }
+  })}
+</script>

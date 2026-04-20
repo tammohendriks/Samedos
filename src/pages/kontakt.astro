@@ -3,11 +3,180 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="Kontakt — Samedos Arbeitsmedizin"
-  description="Kontaktieren Sie Samedos: Timmersloher Str. 82, 28215 Bremen. Tel: 0421 63997761. Mo–Fr 08–15 Uhr."
+  title="Kontakt — Samedos Arbeitsmedizin Bremen"
+  description="Kontaktieren Sie Samedos: Timmersloher Str. 82, 28215 Bremen. Tel: 0421 63997761. Mo–Fr 08–15 Uhr. Auch außerhalb der Öffnungszeiten erreichbar."
 >
-  <div class="max-w-[1200px] mx-auto px-6 py-24">
-    <h1>Kontakt</h1>
-    <p class="text-muted mt-4">Diese Seite wird in Phase 2 ausgebaut.</p>
-  </div>
+
+  <section class="pt-20 pb-16 bg-bg-soft">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+        Kontakt
+      </p>
+      <h1 class="text-[clamp(2rem,4vw,3rem)]">Wir sind für Sie da</h1>
+      <p class="text-muted text-[1.1rem] mt-4 max-w-xl">
+        Rufen Sie an, schreiben Sie uns oder nutzen Sie das Formular — wir antworten schnell.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16">
+
+        <!-- Kontaktdaten -->
+        <div class="space-y-8">
+          <div>
+            <h2 class="text-[1.4rem] mb-6">Kontaktdaten</h2>
+            <ul class="space-y-5">
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">Adresse</p>
+                  <p class="text-muted text-[0.95rem]">Timmersloher Straße 82<br />28215 Bremen</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">Telefon</p>
+                  <a href="tel:042163997761" class="text-muted text-[0.95rem] hover:text-mint transition-colors">0421 63997761</a>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">E-Mail</p>
+                  <a href="mailto:info@samedos.de" class="text-muted text-[0.95rem] hover:text-mint transition-colors">info@samedos.de</a>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">Öffnungszeiten</p>
+                  <p class="text-muted text-[0.95rem]">Mo – Fr: 08:00 – 15:00 Uhr</p>
+                  <p class="text-mint text-[0.9rem] font-medium mt-1">Auch außerhalb erreichbar</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Kontaktformular -->
+        <div class="bg-white border border-border rounded-2xl p-8">
+          <h2 class="text-[1.4rem] mb-6">Nachricht senden</h2>
+          <form
+            name="kontakt"
+            method="POST"
+            class="space-y-5"
+          >
+            <!-- Honeypot -->
+            <input type="text" name="_honeypot" class="hidden" tabindex="-1" autocomplete="off" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="vorname" class="block text-[0.9rem] font-medium text-navy mb-1.5">Vorname *</label>
+                <input
+                  id="vorname" name="vorname" type="text" required
+                  class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors"
+                />
+              </div>
+              <div>
+                <label for="nachname" class="block text-[0.9rem] font-medium text-navy mb-1.5">Nachname *</label>
+                <input
+                  id="nachname" name="nachname" type="text" required
+                  class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="email" class="block text-[0.9rem] font-medium text-navy mb-1.5">E-Mail *</label>
+              <input
+                id="email" name="email" type="email" required
+                class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="unternehmen" class="block text-[0.9rem] font-medium text-navy mb-1.5">Unternehmen</label>
+                <input
+                  id="unternehmen" name="unternehmen" type="text"
+                  class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors"
+                />
+              </div>
+              <div>
+                <label for="telefon" class="block text-[0.9rem] font-medium text-navy mb-1.5">Telefon</label>
+                <input
+                  id="telefon" name="telefon" type="tel"
+                  class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="betreff" class="block text-[0.9rem] font-medium text-navy mb-1.5">Betreff *</label>
+              <select
+                id="betreff" name="betreff" required
+                class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors bg-white"
+              >
+                <option value="">Bitte wählen…</option>
+                <option value="Terminanfrage">Terminanfrage</option>
+                <option value="Allgemeine Frage">Allgemeine Frage</option>
+                <option value="Sonstiges">Sonstiges</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="nachricht" class="block text-[0.9rem] font-medium text-navy mb-1.5">Nachricht *</label>
+              <textarea
+                id="nachricht" name="nachricht" required rows="5"
+                class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors resize-none"
+              ></textarea>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <input
+                id="dsgvo" name="dsgvo" type="checkbox" required
+                class="mt-1 w-4 h-4 accent-mint shrink-0"
+              />
+              <label for="dsgvo" class="text-[0.88rem] text-muted">
+                Ich habe die <a href="/datenschutz" class="text-navy underline hover:text-mint">Datenschutzerklärung</a> gelesen
+                und willige in die Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage ein. *
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full inline-flex items-center justify-center gap-2 px-[22px] py-3.5 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Nachricht senden →
+            </button>
+
+            <p class="text-muted text-[0.82rem] text-center">
+              * Pflichtfelder. Formulardaten werden nur zur Bearbeitung Ihrer Anfrage verwendet.
+            </p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>
