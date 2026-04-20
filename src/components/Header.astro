@@ -1,0 +1,39 @@
+---
+const navLinks = [
+  { href: '/leistungen', label: 'Leistungen' },
+  { href: '/ueber-uns', label: 'Über uns' },
+  { href: '/karriere', label: 'Karriere' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-white/85 backdrop-blur-md [backdrop-filter:saturate(160%)_blur(12px)] border-b border-border">
+  <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between py-4">
+
+    <a href="/" class="flex items-center gap-3 font-heading font-extrabold text-xl text-navy tracking-[0.04em]">
+      <span class="w-[38px] h-[38px] bg-navy rounded-full grid place-items-center text-white shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M12 2v20M2 12h20"/>
+        </svg>
+      </span>
+      SAMEDOS
+    </a>
+
+    <nav class="flex items-center gap-8">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="font-medium text-[0.95rem] text-navy transition-colors hover:text-mint hidden md:block"
+        >
+          {link.label}
+        </a>
+      ))}
+      <a
+        href="/kontakt"
+        class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+      >
+        Kontakt
+      </a>
+    </nav>
+
+  </div>
+</header>

@@ -1,17 +1,166 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Stats from '../components/Stats.astro';
+import ValueCard from '../components/ValueCard.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CtaBand from '../components/CtaBand.astro';
 
+const values = [
+  {
+    title: 'Prävention',
+    description: 'Wir setzen auf frühzeitige Vorsorge und individuelle Beratung, damit Risiken gar nicht erst entstehen.',
+    iconPath: 'M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z',
+  },
+  {
+    title: 'Verlässlichkeit',
+    description: 'Als erfahrener Partner stehen wir Unternehmen dauerhaft zur Seite — von gesetzlichen Untersuchungen bis zu individuellen Lösungen.',
+    iconPath: 'M20 6L9 17l-5-5',
+  },
+  {
+    title: 'Nachhaltigkeit',
+    description: 'Gesunde Mitarbeitende sind die Grundlage für nachhaltigen Unternehmenserfolg — dafür arbeiten wir jeden Tag.',
+    iconPath: 'M12 2v20M2 12h20',
+  },
+  {
+    title: 'Vertrauen',
+    description: 'Persönliche Betreuung, klare Kommunikation und langjährige Erfahrung — Sicherheit für Arbeitgeber und Arbeitnehmer.',
+    iconPath: 'M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11zM12 10m-3 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0',
+  },
+  {
+    title: 'Kompetenz',
+    description: 'Dr. Jörg Janssen verbindet über 23 Jahre Erfahrung in der Arbeitsmedizin mit praxisnahen Lösungen.',
+    iconPath: 'M20 7L9 18l-5-5',
+  },
+  {
+    title: 'Engagement',
+    description: 'Wir begleiten Unternehmen bei Wiedereingliederungen, Gefährdungsbeurteilungen und allen speziellen Anforderungen.',
+    iconPath: 'M12 8m-4 0a4 4 0 1 0 8 0 4 4 0 1 0-8 0M12 2v3M12 19v3M2 12h3M19 12h3',
+  },
+];
+
+const services = [
+  {
+    number: '01.',
+    title: 'Arbeitsmedizinische Vorsorge',
+    description: 'Gesetzlich vorgeschriebene Untersuchungen und Beratung nach ASiG und DGUV Vorschrift 2.',
+    items: ['Beratung nach ASiG', 'Vorsorgeuntersuchungen', 'Gefährdungsbeurteilungen', 'Med. Check-ups'],
+  },
+  {
+    number: '02.',
+    title: 'Betriebliches Gesundheitsmanagement',
+    description: 'Ganzheitliche Konzepte zur langfristigen Gesunderhaltung Ihrer Belegschaft.',
+    items: ['BEM-Beratung', 'BGM-Konzepte', 'Impfungen', 'Ergonomie am Arbeitsplatz'],
+  },
+  {
+    number: '03.',
+    title: 'Spezialuntersuchungen',
+    description: 'Fachuntersuchungen für besondere Tätigkeiten und Branchen — national wie international.',
+    items: ['Offshore (OGUK, OGEPA, AWMF)', 'Tauchmedizin', 'Strahlenschutz', 'Führerschein FEV', 'Sportboot-Schein', 'Sportmedizin'],
+  },
+  {
+    number: '04.',
+    title: 'Psychologische Betreuung & Beratung',
+    description: 'Ergänzende Leistungen rund um mentale Gesundheit und Auslandseinsätze.',
+    items: ['Psychosomatische Grundversorgung', 'Psychologische Beratung', 'Reiseimpfberatung', 'Akupunktur'],
+  },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Samedos — Arbeitsmedizin mit Verantwortung | Bremen"
+  description="Samedos ist Ihr Partner für moderne Arbeitsmedizin nach DGUV Vorschrift 2. Mit Sitz in Bremen — überregional tätig. Vorsorge, BGM, Spezialuntersuchungen."
+>
+
+  <Hero />
+  <Stats />
+
+  <!-- Werte -->
+  <section class="py-24" id="ueber-uns">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-14">
+        <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+          Unsere Werte
+        </p>
+        <h2>Unser Kompass für Zusammenarbeit und Gesundheit</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {values.map((value) => (
+          <ValueCard title={value.title} description={value.description} iconPath={value.iconPath} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Leistungen -->
+  <section class="bg-bg-soft py-24" id="leistungen">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-14">
+        <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+          Unsere Leistungen
+        </p>
+        <h2>Maßgeschneiderte Lösungen für gesunde Mitarbeitende</h2>
+        <p class="text-muted text-[1.05rem] mt-4">
+          Ob präventive Untersuchungen, individuelle Beratung oder arbeitsmedizinische Betreuung —
+          wir bieten Unternehmen jeder Größe die passende Lösung.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {services.map((service) => (
+          <ServiceCard
+            number={service.number}
+            title={service.title}
+            description={service.description}
+            items={service.items}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Team / Gründer Teaser -->
+  <section class="py-24">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-16 items-center">
+
+        <!-- Foto-Platzhalter -->
+        <div
+          class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[440px] mx-auto lg:mx-0 lg:max-w-none grid place-items-center text-navy font-medium text-center p-10"
+          style="background: linear-gradient(135deg, #E8F6F2, #D6EEE7);"
+        >
+          <div>
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+            </svg>
+            [Platzhalter: Foto<br/>Dr. med. Jörg Janssen]
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div>
+          <p class="text-mint font-heading font-semibold text-[0.85rem] tracking-[0.14em] uppercase mb-3.5">
+            Unser Versprechen
+          </p>
+          <h2>Darauf können Sie sich verlassen</h2>
+          <p class="text-muted mt-4 text-[1.05rem]">
+            Wir stehen für zuverlässige, rechtssichere und moderne Arbeitsmedizin nach DGUV Vorschrift&nbsp;2.
+            Unser Ziel: Ihre Mitarbeitenden langfristig gesund und leistungsfähig zu halten.
+          </p>
+          <blockquote class="font-heading text-[1.4rem] leading-[1.4] text-mint font-semibold my-6 pl-5 border-l-[3px] border-mint">
+            „Arbeitsmedizin ist für mich die Verbindung aus Erfahrung, Verantwortung und
+            Menschlichkeit, damit Arbeit und Gesundheit im Einklang bleiben."
+          </blockquote>
+          <p class="text-navy font-medium">
+            Dr. med. Jörg Janssen<br />
+            <span class="text-muted font-normal text-[0.9rem]">Gründer &amp; Geschäftsführer</span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+
+</BaseLayout>

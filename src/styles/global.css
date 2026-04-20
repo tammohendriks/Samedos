@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #142B49;
+  --color-navy-2: #29466B;
+  --color-mint: #64C5AE;
+  --color-mint-soft: #E8F6F2;
+  --color-mint-tint: #D6EEE7;
+  --color-muted: #5B6B82;
+  --color-bg-soft: #F6F8FB;
+  --color-border: #E3E8EF;
+
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'League Spartan', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    color: var(--color-navy);
+    background: #ffffff;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+    color: var(--color-navy);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+}

@@ -1,43 +1,68 @@
-# Astro Starter Kit: Minimal
+# samedos-website
 
-```sh
-npm create astro@latest -- --template minimal
+Website der Samedos GmbH — Arbeitsmedizin, Bremen.
+
+## Tech-Stack
+
+- [Astro](https://astro.build) (SSG)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
+
+## Setup
+
+```bash
+npm install
+npm run dev      # Dev-Server auf http://localhost:4321
+npm run build    # Produktions-Build nach dist/
+npm run preview  # Build lokal vorschauen
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Projektstruktur
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+src/
+  layouts/
+    BaseLayout.astro       # HTML-Shell, Fonts, Meta-Tags
+  components/
+    Header.astro           # Sticky Header mit Navigation
+    Footer.astro           # Footer mit Kontakt & Links
+    Hero.astro             # Hero-Sektion Startseite
+    Stats.astro            # Kennzahlen-Leiste
+    ValueCard.astro        # Einzelne Wertkarte
+    ServiceCard.astro      # Einzelne Leistungskarte
+    CtaBand.astro          # Karriere CTA-Banner
+  pages/
+    index.astro            # Startseite
+    leistungen/index.astro
+    ueber-uns.astro
+    karriere/index.astro
+    kontakt.astro
+    impressum.astro
+    datenschutz.astro
+  styles/
+    global.css             # Tailwind-Import + @theme (Farben, Fonts)
+  assets/                  # Logos, Bilder (noch zu befüllen)
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Farben & Fonts
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Definiert in `src/styles/global.css` über Tailwind v4 `@theme`:
 
-Any static assets, like images, can be placed in the `public/` directory.
+| Token          | Wert      | Klasse         |
+|----------------|-----------|----------------|
+| Navy (Primär)  | `#142B49` | `bg-navy`      |
+| Navy-2         | `#29466B` | `bg-navy-2`    |
+| Mint (Akzent)  | `#64C5AE` | `bg-mint`      |
+| Mint Soft      | `#E8F6F2` | `bg-mint-soft` |
+| Muted Text     | `#5B6B82` | `text-muted`   |
 
-## 🧞 Commands
+Fonts: `font-heading` = League Spartan, `font-sans` = DM Sans (Standard)
 
-All commands are run from the root of the project, from a terminal:
+## Noch ausstehend (Phase 2)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- [ ] Sanity CMS (Team, Stellenanzeigen)
+- [ ] Kontaktformular mit Resend
+- [ ] Karriere-Bewerbungsformular
+- [ ] Detailseiten für Leistungskategorien
+- [ ] JSON-LD strukturierte Daten
+- [ ] Vercel-Deployment + Domain-Umzug

@@ -1,0 +1,25 @@
+---
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+  items: string[];
+}
+
+const { number, title, description, items } = Astro.props;
+---
+
+<div class="bg-white rounded-[20px] p-9 border border-border transition-all duration-250 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(20,43,73,.1)]">
+  <div class="flex items-center gap-4 mb-5">
+    <span class="font-heading font-bold text-mint text-[1.1rem]">{number}</span>
+  </div>
+  <h3 class="text-[1.35rem] mb-3">{title}</h3>
+  <p class="text-muted mb-5">{description}</p>
+  <ul class="grid grid-cols-2 gap-x-4 gap-y-2">
+    {items.map((item) => (
+      <li class="relative text-[0.9rem] text-navy pl-[18px] before:absolute before:left-0 before:top-[9px] before:w-1.5 before:h-1.5 before:bg-mint before:rounded-full">
+        {item}
+      </li>
+    ))}
+  </ul>
+</div>

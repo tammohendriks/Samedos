@@ -1,0 +1,72 @@
+---
+const navLinks = [
+  { href: '/leistungen', label: 'Leistungen' },
+  { href: '/ueber-uns', label: 'Über uns' },
+  { href: '/karriere', label: 'Karriere' },
+  { href: '/impressum', label: 'Impressum' },
+  { href: '/datenschutz', label: 'Datenschutz' },
+];
+---
+
+<footer class="bg-navy text-white/85 pt-16 pb-6">
+  <div class="max-w-[1200px] mx-auto px-6">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr] gap-10 pb-12 border-b border-white/10">
+
+      <div>
+        <a href="/" class="flex items-center gap-3 font-heading font-extrabold text-xl text-white tracking-[0.04em]">
+          <span class="w-[38px] h-[38px] bg-white rounded-full grid place-items-center text-navy shrink-0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2v20M2 12h20"/>
+            </svg>
+          </span>
+          SAMEDOS
+        </a>
+        <p class="text-white/65 text-[0.9rem] mt-3 max-w-xs">
+          Arbeitsmedizin mit Verantwortung — aus Bremen für Unternehmen deutschlandweit.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">Kontakt</h4>
+        <ul class="space-y-2.5 text-[0.92rem]">
+          <li>Timmersloher Str. 82</li>
+          <li>28215 Bremen</li>
+          <li>
+            <a href="tel:042163997761" class="text-white/70 hover:text-mint transition-colors">0421 63997761</a>
+          </li>
+          <li>
+            <a href="mailto:info@samedos.de" class="text-white/70 hover:text-mint transition-colors">info@samedos.de</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">Öffnungszeiten</h4>
+        <ul class="space-y-2.5 text-[0.92rem]">
+          <li>Mo – Fr</li>
+          <li>08:00 – 15:00 Uhr</li>
+          <li class="text-mint mt-2.5">Auch außerhalb erreichbar</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">Navigation</h4>
+        <ul class="space-y-2.5 text-[0.92rem]">
+          {navLinks.map((link) => (
+            <li>
+              <a href={link.href} class="text-white/70 hover:text-mint transition-colors">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="flex flex-wrap justify-between items-center gap-3 pt-6 text-[0.85rem] text-white/50">
+      <span>© 2026 Samedos GmbH — Alle Rechte vorbehalten</span>
+      <span>Made with ❤ in Bremen</span>
+    </div>
+
+  </div>
+</footer>
