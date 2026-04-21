@@ -50,6 +50,7 @@ export const jobPosting = defineType({
         list: [
           { title: 'Vollzeit', value: 'Vollzeit' },
           { title: 'Teilzeit', value: 'Teilzeit' },
+          { title: 'Vollzeit / Teilzeit', value: 'Vollzeit / Teilzeit' },
           { title: 'Minijob', value: 'Minijob' },
         ],
       },
