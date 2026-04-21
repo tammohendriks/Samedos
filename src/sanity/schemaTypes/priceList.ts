@@ -49,9 +49,9 @@ export const priceList = defineType({
                   fields: [
                     defineField({
                       name: 'code',
-                      title: 'Code / Untersuchung (optional)',
+                      title: 'Untersuchung',
                       type: 'string',
-                      description: 'Für G-Untersuchungen: DGUV-Code (z.B. "G 24"). Für Sonderuntersuchungen: Kurzbezeichnung.',
+                      description: 'Bei G-Untersuchungen: DGUV-Code (z.B. "G 24"). Bei Sonderuntersuchungen: Kurzbezeichnung der Leistung.',
                     }),
                     defineField({
                       name: 'bezeichnung',
