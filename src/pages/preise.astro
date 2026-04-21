@@ -1,5 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPriceLists } from '../sanity/client';
+
+const priceLists = await getPriceLists();
+const pdfFor = (cat: string) => priceLists.find(p => p.category === cat)?.pdf?.asset?.url ?? null;
 
 const tabs = [
   { id: 'g-untersuchungen', label: 'G-Untersuchungen' },
@@ -49,97 +53,54 @@ const tabs = [
       </div>
 
       <!-- Tab panels -->
-      <div id="panel-g-untersuchungen" role="tabpanel" aria-labelledby="tab-g-untersuchungen">
-        <div class="mb-6" data-animate>
-          <h2 class="text-[1.4rem] mb-2">G-Untersuchungen</h2>
-          <p class="text-muted">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
-        </div>
-        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
-          <div class="p-8 text-center text-muted">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-            </svg>
-            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
-            <p class="text-[0.95rem]">Die vollständige Preisliste für G-Untersuchungen stellen wir auf Anfrage zur Verfügung.</p>
-            <a
-              href="mailto:info@samedos.de?subject=Preisanfrage G-Untersuchungen"
-              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-            >
-              Preisliste anfordern →
-            </a>
+      {[
+        { id: 'g-untersuchungen',    heading: 'G-Untersuchungen',           desc: 'Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.' },
+        { id: 'sonderuntersuchungen', heading: 'Sonderuntersuchungen',       desc: 'Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.' },
+        { id: 'labor',               heading: 'Laborleistungen',             desc: 'Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.' },
+        { id: 'impfungen',           heading: 'Impfungen',                   desc: 'Schutzimpfungen im betriebsärztlichen Kontext.' },
+      ].map((panel, i) => {
+        const pdf = pdfFor(panel.id);
+        return (
+          <div id={`panel-${panel.id}`} role="tabpanel" aria-labelledby={`tab-${panel.id}`} hidden={i !== 0 ? true : undefined}>
+            <div class="mb-6" data-animate>
+              <h2 class="text-[1.4rem] mb-2">{panel.heading}</h2>
+              <p class="text-muted">{panel.desc}</p>
+            </div>
+            <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
+              <div class="p-8 text-center text-muted">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+                </svg>
+                {pdf ? (
+                  <>
+                    <p class="font-medium text-navy mb-2">Preisliste verfügbar</p>
+                    <a
+                      href={pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="mt-2 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+                    >
+                      PDF herunterladen ↓
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <p class="font-medium text-navy mb-2">Preisliste auf Anfrage</p>
+                    <p class="text-[0.95rem] mb-5">Die vollständige Preisliste stellen wir gerne auf Anfrage zur Verfügung.</p>
+                    <a
+                      href={`mailto:info@samedos.de?subject=Preisanfrage ${panel.heading}`}
+                      class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+                    >
+                      Preisliste anfordern →
+                    </a>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div id="panel-sonderuntersuchungen" role="tabpanel" aria-labelledby="tab-sonderuntersuchungen" hidden>
-        <div class="mb-6" data-animate>
-          <h2 class="text-[1.4rem] mb-2">Einzelpreise Sonderuntersuchungen</h2>
-          <p class="text-muted">Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.</p>
-        </div>
-        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
-          <div class="p-8 text-center text-muted">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-            </svg>
-            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
-            <p class="text-[0.95rem]">Die vollständige Preisliste für Sonderuntersuchungen stellen wir auf Anfrage zur Verfügung.</p>
-            <a
-              href="mailto:info@samedos.de?subject=Preisanfrage Sonderuntersuchungen"
-              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-            >
-              Preisliste anfordern →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-labor" role="tabpanel" aria-labelledby="tab-labor" hidden>
-        <div class="mb-6" data-animate>
-          <h2 class="text-[1.4rem] mb-2">Laborleistungen</h2>
-          <p class="text-muted">Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.</p>
-        </div>
-        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
-          <div class="p-8 text-center text-muted">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-            </svg>
-            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
-            <p class="text-[0.95rem]">Die vollständige Preisliste für Laborleistungen stellen wir auf Anfrage zur Verfügung.</p>
-            <a
-              href="mailto:info@samedos.de?subject=Preisanfrage Labor"
-              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-            >
-              Preisliste anfordern →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div id="panel-impfungen" role="tabpanel" aria-labelledby="tab-impfungen" hidden>
-        <div class="mb-6" data-animate>
-          <h2 class="text-[1.4rem] mb-2">Impfungen</h2>
-          <p class="text-muted">Schutzimpfungen im betriebsärztlichen Kontext.</p>
-        </div>
-        <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
-          <div class="p-8 text-center text-muted">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-            </svg>
-            <p class="font-medium text-navy mb-2">Preisliste als PDF verfügbar</p>
-            <p class="text-[0.95rem]">Die vollständige Preisliste für Impfungen stellen wir auf Anfrage zur Verfügung.</p>
-            <a
-              href="mailto:info@samedos.de?subject=Preisanfrage Impfungen"
-              class="mt-5 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-            >
-              Preisliste anfordern →
-            </a>
-          </div>
-        </div>
-      </div>
+        );
+      })}
 
     </div>
   </section>

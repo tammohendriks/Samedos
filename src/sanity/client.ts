@@ -72,6 +72,19 @@ export async function getGalleryImages(category?: string): Promise<GalleryImage[
   );
 }
 
+export interface PriceList {
+  _id: string;
+  category: 'g-untersuchungen' | 'sonderuntersuchungen' | 'labor' | 'impfungen';
+  pdf?: { asset: { url: string } };
+  updatedAt?: string;
+}
+
+export async function getPriceLists(): Promise<PriceList[]> {
+  return sanityClient.fetch(
+    `*[_type == "priceList"] { _id, category, updatedAt, pdf { asset->{ url } } }`
+  );
+}
+
 export async function getSiteSettings(): Promise<SiteSettings | null> {
   return sanityClient.fetch(
     `*[_type == "siteSettings"][0] { heroImage { asset->{ url }, hotspot }, heroImageAlt }`

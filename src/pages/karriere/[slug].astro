@@ -18,23 +18,23 @@ if (!job) return Astro.redirect('/karriere', 302);
   description={job.description ?? `Jetzt als ${job.title} bei Samedos in Bremen bewerben.`}
 >
 
-  <section class="pt-20 pb-16 bg-bg-soft">
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
     <div class="max-w-[1200px] mx-auto px-6">
-      <a href="/karriere" class="text-muted text-[0.9rem] hover:text-mint transition-colors">← Alle Stellen</a>
+      <a href="/karriere" class="text-white/60 text-[0.9rem] hover:text-mint transition-colors">← Alle Stellen</a>
       <div class="flex flex-wrap items-start justify-between gap-6 mt-6">
         <div>
-          <h1 class="text-[clamp(1.75rem,3.5vw,2.75rem)]">{job.title}</h1>
+          <h1 class="text-[clamp(1.75rem,3.5vw,2.75rem)] text-white">{job.title}</h1>
           <div class="flex flex-wrap gap-3 mt-3">
             {job.scope && (
-              <span class="text-[0.85rem] bg-mint-soft text-navy px-3 py-1 rounded-full font-medium">{job.scope}</span>
+              <span class="text-[0.85rem] bg-white/15 text-white px-3 py-1 rounded-full font-medium">{job.scope}</span>
             )}
             {job.location && (
-              <span class="text-[0.85rem] text-muted">{job.location}</span>
+              <span class="text-[0.85rem] text-white/65">{job.location}</span>
             )}
           </div>
         </div>
         <a
-          href="mailto:info@samedos.de?subject=Bewerbung: {job.title}"
+          href={`mailto:info@samedos.de?subject=Bewerbung: ${job.title}`}
           class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
         >
           Jetzt bewerben →
@@ -89,7 +89,7 @@ if (!job) return Astro.redirect('/karriere', 302);
           — wir freuen uns auf dich!
         </p>
         <a
-          href="mailto:info@samedos.de?subject=Bewerbung: {job.title}"
+          href={`mailto:info@samedos.de?subject=Bewerbung: ${job.title}`}
           class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
         >
           Jetzt bewerben →
