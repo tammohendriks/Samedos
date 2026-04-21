@@ -7,8 +7,6 @@ import type { PreisTabelleDaten } from '../data/preise';
 
 const priceLists = await getPriceLists();
 
-const pdfFor = (cat: string) => priceLists.find(p => p.category === cat)?.pdf?.asset?.url ?? null;
-
 const cmsTabelle = (cat: string): PreisTabelleDaten | null => {
   const entry = priceLists.find(p => p.category === cat);
   if (entry?.sektionen?.length) return { sektionen: entry.sektionen };
@@ -128,24 +126,13 @@ const tabs = [
           <p class="text-muted">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
         </div>
         <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-          {pdfFor('g-untersuchungen') ? (
-            <a
-              href={pdfFor('g-untersuchungen')!}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-            >
-              PDF herunterladen ↓
-            </a>
-          ) : (
-            <button
-              data-print-tab="panel-g-untersuchungen"
-              class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-              Als PDF speichern
-            </button>
-          )}
+          <button
+            data-print-tab="panel-g-untersuchungen"
+            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Als PDF speichern
+          </button>
         </div>
         <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="standard" />
         <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Kombi-Preise gelten bei gleichzeitiger Durchführung.</p>
@@ -158,24 +145,13 @@ const tabs = [
           <p class="text-muted">Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.</p>
         </div>
         <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-          {pdfFor('sonderuntersuchungen') ? (
-            <a
-              href={pdfFor('sonderuntersuchungen')!}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-            >
-              PDF herunterladen ↓
-            </a>
-          ) : (
-            <button
-              data-print-tab="panel-sonderuntersuchungen"
-              class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-              Als PDF speichern
-            </button>
-          )}
+          <button
+            data-print-tab="panel-sonderuntersuchungen"
+            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Als PDF speichern
+          </button>
         </div>
         <PreisTabelle daten={tabelleFor('sonderuntersuchungen', sonderuntersuchungen)} modus="standard" />
         <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Preise auf Anfrage individuell anpassbar.</p>
@@ -188,24 +164,13 @@ const tabs = [
           <p class="text-muted">Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.</p>
         </div>
         <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-          {pdfFor('labor') ? (
-            <a
-              href={pdfFor('labor')!}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-            >
-              PDF herunterladen ↓
-            </a>
-          ) : (
-            <button
-              data-print-tab="panel-labor"
-              class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-              Als PDF speichern
-            </button>
-          )}
+          <button
+            data-print-tab="panel-labor"
+            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Als PDF speichern
+          </button>
         </div>
         <PreisTabelle daten={tabelleFor('labor', labor)} modus="standard" />
         <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
@@ -220,30 +185,13 @@ const tabs = [
         {cmsTabelle('impfungen') ? (
           <>
             <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-              {pdfFor('impfungen') ? (
-                <a
-                  href={pdfFor('impfungen')!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-                >
-                  PDF herunterladen ↓
-                </a>
-              ) : (
-                <button
-                  data-print-tab="panel-impfungen"
-                  class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                  Als PDF speichern
-                </button>
-              )}
-              <a
-                href="mailto:info@samedos.de?subject=Anfrage Impfpreisliste"
-                class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border border-border text-navy font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:border-mint"
+              <button
+                data-print-tab="panel-impfungen"
+                class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
               >
-                Per E-Mail anfordern →
-              </a>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Als PDF speichern
+              </button>
             </div>
             <PreisTabelle daten={cmsTabelle('impfungen')!} modus="standard" />
             <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
@@ -254,30 +202,14 @@ const tabs = [
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
               <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
             </svg>
-            {pdfFor('impfungen') ? (
-              <>
-                <p class="font-medium text-navy mb-2">Impfpreisliste verfügbar</p>
-                <a
-                  href={pdfFor('impfungen')!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-                >
-                  PDF herunterladen ↓
-                </a>
-              </>
-            ) : (
-              <>
-                <p class="font-medium text-navy mb-2">Impfpreise auf Anfrage</p>
-                <p class="text-muted text-[0.95rem] mb-5">Wir stellen Ihnen die aktuelle Impfpreisliste gerne auf Anfrage zur Verfügung.</p>
-                <a
-                  href="mailto:info@samedos.de?subject=Anfrage Impfpreisliste"
-                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-                >
-                  Preisliste anfordern →
-                </a>
-              </>
-            )}
+            <p class="font-medium text-navy mb-2">Impfpreise auf Anfrage</p>
+            <p class="text-muted text-[0.95rem] mb-5">Wir stellen Ihnen die aktuelle Impfpreisliste gerne auf Anfrage zur Verfügung.</p>
+            <a
+              href="mailto:info@samedos.de?subject=Anfrage Impfpreisliste"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Preisliste anfordern →
+            </a>
           </div>
         )}
       </div>

@@ -1,16 +1,15 @@
 import { defineType, defineField } from 'sanity';
+import { PdfDownloadHint } from './components/PdfDownloadHint';
 
 export const priceList = defineType({
   name: 'priceList',
   title: 'Preislisten',
   type: 'document',
-  __experimental_actions: ['update', 'publish'],
   fields: [
     defineField({
       name: 'category',
       title: 'Kategorie',
       type: 'string',
-      readOnly: true,
       options: {
         list: [
           { title: 'G-Untersuchungen', value: 'g-untersuchungen' },
@@ -52,7 +51,6 @@ export const priceList = defineType({
                       name: 'bezeichnung',
                       title: 'Bezeichnung',
                       type: 'string',
-                      validation: (r) => r.required(),
                     }),
                     defineField({
                       name: 'preis',
@@ -84,11 +82,12 @@ export const priceList = defineType({
       ],
     }),
     defineField({
-      name: 'pdf',
-      title: 'PDF-Datei (optional)',
-      description: 'Alternativ zum Online-Bearbeiten: PDF hochladen (ersetzt die Tabelle durch einen Download-Link)',
-      type: 'file',
-      options: { accept: '.pdf' },
+      name: 'pdfDownload',
+      title: 'PDF herunterladen',
+      type: 'string',
+      components: {
+        input: PdfDownloadHint,
+      },
     }),
     defineField({
       name: 'updatedAt',
@@ -106,7 +105,7 @@ export const priceList = defineType({
         'impfungen': 'Impfungen',
       };
       return {
-        title: labels[title] ?? title,
+        title: labels[title] ?? (title || 'Neue Preisliste'),
         subtitle: updatedAt ? `Stand: ${updatedAt}` : 'Noch kein Datum',
       };
     },

@@ -87,7 +87,6 @@ export interface PreisSektionCMS {
 export interface PriceList {
   _id: string;
   category: 'g-untersuchungen' | 'sonderuntersuchungen' | 'labor' | 'impfungen';
-  pdf?: { asset: { url: string } };
   updatedAt?: string;
   sektionen?: PreisSektionCMS[];
 }
@@ -98,7 +97,6 @@ export async function getPriceLists(): Promise<PriceList[]> {
       _id,
       category,
       updatedAt,
-      pdf { asset->{ url } },
       sektionen[] {
         titel,
         zeilen[] { bezeichnung, preis, einheit, hinweis }
