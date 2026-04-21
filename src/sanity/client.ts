@@ -73,6 +73,7 @@ export async function getGalleryImages(category?: string): Promise<GalleryImage[
 }
 
 export interface PreisZeileCMS {
+  code?: string;
   bezeichnung: string;
   preis?: string;
   einheit?: string;
@@ -99,7 +100,7 @@ export async function getPriceLists(): Promise<PriceList[]> {
       updatedAt,
       sektionen[] {
         titel,
-        zeilen[] { bezeichnung, preis, einheit, hinweis }
+        zeilen[] { code, bezeichnung, preis, einheit, hinweis }
       }
     }`
   );

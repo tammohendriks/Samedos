@@ -2,6 +2,7 @@ import { useFormValue } from 'sanity';
 import type { StringInputProps } from 'sanity';
 
 interface PreisZeile {
+  code?: string;
   bezeichnung?: string;
   preis?: string;
   einheit?: string;
@@ -35,9 +36,20 @@ function escapeHtml(str: string): string {
     .replace(/"/g, '&quot;');
 }
 
+const extraColHeader: Record<string, string | null> = {
+  'g-untersuchungen': 'Code',
+  'sonderuntersuchungen': 'Untersuchung',
+};
+
+const bezeichnungHeader: Record<string, string> = {
+  'labor': 'Laborleistung',
+};
+
 function generatePrintHTML(category: string, sektionen: PreisSektion[]): string {
   const label = categoryLabels[category] ?? category;
   const desc = categoryDescs[category] ?? '';
+  const extraHeader = extraColHeader[category] ?? null;
+  const firstColHeader = bezeichnungHeader[category] ?? 'Bezeichnung';
 
   const tableBlocks = sektionen
     .map((sektion) => {
@@ -46,12 +58,20 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
           const preisCell = zeile.preis
             ? `${escapeHtml(zeile.preis)}${zeile.einheit ? `<span class="einheit"> ${escapeHtml(zeile.einheit)}</span>` : ''}`
             : `<span class="hinweis">${escapeHtml(zeile.hinweis ?? '–')}</span>`;
+          const codeCell = extraHeader
+            ? `<td class="td-code">${escapeHtml(zeile.code ?? '')}</td>`
+            : '';
           return `<tr class="${i % 2 === 1 ? 'alt' : ''}">
+            ${codeCell}
             <td>${escapeHtml(zeile.bezeichnung ?? '')}</td>
             <td class="td-right">${preisCell}</td>
           </tr>`;
         })
         .join('\n');
+
+      const extraTh = extraHeader
+        ? `<th class="th-code">${escapeHtml(extraHeader)}</th>`
+        : '';
 
       return `
       <div class="section">
@@ -61,7 +81,8 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
         <table>
           <thead>
             <tr>
-              <th class="th-left">Bezeichnung</th>
+              ${extraTh}
+              <th class="th-left">${escapeHtml(firstColHeader)}</th>
               <th class="th-right">Preis (netto)</th>
             </tr>
           </thead>
@@ -118,8 +139,10 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
     th { font-weight: 600; color: #142B49; padding: 5pt 8pt; border: .5pt solid #ccc; background: #f8fafc; }
     .th-left { text-align: left; }
     .th-right { text-align: right; white-space: nowrap; }
+    .th-code { text-align: left; white-space: nowrap; width: 56pt; }
     td { padding: 5pt 8pt; border: .5pt solid #ccc; color: #444; }
     .td-right { text-align: right; font-weight: 500; color: #142B49; white-space: nowrap; }
+    .td-code { white-space: nowrap; width: 56pt; font-size: 8pt; color: #666; font-family: monospace; }
     .einheit { font-size: 7.5pt; color: #888; font-weight: 400; }
     .hinweis { font-weight: 400; color: #888; }
     tr.alt { background: #f8fafc; }

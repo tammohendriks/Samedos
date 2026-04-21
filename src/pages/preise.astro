@@ -134,7 +134,7 @@ const tabs = [
             Als PDF speichern
           </button>
         </div>
-        <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="standard" />
+        <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" />
         <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Kombi-Preise gelten bei gleichzeitiger Durchführung.</p>
       </div>
 
@@ -153,7 +153,7 @@ const tabs = [
             Als PDF speichern
           </button>
         </div>
-        <PreisTabelle daten={tabelleFor('sonderuntersuchungen', sonderuntersuchungen)} modus="standard" />
+        <PreisTabelle daten={tabelleFor('sonderuntersuchungen', sonderuntersuchungen)} modus="sonderuntersuchungen" />
         <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Preise auf Anfrage individuell anpassbar.</p>
       </div>
 
@@ -172,7 +172,7 @@ const tabs = [
             Als PDF speichern
           </button>
         </div>
-        <PreisTabelle daten={tabelleFor('labor', labor)} modus="standard" />
+        <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" />
         <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
       </div>
 

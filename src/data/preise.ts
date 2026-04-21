@@ -1,4 +1,5 @@
 export interface PreisZeile {
+  code?: string;
   bezeichnung: string;
   preis?: string;
   einheit?: string;
