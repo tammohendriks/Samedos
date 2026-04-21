@@ -15,7 +15,6 @@ export default defineConfig({
             S.documentTypeListItem('teamMember').title('Team'),
             S.documentTypeListItem('jobPosting').title('Stellenanzeigen'),
             S.documentTypeListItem('priceList').title('Preislisten'),
-            S.documentTypeListItem('galleryImage').title('Galerie & Fotos'),
             S.documentListItem()
               .title('Website-Einstellungen')
               .id('siteSettings')

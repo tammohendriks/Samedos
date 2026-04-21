@@ -1,22 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Slideshow from '../components/Slideshow.astro';
-import { getTeamMembers, getGalleryImages } from '../sanity/client';
+import { getTeamMembers } from '../sanity/client';
 
-const [team, sanityGallery] = await Promise.all([getTeamMembers(), getGalleryImages()]);
-
-const localFallbackImages = [
-  { src: '/images/gallery/ueber-uns.jpg', alt: 'Das Samedos-Team' },
-  { src: '/images/gallery/ueber-uns-1.jpg', alt: 'Einblick in die Praxis' },
-  { src: '/images/gallery/ueber-uns-2.jpg', alt: 'Einblick in die Praxis' },
-  { src: '/images/gallery/leistungen.jpg', alt: 'Arbeitsmedizinische Leistungen' },
-  { src: '/images/gallery/leistungen-1.jpg', alt: 'Untersuchung' },
-  { src: '/images/gallery/leistungen-2.jpg', alt: 'Untersuchung' },
-];
-
-const galleryImages = sanityGallery.length > 0
-  ? sanityGallery.map((img) => ({ src: img.image.asset.url, alt: img.alt }))
-  : localFallbackImages;
+const team = await getTeamMembers();
 
 const fallbackTeam = [
   { name: 'Jörg', position: 'Gründer & Geschäftsführer', photo: '/images/team/joerg-janssen.png' },
@@ -108,21 +94,6 @@ const fallbackTeam = [
           </div>
         );
       })()}
-    </div>
-  </section>
-
-  <!-- Galerie / Diashow -->
-  <section class="py-16">
-    <div class="max-w-[1200px] mx-auto px-6">
-      <div class="mb-8" data-animate>
-        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
-          Einblicke
-        </p>
-        <h2>Das sind wir!</h2>
-      </div>
-      <div data-animate data-delay="1">
-        <Slideshow images={galleryImages} id="gallery-slideshow" />
-      </div>
     </div>
   </section>
 
