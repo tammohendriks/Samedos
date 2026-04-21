@@ -80,11 +80,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <!-- Kontaktformular -->
         <div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="2">
           <h2 class="text-[1.4rem] mb-6">Nachricht senden</h2>
-          <form
-            name="kontakt"
-            method="POST"
-            class="space-y-5"
-          >
+
+          <!-- Erfolgsmeldung -->
+          <div id="form-success" class="hidden text-center py-10">
+            <div class="w-14 h-14 bg-mint-soft rounded-full grid place-items-center mx-auto mb-4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-7 h-7 text-mint">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            </div>
+            <h3 class="text-[1.2rem] mb-2">Nachricht gesendet!</h3>
+            <p class="text-muted text-[0.95rem]">Vielen Dank — wir melden uns so schnell wie möglich bei Ihnen.</p>
+          </div>
+
+          <!-- Fehlermeldung -->
+          <div id="form-error" class="hidden mb-5 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-[0.9rem]">
+            Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder schreiben Sie uns direkt an <a href="mailto:info@samedos.de" class="underline">info@samedos.de</a>.
+          </div>
+
+          <form id="kontakt-form" method="POST" action="/api/kontakt" class="space-y-5">
             <!-- Honeypot -->
             <input type="text" name="_honeypot" class="hidden" tabindex="-1" autocomplete="off" />
 
@@ -163,10 +176,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </div>
 
             <button
+              id="submit-btn"
               type="submit"
-              class="w-full inline-flex items-center justify-center gap-2 px-[22px] py-3.5 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+              class="w-full inline-flex items-center justify-center gap-2 px-[22px] py-3.5 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)] disabled:opacity-60 disabled:pointer-events-none"
             >
-              Nachricht senden →
+              <span id="submit-label">Nachricht senden →</span>
+              <svg id="submit-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="32" stroke-dashoffset="12"/>
+              </svg>
             </button>
 
             <p class="text-muted text-[0.82rem] text-center">
@@ -259,3 +276,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </section>
 
 </BaseLayout>
+
+<script>
+  const form = document.getElementById('kontakt-form') as HTMLFormElement;
+  const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const label = document.getElementById('submit-label')!;
+  const spinner = document.getElementById('submit-spinner')!;
+  const success = document.getElementById('form-success')!;
+  const errorBox = document.getElementById('form-error')!;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    label.textContent = 'Wird gesendet…';
+    spinner.classList.remove('hidden');
+    errorBox.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/kontakt', { method: 'POST', body: new FormData(form) });
+      const json = await res.json();
+
+      if (json.ok) {
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+      } else {
+        throw new Error();
+      }
+    } catch {
+      errorBox.classList.remove('hidden');
+      btn.disabled = false;
+      label.textContent = 'Nachricht senden →';
+      spinner.classList.add('hidden');
+    }
+  });
+</script>
