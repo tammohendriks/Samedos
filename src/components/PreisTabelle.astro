@@ -1,0 +1,88 @@
+---
+import type { PreisTabelleDaten } from '../data/preise';
+
+interface Props {
+  daten: PreisTabelleDaten;
+  /** Extra column headers — falls undefined, nur Bezeichnung + Preis */
+  spalten?: string[];
+  /** Kategorie-ID für die Labor-Sonderspalten */
+  modus?: 'standard' | 'labor' | 'impfungen';
+}
+
+const { daten, modus = 'standard' } = Astro.props;
+---
+
+<div class="mt-6 space-y-8 preistabelle">
+  {daten.sektionen.map((sektion) => (
+    <div>
+      <div class="bg-navy/5 border-l-4 border-mint px-4 py-2 mb-0 rounded-tr-lg">
+        <p class="font-heading font-semibold text-navy text-[0.9rem] tracking-wide">{sektion.titel}</p>
+      </div>
+      <div class="border border-border rounded-b-xl overflow-x-auto">
+        <table class="w-full text-[0.9rem] border-collapse">
+          <colgroup>
+            <col class="w-full" />
+            {modus === 'labor' && <col class="w-36" />}
+            {modus === 'labor' && <col class="w-36" />}
+            {modus === 'impfungen' && <col class="w-44" />}
+            {modus === 'impfungen' && <col class="w-44" />}
+            {(modus === 'standard' || modus === 'impfungen' || modus === 'labor') && <col class="w-36" />}
+          </colgroup>
+          <thead>
+            {modus === 'standard' && (
+              <tr class="border-b border-border bg-bg-soft">
+                <th class="text-left px-4 py-2.5 font-semibold text-navy">Bezeichnung</th>
+                <th class="text-right px-4 py-2.5 font-semibold text-navy whitespace-nowrap">Preis (netto)</th>
+              </tr>
+            )}
+            {modus === 'labor' && (
+              <tr class="border-b border-border bg-bg-soft">
+                <th class="text-left px-4 py-2.5 font-semibold text-navy">Leistung</th>
+                <th class="text-right px-4 py-2.5 font-semibold text-navy whitespace-nowrap">Einkauf</th>
+                <th class="text-right px-4 py-2.5 font-semibold text-navy whitespace-nowrap">Verkauf</th>
+                <th class="text-left px-4 py-2.5 font-semibold text-navy">Hinweis</th>
+              </tr>
+            )}
+            {modus === 'impfungen' && (
+              <tr class="border-b border-border bg-bg-soft">
+                <th class="text-left px-4 py-2.5 font-semibold text-navy">Impfstoff / Indikation</th>
+                <th class="text-right px-4 py-2.5 font-semibold text-navy whitespace-nowrap">Preis/Dosis</th>
+                <th class="text-right px-4 py-2.5 font-semibold text-navy whitespace-nowrap">ab 10 Dosen</th>
+                <th class="text-left px-4 py-2.5 font-semibold text-navy">Hinweis</th>
+              </tr>
+            )}
+          </thead>
+          <tbody>
+            {sektion.zeilen.map((zeile, i) => (
+              <tr class={`border-b border-border last:border-0 ${i % 2 === 0 ? '' : 'bg-bg-soft/50'}`}>
+                <td class="px-4 py-2.5 text-muted">{zeile.bezeichnung}</td>
+                {modus === 'standard' && (
+                  <td class="px-4 py-2.5 text-right font-medium text-navy whitespace-nowrap">
+                    {zeile.preis
+                      ? <>{zeile.preis}{zeile.einheit ? <span class="text-muted font-normal text-[0.8rem] ml-1">{zeile.einheit}</span> : ''}</>
+                      : <span class="text-muted font-normal">{zeile.hinweis ?? '–'}</span>
+                    }
+                  </td>
+                )}
+                {modus === 'labor' && (
+                  <>
+                    <td class="px-4 py-2.5 text-right font-medium text-navy whitespace-nowrap">{zeile.preis ?? '–'}</td>
+                    <td class="px-4 py-2.5 text-right font-medium text-navy whitespace-nowrap">{zeile.einheit ?? '–'}</td>
+                    <td class="px-4 py-2.5 text-muted text-[0.82rem]">{zeile.hinweis ?? ''}</td>
+                  </>
+                )}
+                {modus === 'impfungen' && (
+                  <>
+                    <td class="px-4 py-2.5 text-right font-medium text-navy whitespace-nowrap">{zeile.preis ?? '–'}</td>
+                    <td class="px-4 py-2.5 text-right text-muted whitespace-nowrap">{zeile.einheit ?? '–'}</td>
+                    <td class="px-4 py-2.5 text-muted text-[0.82rem]">{zeile.hinweis ?? ''}</td>
+                  </>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  ))}
+</div>

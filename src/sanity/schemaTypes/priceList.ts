@@ -10,6 +10,7 @@ export const priceList = defineType({
       name: 'category',
       title: 'Kategorie',
       type: 'string',
+      readOnly: true,
       options: {
         list: [
           { title: 'G-Untersuchungen', value: 'g-untersuchungen' },
@@ -22,8 +23,70 @@ export const priceList = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'sektionen',
+      title: 'Preisabschnitte',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'preisSektion',
+          title: 'Abschnitt',
+          fields: [
+            defineField({
+              name: 'titel',
+              title: 'Titel',
+              type: 'string',
+              validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'zeilen',
+              title: 'Preiszeilen',
+              type: 'array',
+              of: [
+                {
+                  type: 'object',
+                  name: 'preisZeile',
+                  title: 'Zeile',
+                  fields: [
+                    defineField({
+                      name: 'bezeichnung',
+                      title: 'Bezeichnung',
+                      type: 'string',
+                      validation: (r) => r.required(),
+                    }),
+                    defineField({
+                      name: 'preis',
+                      title: 'Preis (z.B. "94,07 €")',
+                      type: 'string',
+                    }),
+                    defineField({
+                      name: 'einheit',
+                      title: 'Einheit (z.B. "pro Stunde")',
+                      type: 'string',
+                    }),
+                    defineField({
+                      name: 'hinweis',
+                      title: 'Hinweis (z.B. "auf Anfrage")',
+                      type: 'string',
+                    }),
+                  ],
+                  preview: {
+                    select: { title: 'bezeichnung', subtitle: 'preis' },
+                  },
+                },
+              ],
+            }),
+          ],
+          preview: {
+            select: { title: 'titel' },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'pdf',
-      title: 'PDF-Datei',
+      title: 'PDF-Datei (optional)',
+      description: 'Alternativ zum Online-Bearbeiten: PDF hochladen (ersetzt die Tabelle durch einen Download-Link)',
       type: 'file',
       options: { accept: '.pdf' },
     }),

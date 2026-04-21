@@ -72,16 +72,38 @@ export async function getGalleryImages(category?: string): Promise<GalleryImage[
   );
 }
 
+export interface PreisZeileCMS {
+  bezeichnung: string;
+  preis?: string;
+  einheit?: string;
+  hinweis?: string;
+}
+
+export interface PreisSektionCMS {
+  titel: string;
+  zeilen: PreisZeileCMS[];
+}
+
 export interface PriceList {
   _id: string;
   category: 'g-untersuchungen' | 'sonderuntersuchungen' | 'labor' | 'impfungen';
   pdf?: { asset: { url: string } };
   updatedAt?: string;
+  sektionen?: PreisSektionCMS[];
 }
 
 export async function getPriceLists(): Promise<PriceList[]> {
   return sanityClient.fetch(
-    `*[_type == "priceList"] { _id, category, updatedAt, pdf { asset->{ url } } }`
+    `*[_type == "priceList"] {
+      _id,
+      category,
+      updatedAt,
+      pdf { asset->{ url } },
+      sektionen[] {
+        titel,
+        zeilen[] { bezeichnung, preis, einheit, hinweis }
+      }
+    }`
   );
 }
 

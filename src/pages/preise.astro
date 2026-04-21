@@ -1,9 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PreisTabelle from '../components/PreisTabelle.astro';
 import { getPriceLists } from '../sanity/client';
+import { gUntersuchungen, sonderuntersuchungen, labor } from '../data/preise';
+import type { PreisTabelleDaten } from '../data/preise';
 
 const priceLists = await getPriceLists();
+
 const pdfFor = (cat: string) => priceLists.find(p => p.category === cat)?.pdf?.asset?.url ?? null;
+
+const cmsTabelle = (cat: string): PreisTabelleDaten | null => {
+  const entry = priceLists.find(p => p.category === cat);
+  if (entry?.sektionen?.length) return { sektionen: entry.sektionen };
+  return null;
+};
+
+const tabelleFor = (cat: string, fallback: PreisTabelleDaten): PreisTabelleDaten =>
+  cmsTabelle(cat) ?? fallback;
+
+// Auf false setzen um die Preisliste zu verbergen und stattdessen den Anfrage-Button zu zeigen
+const preislisteAktiv = false;
 
 const tabs = [
   { id: 'g-untersuchungen', label: 'G-Untersuchungen' },
@@ -31,10 +47,63 @@ const tabs = [
   </section>
 
   <section class="py-20">
-    <div class="max-w-[1200px] mx-auto px-6">
 
+    <!-- Deckblatt (nur im Druck sichtbar) -->
+    <div id="print-cover" style="display:none; box-sizing:border-box; overflow:hidden; position:relative; background:#142B49;">
+      <div style="display:flex; flex-direction:column; height:100%; padding:2cm 1.5cm 1.5cm; position:relative; z-index:1;">
+
+        <!-- Logo + Tagline -->
+        <div>
+          <img src="/logo-new-white.svg" alt="SAMEDOS" style="height:50pt; width:auto; display:block;" />
+          <p style="font-family:sans-serif; color:#64c5ae; font-size:9pt; margin:5pt 0 0; letter-spacing:0.04em;">Arbeitsmedizin · Bremen</p>
+        </div>
+
+        <!-- Spacer -->
+        <div style="flex:1; min-height:60pt;"></div>
+
+        <!-- Haupttitel -->
+        <div>
+          <p style="font-family:sans-serif; font-weight:700; font-size:8pt; color:#64c5ae; letter-spacing:0.16em; text-transform:uppercase; margin:0 0 12pt;">PREISLISTE 2026</p>
+          <h1 id="print-cover-title" style="font-family:sans-serif; font-weight:800; font-size:46pt; color:white; margin:0 0 20pt; line-height:1.05; max-width:380pt;">G-Untersuchungen</h1>
+          <div style="width:44pt; height:3pt; background:#64c5ae; margin-bottom:18pt;"></div>
+          <p id="print-cover-desc" style="font-family:sans-serif; font-size:10.5pt; color:rgba(255,255,255,0.72); line-height:1.65; margin:0; max-width:310pt;">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
+        </div>
+
+        <!-- Spacer -->
+        <div style="flex:1; min-height:40pt;"></div>
+
+        <!-- Kontakt Footer -->
+        <div style="border-top:0.5pt solid rgba(255,255,255,0.18); padding-top:14pt;">
+          <p style="font-family:sans-serif; font-size:8pt; color:rgba(255,255,255,0.55); margin:0 0 2pt;">Samedos GmbH · Timmersloher Straße 82, 28215 Bremen</p>
+          <p style="font-family:sans-serif; font-size:8pt; color:rgba(255,255,255,0.55); margin:0 0 5pt;">Telefon 0421 63997761 · info@samedos.de · www.samedos.de</p>
+          <p style="font-family:sans-serif; font-size:8pt; font-weight:600; color:#64c5ae; margin:0;">Stand: April 2026</p>
+        </div>
+
+      </div>
+      <!-- Dekorativer Kreis -->
+      <div style="position:absolute; right:-60pt; bottom:60pt; width:230pt; height:230pt; border-radius:50%; background:rgba(41,70,107,0.55); z-index:0;"></div>
+      <div style="position:absolute; right:-100pt; bottom:-50pt; width:290pt; height:290pt; border-radius:50%; background:rgba(41,70,107,0.35); z-index:0;"></div>
+    </div>
+
+    <div id="print-content-wrapper" class="max-w-[1200px] mx-auto px-6">
+
+      <!-- Print-only header (hidden on screen) -->
+      <div id="print-header" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:12pt; border-bottom:1.5pt solid #142B49; margin-bottom:18pt;">
+          <img src="/logo-new.svg" alt="Samedos" style="height:44pt; width:auto;" />
+          <div style="text-align:right; font-size:8.5pt; color:#555; line-height:1.7; font-family:sans-serif;">
+            <p id="print-category-label" style="font-weight:700; font-size:11pt; color:#142B49; margin:0 0 3pt;">Preisübersicht</p>
+            <p style="margin:0;">Alle Preise zzgl. MwSt. &middot; Stand: April 2026</p>
+            <p style="margin:0;">Samedos GmbH &middot; Timmersloher Str. 82 &middot; 28215 Bremen</p>
+            <p style="margin:0;">info@samedos.de &middot; 0421 63997761</p>
+          </div>
+        </div>
+      </div>
+
+      {preislisteAktiv ? (
+      <Fragment>
       <!-- Tab navigation -->
-      <div class="flex flex-wrap gap-2 mb-10 border-b border-border pb-1" role="tablist" data-animate>
+      <div class="flex flex-wrap gap-2 mb-10 border-b border-border pb-1 no-print" role="tablist" data-animate>
         {tabs.map((tab, i) => (
           <button
             role="tab"
@@ -52,92 +121,348 @@ const tabs = [
         ))}
       </div>
 
-      <!-- Tab panels -->
-      {[
-        { id: 'g-untersuchungen',    heading: 'G-Untersuchungen',           desc: 'Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.' },
-        { id: 'sonderuntersuchungen', heading: 'Sonderuntersuchungen',       desc: 'Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.' },
-        { id: 'labor',               heading: 'Laborleistungen',             desc: 'Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.' },
-        { id: 'impfungen',           heading: 'Impfungen',                   desc: 'Schutzimpfungen im betriebsärztlichen Kontext.' },
-      ].map((panel, i) => {
-        const pdf = pdfFor(panel.id);
-        return (
-          <div id={`panel-${panel.id}`} role="tabpanel" aria-labelledby={`tab-${panel.id}`} hidden={i !== 0 ? true : undefined}>
-            <div class="mb-6" data-animate>
-              <h2 class="text-[1.4rem] mb-2">{panel.heading}</h2>
-              <p class="text-muted">{panel.desc}</p>
+      <!-- G-Untersuchungen -->
+      <div id="panel-g-untersuchungen" role="tabpanel" aria-labelledby="tab-g-untersuchungen">
+        <div class="mb-6 no-print" data-animate>
+          <h2 class="text-[1.4rem] mb-2">G-Untersuchungen</h2>
+          <p class="text-muted">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+          {pdfFor('g-untersuchungen') ? (
+            <a
+              href={pdfFor('g-untersuchungen')!}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              PDF herunterladen ↓
+            </a>
+          ) : (
+            <button
+              data-print-tab="panel-g-untersuchungen"
+              class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Als PDF speichern
+            </button>
+          )}
+        </div>
+        <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="standard" />
+        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Kombi-Preise gelten bei gleichzeitiger Durchführung.</p>
+      </div>
+
+      <!-- Sonderuntersuchungen -->
+      <div id="panel-sonderuntersuchungen" role="tabpanel" aria-labelledby="tab-sonderuntersuchungen" hidden>
+        <div class="mb-6 no-print" data-animate>
+          <h2 class="text-[1.4rem] mb-2">Sonderuntersuchungen</h2>
+          <p class="text-muted">Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.</p>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+          {pdfFor('sonderuntersuchungen') ? (
+            <a
+              href={pdfFor('sonderuntersuchungen')!}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              PDF herunterladen ↓
+            </a>
+          ) : (
+            <button
+              data-print-tab="panel-sonderuntersuchungen"
+              class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Als PDF speichern
+            </button>
+          )}
+        </div>
+        <PreisTabelle daten={tabelleFor('sonderuntersuchungen', sonderuntersuchungen)} modus="standard" />
+        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Preise auf Anfrage individuell anpassbar.</p>
+      </div>
+
+      <!-- Labor -->
+      <div id="panel-labor" role="tabpanel" aria-labelledby="tab-labor" hidden>
+        <div class="mb-6 no-print" data-animate>
+          <h2 class="text-[1.4rem] mb-2">Laborleistungen</h2>
+          <p class="text-muted">Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.</p>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+          {pdfFor('labor') ? (
+            <a
+              href={pdfFor('labor')!}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              PDF herunterladen ↓
+            </a>
+          ) : (
+            <button
+              data-print-tab="panel-labor"
+              class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Als PDF speichern
+            </button>
+          )}
+        </div>
+        <PreisTabelle daten={tabelleFor('labor', labor)} modus="standard" />
+        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
+      </div>
+
+      <!-- Impfungen -->
+      <div id="panel-impfungen" role="tabpanel" aria-labelledby="tab-impfungen" hidden>
+        <div class="mb-6 no-print" data-animate>
+          <h2 class="text-[1.4rem] mb-2">Impfungen</h2>
+          <p class="text-muted">Schutzimpfungen im betriebsärztlichen Kontext.</p>
+        </div>
+        {cmsTabelle('impfungen') ? (
+          <>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+              {pdfFor('impfungen') ? (
+                <a
+                  href={pdfFor('impfungen')!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+                >
+                  PDF herunterladen ↓
+                </a>
+              ) : (
+                <button
+                  data-print-tab="panel-impfungen"
+                  class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                  Als PDF speichern
+                </button>
+              )}
+              <a
+                href="mailto:info@samedos.de?subject=Anfrage Impfpreisliste"
+                class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border border-border text-navy font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:border-mint"
+              >
+                Per E-Mail anfordern →
+              </a>
             </div>
-            <div class="bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="1">
-              <div class="p-8 text-center text-muted">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mx-auto mb-4 text-mint opacity-60">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-                  <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-                </svg>
-                {pdf ? (
-                  <>
-                    <p class="font-medium text-navy mb-2">Preisliste verfügbar</p>
-                    <a
-                      href={pdf}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="mt-2 inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-                    >
-                      PDF herunterladen ↓
-                    </a>
-                  </>
-                ) : (
-                  <>
-                    <p class="font-medium text-navy mb-2">Preisliste auf Anfrage</p>
-                    <p class="text-[0.95rem] mb-5">Die vollständige Preisliste stellen wir gerne auf Anfrage zur Verfügung.</p>
-                    <a
-                      href={`mailto:info@samedos.de?subject=Preisanfrage ${panel.heading}`}
-                      class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-                    >
-                      Preisliste anfordern →
-                    </a>
-                  </>
-                )}
-              </div>
-            </div>
+            <PreisTabelle daten={cmsTabelle('impfungen')!} modus="standard" />
+            <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
+          </>
+        ) : (
+          <div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mb-4 text-mint opacity-60">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+            </svg>
+            {pdfFor('impfungen') ? (
+              <>
+                <p class="font-medium text-navy mb-2">Impfpreisliste verfügbar</p>
+                <a
+                  href={pdfFor('impfungen')!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+                >
+                  PDF herunterladen ↓
+                </a>
+              </>
+            ) : (
+              <>
+                <p class="font-medium text-navy mb-2">Impfpreise auf Anfrage</p>
+                <p class="text-muted text-[0.95rem] mb-5">Wir stellen Ihnen die aktuelle Impfpreisliste gerne auf Anfrage zur Verfügung.</p>
+                <a
+                  href="mailto:info@samedos.de?subject=Anfrage Impfpreisliste"
+                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+                >
+                  Preisliste anfordern →
+                </a>
+              </>
+            )}
           </div>
-        );
-      })}
+        )}
+      </div>
 
     </div>
+      </Fragment>
+      ) : (
+        <div class="flex flex-col items-center text-center py-10 max-w-lg mx-auto" data-animate>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mb-5 text-mint opacity-70">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+          </svg>
+          <h2 class="text-[1.3rem] mb-3">Preislisten auf Anfrage</h2>
+          <p class="text-muted text-[1rem] mb-7">
+            Unsere aktuellen Preislisten für G-Untersuchungen, Sonderuntersuchungen, Labor und Impfungen stellen wir Ihnen gerne auf Anfrage zur Verfügung.
+          </p>
+          <a
+            href="mailto:info@samedos.de?subject=Anfrage Preisliste"
+            class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+          >
+            Preisliste anfordern →
+          </a>
+        </div>
+      )}
+    </div><!-- /print-content-wrapper -->
   </section>
 
 </BaseLayout>
+
+<style is:global>
+  @media print {
+    /* margin: 0 entfernt Browser-eigene URL/Datum-Kopf- und Fußzeilen */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    /* Website-Chrome verstecken */
+    body > header,
+    #mobile-menu,
+    body > footer,
+    main > section:first-child,
+    .no-print {
+      display: none !important;
+    }
+
+    /* Section ohne Web-Padding */
+    main > section:last-child {
+      padding: 0 !important;
+    }
+
+    /* Deckblatt: volle Seite, dann Seitenumbruch */
+    #print-cover {
+      display: block !important;
+      height: 297mm;
+      width: 100%;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    /* Inhaltsbereich: eigene Ränder (da @page margin: 0) */
+    #print-content-wrapper {
+      padding: 1.5cm 1.5cm 2cm !important;
+      max-width: none !important;
+    }
+
+    /* Kompakter Header auf Inhaltsseiten */
+    #print-header {
+      display: block !important;
+    }
+
+    /* Nur aktives Tab-Panel */
+    [role="tabpanel"][hidden] { display: none !important; }
+    [role="tabpanel"]:not([hidden]) { display: block !important; }
+
+    /* Abschnittsüberschriften */
+    .preistabelle .border-l-4 {
+      border-left-width: 3pt !important;
+      background: #f4f7fa !important;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    /* Tabellen */
+    .preistabelle {
+      margin-top: 0 !important;
+    }
+    .preistabelle table {
+      border-collapse: collapse !important;
+      font-size: 9pt !important;
+      width: 100% !important;
+    }
+    .preistabelle th,
+    .preistabelle td {
+      border: 0.5pt solid #ccc !important;
+      padding: 5pt 8pt !important;
+    }
+    .preistabelle thead {
+      display: table-header-group !important;
+    }
+    .preistabelle tbody tr {
+      page-break-inside: avoid !important;
+    }
+    .preistabelle .space-y-8 > * + * {
+      margin-top: 16pt !important;
+    }
+
+    /* Fußnoten */
+    .preistabelle + p {
+      font-size: 7.5pt !important;
+      color: #666 !important;
+      margin-top: 6pt !important;
+    }
+  }
+</style>
 
 <script>
   const tabs = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
   const panels = document.querySelectorAll<HTMLElement>('[role="tabpanel"]');
 
+  const coverDescs: Record<string, string> = {
+    'panel-g-untersuchungen': 'Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.',
+    'panel-sonderuntersuchungen': 'Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.',
+    'panel-labor': 'Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.',
+    'panel-impfungen': 'Schutzimpfungen im betriebsärztlichen Kontext.',
+  };
+
+  function updatePrintMeta(tabLabel: string, panelId: string) {
+    const headerLabel = document.getElementById('print-category-label');
+    if (headerLabel) headerLabel.textContent = tabLabel;
+    const coverTitle = document.getElementById('print-cover-title');
+    if (coverTitle) coverTitle.textContent = tabLabel;
+    const coverDesc = document.getElementById('print-cover-desc');
+    if (coverDesc) coverDesc.textContent = coverDescs[panelId] ?? '';
+  }
+
+  function activateTab(targetId: string) {
+    tabs.forEach((t) => {
+      t.setAttribute('aria-selected', 'false');
+      t.classList.remove('border-mint', 'text-navy', 'bg-mint-soft');
+      t.classList.add('border-transparent', 'text-muted');
+    });
+
+    panels.forEach((p) => p.setAttribute('hidden', ''));
+
+    const tab = document.querySelector<HTMLButtonElement>(`[aria-controls="${targetId}"]`)!;
+    tab.setAttribute('aria-selected', 'true');
+    tab.classList.add('border-mint', 'text-navy', 'bg-mint-soft');
+    tab.classList.remove('border-transparent', 'text-muted');
+
+    const panel = document.getElementById(targetId)!;
+    panel.removeAttribute('hidden');
+
+    updatePrintMeta(tab.textContent?.trim() ?? 'Preisübersicht', targetId);
+
+    panel.querySelectorAll('[data-animate]').forEach((el) => {
+      el.classList.remove('in-view');
+      setTimeout(() => el.classList.add('in-view'), 50);
+    });
+  }
+
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
-      const targetId = tab.getAttribute('aria-controls')!;
-
-      tabs.forEach((t) => {
-        t.setAttribute('aria-selected', 'false');
-        t.classList.remove('border-mint', 'text-navy', 'bg-mint-soft');
-        t.classList.add('border-transparent', 'text-muted');
-      });
-
-      panels.forEach((p) => p.setAttribute('hidden', ''));
-
-      tab.setAttribute('aria-selected', 'true');
-      tab.classList.add('border-mint', 'text-navy', 'bg-mint-soft');
-      tab.classList.remove('border-transparent', 'text-muted');
-
-      const panel = document.getElementById(targetId)!;
-      panel.removeAttribute('hidden');
-
-      panel.querySelectorAll('[data-animate]').forEach((el) => {
-        el.classList.remove('in-view');
-        setTimeout(() => el.classList.add('in-view'), 50);
-      });
+      activateTab(tab.getAttribute('aria-controls')!);
     });
   });
 
-  // Trigger animation for visible panel on load
+  // Print buttons: aktiven Tab setzen, dann drucken
+  document.querySelectorAll<HTMLButtonElement>('.print-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const panelId = btn.getAttribute('data-print-tab')!;
+      activateTab(panelId);
+      setTimeout(() => window.print(), 100);
+    });
+  });
+
+  // Initiale Print-Metadaten für den ersten Tab setzen
+  const firstTab = document.querySelector<HTMLButtonElement>('.tab-btn[aria-selected="true"]');
+  if (firstTab) {
+    updatePrintMeta(firstTab.textContent?.trim() ?? 'Preisübersicht', 'panel-g-untersuchungen');
+  }
+
+  // Animationen für sichtbares Panel beim Laden
   document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-animate]').forEach((el) => {
     el.classList.add('in-view');
   });
