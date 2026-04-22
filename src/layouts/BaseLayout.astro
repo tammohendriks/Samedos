@@ -46,15 +46,8 @@ const {
       href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=League+Spartan:wght@600;700;800&display=optional"
       rel="stylesheet"
     />
-    <!-- Set overlay opaque before first paint if we just switched language -->
-    <script is:inline>
-      if (sessionStorage.getItem('lang-switch') === '1') {
-        document.documentElement.classList.add('lang-entering');
-      }
-    </script>
   </head>
   <body>
-    <div id="lang-overlay" aria-hidden="true"></div>
     <Header lang={lang} alternateHref={alternateHref} />
     <main>
       <slot />
@@ -76,30 +69,5 @@ const {
     );
     document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
 
-    // ── Language-switch transition ────────────────────────────────────────
-    const overlay = document.getElementById('lang-overlay') as HTMLElement;
-
-    if (sessionStorage.getItem('lang-switch') === '1') {
-      sessionStorage.removeItem('lang-switch');
-      // Give browser one frame to paint the opaque overlay, then fade out
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          overlay.style.transition = 'opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
-          overlay.style.opacity = '0';
-        });
-      });
-    }
-
-    document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const href = link.getAttribute('href')!;
-        sessionStorage.setItem('lang-switch', '1');
-        overlay.style.transition = 'opacity 0.25s cubic-bezier(0.4, 0, 1, 1)';
-        overlay.style.opacity = '1';
-        overlay.style.pointerEvents = 'all';
-        setTimeout(() => { window.location.href = href; }, 280);
-      });
-    });
   </script>
 </html>
