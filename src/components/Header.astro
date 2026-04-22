@@ -50,7 +50,7 @@ const showSwitcher = !!alternateHref;
     <nav class="flex items-center gap-6" aria-label="Hauptnavigation">
 
       {!isHome && (
-        <a href={homeHref} class="font-medium text-[0.95rem] text-navy transition-colors hover:text-mint hidden md:block">
+        <a href={homeHref} class="nav-home-link font-medium text-[0.95rem] text-navy transition-colors hover:text-mint hidden md:block">
           {homeLabel}
         </a>
       )}
@@ -158,7 +158,7 @@ const showSwitcher = !!alternateHref;
   </div>
 
   {!isHome && (
-    <a href={homeHref} class="text-navy font-heading font-bold text-[1.3rem] border-b border-border py-4 hover:text-mint transition-colors">
+    <a href={homeHref} class="nav-home-link text-navy font-heading font-bold text-[1.3rem] border-b border-border py-4 hover:text-mint transition-colors">
       {homeLabel}
     </a>
   )}
@@ -216,6 +216,19 @@ const showSwitcher = !!alternateHref;
     )}
   </div>
 </div>
+
+<style>
+  @keyframes nav-home-fade {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .nav-home-link {
+    animation: nav-home-fade 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-home-link { animation: none; }
+  }
+</style>
 
 <script is:inline>
 (function () {
