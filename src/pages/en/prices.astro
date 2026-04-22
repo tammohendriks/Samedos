@@ -53,21 +53,37 @@ const sonderTranslations: Record<string, string> = {
   'Führerscheingutachten (MPU-Vorbereitung)': "Driver's Licence Medical (MPU Preparation)",
 };
 
-function translateSonderuntersuchungen(data: PreisTabelleDaten): PreisTabelleDaten {
-  return {
-    spalten: ['Description', 'Price (net)'],
-    sektionen: data.sektionen.map((sektion: PreisSektion) => ({
-      titel: sonderTranslations[sektion.titel] ?? sektion.titel,
-      zeilen: sektion.zeilen.map((zeile) => ({
-        ...zeile,
-        bezeichnung: sonderTranslations[zeile.bezeichnung] ?? zeile.bezeichnung,
-        hinweis: zeile.hinweis === 'auf Anfrage' ? 'on request' : zeile.hinweis === 'Zuweisung extern' ? 'external referral' : zeile.hinweis,
-      })),
-    })),
-  };
+function translateHinweis(h?: string) {
+  if (h === 'auf Anfrage') return 'on request';
+  if (h === 'Zuweisung extern') return 'external referral';
+  return h;
 }
 
-const sonderEN = translateSonderuntersuchungen(tabelleFor('sonderuntersuchungen', sonderuntersuchungen));
+// Build translated Sonderuntersuchungen:
+// Prefers CMS-stored bezeichnungEN/titelEN fields (dynamic), falls back to static map.
+const sonderCMS = priceLists.find(p => p.category === 'sonderuntersuchungen');
+
+const sonderEN: PreisTabelleDaten = sonderCMS?.sektionen?.length
+  ? {
+      sektionen: sonderCMS.sektionen.map((sektion) => ({
+        titel: sektion.titelEN ?? sonderTranslations[sektion.titel] ?? sektion.titel,
+        zeilen: sektion.zeilen.map((zeile) => ({
+          ...zeile,
+          bezeichnung: zeile.bezeichnungEN ?? sonderTranslations[zeile.bezeichnung] ?? zeile.bezeichnung,
+          hinweis: translateHinweis(zeile.hinweis),
+        })),
+      })),
+    }
+  : {
+      sektionen: sonderuntersuchungen.sektionen.map((sektion: PreisSektion) => ({
+        titel: sonderTranslations[sektion.titel] ?? sektion.titel,
+        zeilen: sektion.zeilen.map((zeile) => ({
+          ...zeile,
+          bezeichnung: sonderTranslations[zeile.bezeichnung] ?? zeile.bezeichnung,
+          hinweis: translateHinweis(zeile.hinweis),
+        })),
+      })),
+    };
 
 const tabs = [
   { id: 'g-untersuchungen', label: 'G-Examinations' },
@@ -181,7 +197,7 @@ const tabs = [
             Save as PDF
           </button>
         </div>
-        <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" />
+        <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" lang="en" />
         <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Combined prices apply when examinations are carried out simultaneously.</p>
       </div>
 
@@ -200,7 +216,7 @@ const tabs = [
             Save as PDF
           </button>
         </div>
-        <PreisTabelle daten={sonderEN} modus="sonderuntersuchungen" />
+        <PreisTabelle daten={sonderEN} modus="sonderuntersuchungen" lang="en" />
         <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Prices are individually adjustable on request.</p>
       </div>
 
@@ -226,7 +242,7 @@ const tabs = [
             Save as PDF
           </button>
         </div>
-        <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" />
+        <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" lang="en" />
         <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT).</p>
       </div>
 
@@ -254,7 +270,7 @@ const tabs = [
                 Save as PDF
               </button>
             </div>
-            <PreisTabelle daten={cmsTabelle('impfungen')!} modus="standard" />
+            <PreisTabelle daten={cmsTabelle('impfungen')!} modus="standard" lang="en" />
             <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT).</p>
           </>
         ) : (
@@ -375,6 +391,8 @@ const tabs = [
       font-size: 7.5pt !important;
       color: #666 !important;
       margin-top: 6pt !important;
+      page-break-before: avoid !important;
+      break-before: avoid !important;
     }
   }
 </style>
@@ -438,9 +456,22 @@ const tabs = [
     });
   });
 
-  const firstTab = document.querySelector<HTMLButtonElement>('.tab-btn[aria-selected="true"]');
-  if (firstTab) {
-    updatePrintMeta(firstTab.textContent?.trim() ?? 'Price Overview', 'panel-g-untersuchungen');
+  // Hash-based tab activation (e.g. /en/prices#sonderuntersuchungen)
+  const hashMap: Record<string, string> = {
+    'sonderuntersuchungen': 'panel-sonderuntersuchungen',
+    'labor': 'panel-labor',
+    'impfungen': 'panel-impfungen',
+    'g-untersuchungen': 'panel-g-untersuchungen',
+  };
+  const hash = window.location.hash.replace('#', '');
+  const targetPanel = hashMap[hash];
+  if (targetPanel && document.getElementById(targetPanel)) {
+    activateTab(targetPanel);
+  } else {
+    const firstTab = document.querySelector<HTMLButtonElement>('.tab-btn[aria-selected="true"]');
+    if (firstTab) {
+      updatePrintMeta(firstTab.textContent?.trim() ?? 'Price Overview', 'panel-g-untersuchungen');
+    }
   }
 
   document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-animate]').forEach((el) => {

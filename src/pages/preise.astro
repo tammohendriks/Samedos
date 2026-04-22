@@ -325,6 +325,8 @@ const tabs = [
       font-size: 7.5pt !important;
       color: #666 !important;
       margin-top: 6pt !important;
+      page-break-before: avoid !important;
+      break-before: avoid !important;
     }
   }
 </style>
@@ -389,10 +391,23 @@ const tabs = [
     });
   });
 
-  // Initiale Print-Metadaten für den ersten Tab setzen
-  const firstTab = document.querySelector<HTMLButtonElement>('.tab-btn[aria-selected="true"]');
-  if (firstTab) {
-    updatePrintMeta(firstTab.textContent?.trim() ?? 'Preisübersicht', 'panel-g-untersuchungen');
+  // Hash-basierte Tab-Aktivierung (z.B. /preise#sonderuntersuchungen)
+  const hashMap: Record<string, string> = {
+    'sonderuntersuchungen': 'panel-sonderuntersuchungen',
+    'labor': 'panel-labor',
+    'impfungen': 'panel-impfungen',
+    'g-untersuchungen': 'panel-g-untersuchungen',
+  };
+  const hash = window.location.hash.replace('#', '');
+  const targetPanel = hashMap[hash];
+  if (targetPanel && document.getElementById(targetPanel)) {
+    activateTab(targetPanel);
+  } else {
+    // Initiale Print-Metadaten für den ersten Tab setzen
+    const firstTab = document.querySelector<HTMLButtonElement>('.tab-btn[aria-selected="true"]');
+    if (firstTab) {
+      updatePrintMeta(firstTab.textContent?.trim() ?? 'Preisübersicht', 'panel-g-untersuchungen');
+    }
   }
 
   // Animationen für sichtbares Panel beim Laden

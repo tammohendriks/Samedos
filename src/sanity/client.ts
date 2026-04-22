@@ -4,7 +4,7 @@ export const sanityClient = createClient({
   projectId: 'etmanjr2',
   dataset: 'production',
   apiVersion: '2026-04-20',
-  useCdn: true,
+  useCdn: !import.meta.env.DEV,
 });
 
 export interface TeamMember {
@@ -75,6 +75,7 @@ export async function getGalleryImages(category?: string): Promise<GalleryImage[
 export interface PreisZeileCMS {
   code?: string;
   bezeichnung: string;
+  bezeichnungEN?: string;
   preis?: string;
   einheit?: string;
   hinweis?: string;
@@ -82,6 +83,7 @@ export interface PreisZeileCMS {
 
 export interface PreisSektionCMS {
   titel: string;
+  titelEN?: string;
   zeilen: PreisZeileCMS[];
 }
 
@@ -100,7 +102,8 @@ export async function getPriceLists(): Promise<PriceList[]> {
       updatedAt,
       sektionen[] {
         titel,
-        zeilen[] { code, bezeichnung, preis, einheit, hinweis }
+        titelEN,
+        zeilen[] { code, bezeichnung, bezeichnungEN, preis, einheit, hinweis }
       }
     }`
   );

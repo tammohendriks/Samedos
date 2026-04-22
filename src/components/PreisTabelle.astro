@@ -4,16 +4,26 @@ import type { PreisTabelleDaten } from '../data/preise';
 interface Props {
   daten: PreisTabelleDaten;
   modus?: 'standard' | 'g-untersuchungen' | 'sonderuntersuchungen' | 'labor' | 'impfungen';
+  lang?: 'de' | 'en';
 }
 
-const { daten, modus = 'standard' } = Astro.props;
+const { daten, modus = 'standard', lang = 'de' } = Astro.props;
+const isEN = lang === 'en';
 
-const extraLinksHeader =
-  modus === 'g-untersuchungen' ? 'Code' :
-  modus === 'sonderuntersuchungen' ? 'Untersuchung' :
-  null;
+// Only show the code/extra column if at least one row actually has a code value
+const hasCode = daten.sektionen.some(s => s.zeilen.some(z => z.code));
 
-const bezeichnungHeader = modus === 'labor' ? 'Laborleistung' : 'Bezeichnung';
+const extraLinksHeader = hasCode
+  ? (modus === 'g-untersuchungen' ? 'Code'
+    : modus === 'sonderuntersuchungen' ? (isEN ? 'Examination' : 'Untersuchung')
+    : null)
+  : null;
+
+const bezeichnungHeader = isEN ? 'Description'
+  : modus === 'labor' ? 'Laborleistung'
+  : 'Bezeichnung';
+
+const preisHeader = isEN ? 'Price (net)' : 'Preis (netto)';
 ---
 
 <div class="mt-6 space-y-8 preistabelle">
@@ -35,7 +45,7 @@ const bezeichnungHeader = modus === 'labor' ? 'Laborleistung' : 'Bezeichnung';
                 <th class="text-left px-4 py-2.5 font-semibold text-navy whitespace-nowrap">{extraLinksHeader}</th>
               )}
               <th class="text-left px-4 py-2.5 font-semibold text-navy">{bezeichnungHeader}</th>
-              <th class="text-right px-4 py-2.5 font-semibold text-navy whitespace-nowrap">Preis (netto)</th>
+              <th class="text-right px-4 py-2.5 font-semibold text-navy whitespace-nowrap">{preisHeader}</th>
             </tr>
           </thead>
           <tbody>

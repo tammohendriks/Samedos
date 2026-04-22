@@ -38,6 +38,13 @@ export const priceList = defineType({
               validation: (r) => r.required(),
             }),
             defineField({
+              name: 'titelEN',
+              title: 'Titel (English)',
+              type: 'string',
+              description: 'Englische Übersetzung des Abschnittstitels (nur für Sonderuntersuchungen relevant)',
+              hidden: ({ document }) => (document as Record<string, unknown>)?.category !== 'sonderuntersuchungen',
+            }),
+            defineField({
               name: 'zeilen',
               title: 'Preiszeilen',
               type: 'array',
@@ -57,6 +64,13 @@ export const priceList = defineType({
                       name: 'bezeichnung',
                       title: 'Bezeichnung',
                       type: 'string',
+                    }),
+                    defineField({
+                      name: 'bezeichnungEN',
+                      title: 'Bezeichnung (English)',
+                      type: 'string',
+                      description: 'Englische Übersetzung (nur für Sonderuntersuchungen)',
+                      hidden: ({ document }) => (document as Record<string, unknown>)?.category !== 'sonderuntersuchungen',
                     }),
                     defineField({
                       name: 'preis',
