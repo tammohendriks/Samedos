@@ -17,7 +17,7 @@ const tabelleFor = (cat: string, fallback: PreisTabelleDaten): PreisTabelleDaten
   cmsTabelle(cat) ?? fallback;
 
 // Auf false setzen um die Preisliste zu verbergen und stattdessen den Anfrage-Button zu zeigen
-const preislisteAktiv = false;
+const preislisteAktiv = import.meta.env.PUBLIC_PREISLISTE_AKTIV === 'true';
 
 const tabs = [
   { id: 'g-untersuchungen', label: 'G-Untersuchungen' },

@@ -16,7 +16,7 @@ const cmsTabelle = (cat: string): PreisTabelleDaten | null => {
 const tabelleFor = (cat: string, fallback: PreisTabelleDaten): PreisTabelleDaten =>
   cmsTabelle(cat) ?? fallback;
 
-const preislisteAktiv = false;
+const preislisteAktiv = import.meta.env.PUBLIC_PREISLISTE_AKTIV === 'true';
 
 // Translation map for Sonderuntersuchungen items
 const sonderTranslations: Record<string, string> = {
