@@ -332,7 +332,9 @@ const tabs = [
 </style>
 
 <script>
+  function initPreise() {
   const tabs = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+  if (!tabs.length) return;
   const panels = document.querySelectorAll<HTMLElement>('[role="tabpanel"]');
 
   const coverDescs: Record<string, string> = {
@@ -414,4 +416,8 @@ const tabs = [
   document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-animate]').forEach((el) => {
     el.classList.add('in-view');
   });
+  } // end initPreise
+
+  initPreise();
+  document.addEventListener('astro:after-swap', initPreise);
 </script>

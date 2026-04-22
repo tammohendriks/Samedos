@@ -57,20 +57,24 @@ const {
     <Footer lang={lang} />
   </body>
   <script>
-    // Re-runs after every View Transitions navigation
-    document.addEventListener('astro:page-load', () => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('in-view');
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.12 }
-      );
-      document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
+    // Initial load: IntersectionObserver for scroll-in animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
+
+    // View Transitions: mark all elements visible immediately after DOM swap
+    // so the new-page screenshot (used for cross-fade) shows full content
+    document.addEventListener('astro:after-swap', () => {
+      document.querySelectorAll('[data-animate]').forEach((el) => el.classList.add('in-view'));
     });
   </script>
 </html>

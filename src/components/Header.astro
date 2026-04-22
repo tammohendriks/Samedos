@@ -218,64 +218,57 @@ const showSwitcher = !!alternateHref;
 </div>
 
 
-<script is:inline>
-(function () {
+<script>
+function initHeader() {
   // ── Desktop Dropdown ──────────────────────────────────────────────
-  var btn = document.getElementById('leistungen-btn');
-  var panel = document.getElementById('leistungen-panel');
-  var chevron = document.getElementById('leistungen-chevron');
-  var container = document.getElementById('leistungen-dropdown');
-  var isOpen = false;
+  const btn = document.getElementById('leistungen-btn');
+  const panel = document.getElementById('leistungen-panel');
+  const chevron = document.getElementById('leistungen-chevron');
+  const container = document.getElementById('leistungen-dropdown');
+  let isOpen = false;
 
   function openDropdown() {
     isOpen = true;
-    btn.setAttribute('aria-expanded', 'true');
-    panel.classList.remove('opacity-0', 'invisible', 'translate-y-1', 'pointer-events-none');
-    panel.classList.add('opacity-100', 'visible', 'translate-y-0');
-    chevron.style.transform = 'rotate(180deg)';
+    btn!.setAttribute('aria-expanded', 'true');
+    panel!.classList.remove('opacity-0', 'invisible', 'translate-y-1', 'pointer-events-none');
+    panel!.classList.add('opacity-100', 'visible', 'translate-y-0');
+    chevron!.style.transform = 'rotate(180deg)';
   }
 
   function closeDropdown() {
     isOpen = false;
-    btn.setAttribute('aria-expanded', 'false');
-    panel.classList.add('opacity-0', 'invisible', 'translate-y-1', 'pointer-events-none');
-    panel.classList.remove('opacity-100', 'visible', 'translate-y-0');
-    chevron.style.transform = '';
+    btn!.setAttribute('aria-expanded', 'false');
+    panel!.classList.add('opacity-0', 'invisible', 'translate-y-1', 'pointer-events-none');
+    panel!.classList.remove('opacity-100', 'visible', 'translate-y-0');
+    chevron!.style.transform = '';
   }
 
   if (btn && panel) {
-    // Hover
-    container.addEventListener('mouseenter', openDropdown);
-    container.addEventListener('mouseleave', closeDropdown);
+    container!.addEventListener('mouseenter', openDropdown);
+    container!.addEventListener('mouseleave', closeDropdown);
+    btn.addEventListener('click', () => { isOpen ? closeDropdown() : openDropdown(); });
 
-    // Click/keyboard toggle
-    btn.addEventListener('click', function () { isOpen ? closeDropdown() : openDropdown(); });
-
-    // Keyboard: Escape closes
-    document.addEventListener('keydown', function (e) {
+    document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && isOpen) { closeDropdown(); btn.focus(); }
     });
-
-    // Close when clicking outside
-    document.addEventListener('click', function (e) {
-      if (!container.contains(e.target)) closeDropdown();
+    document.addEventListener('click', (e) => {
+      if (!container!.contains(e.target as Node)) closeDropdown();
     });
 
-    // Arrow key navigation inside panel
-    btn.addEventListener('keydown', function (e) {
+    btn.addEventListener('keydown', (e) => {
       if ((e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') && !isOpen) {
         e.preventDefault();
         openDropdown();
-        var first = panel.querySelector('a');
+        const first = panel.querySelector('a') as HTMLElement | null;
         if (first) first.focus();
       }
     });
 
-    var menuItems = panel.querySelectorAll('a');
-    menuItems.forEach(function (item, idx) {
-      item.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowDown') { e.preventDefault(); if (menuItems[idx + 1]) menuItems[idx + 1].focus(); }
-        if (e.key === 'ArrowUp')   { e.preventDefault(); if (menuItems[idx - 1]) menuItems[idx - 1].focus(); else btn.focus(); }
+    const menuItems = panel.querySelectorAll<HTMLElement>('a');
+    menuItems.forEach((item, idx) => {
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); menuItems[idx + 1]?.focus(); }
+        if (e.key === 'ArrowUp')   { e.preventDefault(); menuItems[idx - 1] ? menuItems[idx - 1].focus() : btn.focus(); }
         if (e.key === 'Escape')    { closeDropdown(); btn.focus(); }
         if (e.key === 'Tab')       { closeDropdown(); }
       });
@@ -283,52 +276,54 @@ const showSwitcher = !!alternateHref;
   }
 
   // ── Mobile Menu ───────────────────────────────────────────────────
-  var toggle = document.getElementById('menu-toggle');
-  var mobileMenu = document.getElementById('mobile-menu');
-  var closeBtn = document.getElementById('menu-close');
-  var bar1 = document.getElementById('bar1');
-  var bar2 = document.getElementById('bar2');
-  var bar3 = document.getElementById('bar3');
+  const toggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const closeBtn = document.getElementById('menu-close');
+  const bar1 = document.getElementById('bar1');
+  const bar2 = document.getElementById('bar2');
+  const bar3 = document.getElementById('bar3');
 
   function openMenu() {
-    mobileMenu.classList.remove('translate-x-full');
-    mobileMenu.setAttribute('aria-hidden', 'false');
+    mobileMenu!.classList.remove('translate-x-full');
+    mobileMenu!.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    bar1.style.transform = 'translateY(7px) rotate(45deg)';
-    bar2.style.opacity = '0';
-    bar3.style.transform = 'translateY(-7px) rotate(-45deg)';
+    bar1!.style.transform = 'translateY(7px) rotate(45deg)';
+    bar2!.style.opacity = '0';
+    bar3!.style.transform = 'translateY(-7px) rotate(-45deg)';
   }
 
   function closeMobileMenu() {
-    mobileMenu.classList.add('translate-x-full');
-    mobileMenu.setAttribute('aria-hidden', 'true');
+    mobileMenu!.classList.add('translate-x-full');
+    mobileMenu!.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    bar1.style.transform = '';
-    bar2.style.opacity = '';
-    bar3.style.transform = '';
+    bar1!.style.transform = '';
+    bar2!.style.opacity = '';
+    bar3!.style.transform = '';
   }
 
   if (toggle) toggle.addEventListener('click', openMenu);
   if (closeBtn) closeBtn.addEventListener('click', closeMobileMenu);
-
   if (mobileMenu) {
-    mobileMenu.querySelectorAll('a').forEach(function (link) {
+    mobileMenu.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', closeMobileMenu);
     });
   }
 
   // ── Mobile Leistungen Accordion ───────────────────────────────────
-  var mobileLeistungenBtn = document.getElementById('mobile-leistungen-btn');
-  var mobileLeistungenPanel = document.getElementById('mobile-leistungen-panel');
-  var mobileLeistungenChevron = document.getElementById('mobile-leistungen-chevron');
+  const mobileLeistungenBtn = document.getElementById('mobile-leistungen-btn');
+  const mobileLeistungenPanel = document.getElementById('mobile-leistungen-panel');
+  const mobileLeistungenChevron = document.getElementById('mobile-leistungen-chevron');
 
   if (mobileLeistungenBtn && mobileLeistungenPanel) {
-    mobileLeistungenBtn.addEventListener('click', function () {
-      var expanded = mobileLeistungenBtn.getAttribute('aria-expanded') === 'true';
+    mobileLeistungenBtn.addEventListener('click', () => {
+      const expanded = mobileLeistungenBtn.getAttribute('aria-expanded') === 'true';
       mobileLeistungenBtn.setAttribute('aria-expanded', String(!expanded));
       mobileLeistungenPanel.classList.toggle('hidden');
-      mobileLeistungenChevron.style.transform = expanded ? '' : 'rotate(180deg)';
+      mobileLeistungenChevron!.style.transform = expanded ? '' : 'rotate(180deg)';
     });
   }
-})();
+}
+
+initHeader();
+document.addEventListener('astro:after-swap', initHeader);
 </script>
