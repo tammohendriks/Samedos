@@ -44,7 +44,7 @@ const showSwitcher = !!alternateHref;
   <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between py-3">
 
     <a href={homeHref} class="flex items-center gap-2 shrink-0" aria-label="Samedos – Startseite">
-      <img src="/logo-new.svg" alt="Samedos" class="h-24 w-auto" />
+      <img src="/logo-new.svg" alt="Samedos" class="h-24 w-auto" transition:name="nav-logo" />
     </a>
 
     <nav class="flex items-center gap-6" aria-label="Hauptnavigation">
@@ -118,7 +118,7 @@ const showSwitcher = !!alternateHref;
 
       <a
         href={isEnglish ? '/en/contact' : '/kontakt'}
-        class="hidden md:inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+        class="hidden md:inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
       >
         {isEnglish ? 'Contact' : 'Kontakt'}
       </a>
@@ -145,7 +145,7 @@ const showSwitcher = !!alternateHref;
   aria-hidden="true"
 >
   <div class="flex items-center justify-between mb-6">
-    <img src="/logo-new.svg" alt="Samedos" class="h-16 w-auto" />
+    <img src="/logo-new.svg" alt="Samedos" class="h-24 w-auto" />
     <button
       id="menu-close"
       aria-label="Menü schließen"
@@ -200,7 +200,7 @@ const showSwitcher = !!alternateHref;
   <div class="mt-4 flex gap-3">
     <a
       href={isEnglish ? '/en/contact' : '/kontakt'}
-      class="flex-1 inline-flex items-center justify-center gap-2 px-[22px] py-4 rounded-full bg-navy text-white font-medium text-[1rem]"
+      class="flex-1 inline-flex items-center justify-center gap-2 px-[22px] py-4 rounded-full bg-mint text-navy font-medium text-[1rem]"
     >
       {isEnglish ? 'Contact →' : 'Kontakt →'}
     </a>
