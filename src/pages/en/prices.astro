@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PreisTabelle from '../components/PreisTabelle.astro';
-import { getPriceLists } from '../sanity/client';
-import { gUntersuchungen, sonderuntersuchungen, labor } from '../data/preise';
-import type { PreisTabelleDaten } from '../data/preise';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PreisTabelle from '../../components/PreisTabelle.astro';
+import { getPriceLists } from '../../sanity/client';
+import { gUntersuchungen, sonderuntersuchungen, labor } from '../../data/preise';
+import type { PreisTabelleDaten, PreisSektion } from '../../data/preise';
 
 const priceLists = await getPriceLists();
 
@@ -16,85 +16,124 @@ const cmsTabelle = (cat: string): PreisTabelleDaten | null => {
 const tabelleFor = (cat: string, fallback: PreisTabelleDaten): PreisTabelleDaten =>
   cmsTabelle(cat) ?? fallback;
 
-// Auf false setzen um die Preisliste zu verbergen und stattdessen den Anfrage-Button zu zeigen
 const preislisteAktiv = false;
 
+// Translation map for Sonderuntersuchungen items
+const sonderTranslations: Record<string, string> = {
+  // Section titles
+  'Spezial-Tauglichkeitsuntersuchungen': 'Special Fitness Examinations',
+  'Diagnostik-Einzelleistungen': 'Individual Diagnostic Services',
+  'Bescheinigungen & Gutachten': 'Certificates & Expert Reports',
+  'Freizeit-Tauglichkeit': 'Leisure Fitness Examinations',
+  // Items
+  'AWMF / Offshore-Tauglichkeit': 'AWMF / Offshore Fitness Examination',
+  'FEV / Feuerwehrtauglichkeit': 'FEV / Fire Brigade Fitness Examination',
+  'Einstellungsuntersuchung allgemein': 'Pre-employment Medical Examination',
+  'Triebfahrzeugführer (TfZ)': 'Train Driver Medical (TfZ)',
+  'Gefahrgutfahrer ADR': 'Hazardous Goods Driver ADR',
+  'Hafenarbeiter': 'Port Worker Examination',
+  'Kranführer': 'Crane Operator Examination',
+  'Flurförderfahrzeuge': 'Forklift / Industrial Truck Operator',
+  'EKG (Ruhe)': 'ECG (Resting)',
+  'EKG (Belastung / Ergometrie)': 'ECG (Exercise / Ergometry)',
+  'Lungenfunktion (Spirometrie)': 'Lung Function Test (Spirometry)',
+  'Audiometrie (Hörtest)': 'Audiometry (Hearing Test)',
+  'Sehtest (Visus, Farbsehen, Stereosehen)': 'Vision Test (Visual Acuity, Colour Vision, Stereopsis)',
+  'Blutdruckmessung': 'Blood Pressure Measurement',
+  'Urinuntersuchung (Stix)': 'Urinalysis (Dipstick)',
+  'Blutentnahme (venös)': 'Blood Draw (Venous)',
+  'Blutentnahme (kapillär)': 'Blood Draw (Capillary)',
+  'Röntgen Thorax (2 Ebenen, inkl. Befundung)': 'Chest X-ray (2 Views, incl. Report)',
+  'Ärztliche Bescheinigung (einfach)': 'Medical Certificate (Standard)',
+  'Ärztliches Attest / Gutachten (kurz)': 'Medical Certificate / Short Expert Report',
+  'Ausführliches Gutachten': 'Comprehensive Expert Report',
+  'Zweitmeinung / Beratung': 'Second Opinion / Medical Consultation',
+  'Sport-/Tauchtauglichkeit': 'Sports / Diving Fitness Examination',
+  'Piloten-Tauglichkeit (privat, LAPL)': 'Private Pilot Medical (LAPL)',
+  'Führerscheingutachten (MPU-Vorbereitung)': "Driver's Licence Medical (MPU Preparation)",
+};
+
+function translateSonderuntersuchungen(data: PreisTabelleDaten): PreisTabelleDaten {
+  return {
+    spalten: ['Description', 'Price (net)'],
+    sektionen: data.sektionen.map((sektion: PreisSektion) => ({
+      titel: sonderTranslations[sektion.titel] ?? sektion.titel,
+      zeilen: sektion.zeilen.map((zeile) => ({
+        ...zeile,
+        bezeichnung: sonderTranslations[zeile.bezeichnung] ?? zeile.bezeichnung,
+        hinweis: zeile.hinweis === 'auf Anfrage' ? 'on request' : zeile.hinweis === 'Zuweisung extern' ? 'external referral' : zeile.hinweis,
+      })),
+    })),
+  };
+}
+
+const sonderEN = translateSonderuntersuchungen(tabelleFor('sonderuntersuchungen', sonderuntersuchungen));
+
 const tabs = [
-  { id: 'g-untersuchungen', label: 'G-Untersuchungen' },
-  { id: 'sonderuntersuchungen', label: 'Sonderuntersuchungen' },
-  { id: 'labor', label: 'Labor' },
-  { id: 'impfungen', label: 'Impfungen' },
+  { id: 'g-untersuchungen', label: 'G-Examinations' },
+  { id: 'sonderuntersuchungen', label: 'Special Examinations' },
+  { id: 'labor', label: 'Laboratory' },
+  { id: 'impfungen', label: 'Vaccinations' },
 ];
 ---
 
 <BaseLayout
-  title="Preise — Samedos Arbeitsmedizin Bremen"
-  description="Transparente Preise für arbeitsmedizinische Untersuchungen bei Samedos: G-Untersuchungen, Labor, Impfungen und Sonderuntersuchungen in Bremen."
-  alternateHref="/en/prices"
+  title="Prices — Samedos Occupational Medicine Bremen"
+  description="Transparent pricing for occupational health examinations at Samedos: G-Examinations, laboratory, vaccinations and special examinations in Bremen."
+  lang="en"
+  alternateHref="/preise"
 >
 
   <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
     <div class="max-w-[1200px] mx-auto px-6">
       <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
-        Unsere Preise
+        Our Prices
       </p>
-      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white" data-animate data-delay="1">Transparente Preisübersicht</h1>
+      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white" data-animate data-delay="1">Transparent Price Overview</h1>
       <p class="text-white/75 text-[1.1rem] mt-4 max-w-xl" data-animate data-delay="2">
-        Alle Preise zzgl. der gesetzlichen Mehrwertsteuer. Bei Fragen stehen wir gerne zur Verfügung.
+        All prices are net (excl. VAT). Please don't hesitate to get in touch with any questions.
       </p>
     </div>
   </section>
 
   <section class="py-20">
 
-    <!-- Deckblatt (nur im Druck sichtbar) -->
+    <!-- Print cover (visible in print only) -->
     <div id="print-cover" style="display:none; box-sizing:border-box; overflow:hidden; position:relative; background:#142B49;">
       <div style="display:flex; flex-direction:column; height:100%; padding:2cm 1.5cm 1.5cm; position:relative; z-index:1;">
-
-        <!-- Logo + Tagline -->
         <div>
           <img src="/logo-new-white.svg" alt="SAMEDOS" style="height:50pt; width:auto; display:block;" />
-          <p style="font-family:sans-serif; color:#64c5ae; font-size:9pt; margin:5pt 0 0; letter-spacing:0.04em;">Arbeitsmedizin · Bremen</p>
+          <p style="font-family:sans-serif; color:#64c5ae; font-size:9pt; margin:5pt 0 0; letter-spacing:0.04em;">Occupational Medicine · Bremen</p>
         </div>
-
-        <!-- Spacer -->
         <div style="flex:1; min-height:60pt;"></div>
-
-        <!-- Haupttitel -->
         <div>
-          <p style="font-family:sans-serif; font-weight:700; font-size:8pt; color:#64c5ae; letter-spacing:0.16em; text-transform:uppercase; margin:0 0 12pt;">PREISLISTE 2026</p>
-          <h1 id="print-cover-title" style="font-family:sans-serif; font-weight:800; font-size:46pt; color:white; margin:0 0 20pt; line-height:1.05; max-width:380pt;">G-Untersuchungen</h1>
+          <p style="font-family:sans-serif; font-weight:700; font-size:8pt; color:#64c5ae; letter-spacing:0.16em; text-transform:uppercase; margin:0 0 12pt;">PRICE LIST 2026</p>
+          <h1 id="print-cover-title" style="font-family:sans-serif; font-weight:800; font-size:46pt; color:white; margin:0 0 20pt; line-height:1.05; max-width:380pt;">G-Examinations</h1>
           <div style="width:44pt; height:3pt; background:#64c5ae; margin-bottom:18pt;"></div>
-          <p id="print-cover-desc" style="font-family:sans-serif; font-size:10.5pt; color:rgba(255,255,255,0.72); line-height:1.65; margin:0; max-width:310pt;">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
+          <p id="print-cover-desc" style="font-family:sans-serif; font-size:10.5pt; color:rgba(255,255,255,0.72); line-height:1.65; margin:0; max-width:310pt;">Occupational health surveillance and fitness examinations based on DGUV guidelines.</p>
         </div>
-
-        <!-- Spacer -->
         <div style="flex:1; min-height:40pt;"></div>
-
-        <!-- Kontakt Footer -->
         <div style="border-top:0.5pt solid rgba(255,255,255,0.18); padding-top:14pt;">
           <p style="font-family:sans-serif; font-size:8pt; color:rgba(255,255,255,0.55); margin:0 0 2pt;">Samedos GmbH · Timmersloher Straße 82, 28215 Bremen</p>
-          <p style="font-family:sans-serif; font-size:8pt; color:rgba(255,255,255,0.55); margin:0 0 5pt;">Telefon 0421 63997761 · info@samedos.de · www.samedos.de</p>
-          <p style="font-family:sans-serif; font-size:8pt; font-weight:600; color:#64c5ae; margin:0;">Stand: April 2026</p>
+          <p style="font-family:sans-serif; font-size:8pt; color:rgba(255,255,255,0.55); margin:0 0 5pt;">Phone +49 421 63997761 · info@samedos.de · www.samedos.de</p>
+          <p style="font-family:sans-serif; font-size:8pt; font-weight:600; color:#64c5ae; margin:0;">As of: April 2026</p>
         </div>
-
       </div>
-      <!-- Dekorativer Kreis -->
       <div style="position:absolute; right:-60pt; bottom:60pt; width:230pt; height:230pt; border-radius:50%; background:rgba(41,70,107,0.55); z-index:0;"></div>
       <div style="position:absolute; right:-100pt; bottom:-50pt; width:290pt; height:290pt; border-radius:50%; background:rgba(41,70,107,0.35); z-index:0;"></div>
     </div>
 
     <div id="print-content-wrapper" class="max-w-[1200px] mx-auto px-6">
 
-      <!-- Print-only header (hidden on screen) -->
+      <!-- Print-only header -->
       <div id="print-header" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; padding-bottom:12pt; border-bottom:1.5pt solid #142B49; margin-bottom:18pt;">
           <img src="/logo-new.svg" alt="Samedos" style="height:44pt; width:auto;" />
           <div style="text-align:right; font-size:8.5pt; color:#555; line-height:1.7; font-family:sans-serif;">
-            <p id="print-category-label" style="font-weight:700; font-size:11pt; color:#142B49; margin:0 0 3pt;">Preisübersicht</p>
-            <p style="margin:0;">Alle Preise zzgl. MwSt. &middot; Stand: April 2026</p>
+            <p id="print-category-label" style="font-weight:700; font-size:11pt; color:#142B49; margin:0 0 3pt;">Price Overview</p>
+            <p style="margin:0;">All prices net (excl. VAT) &middot; As of: April 2026</p>
             <p style="margin:0;">Samedos GmbH &middot; Timmersloher Str. 82 &middot; 28215 Bremen</p>
-            <p style="margin:0;">info@samedos.de &middot; 0421 63997761</p>
+            <p style="margin:0;">info@samedos.de &middot; +49 421 63997761</p>
           </div>
         </div>
       </div>
@@ -120,30 +159,37 @@ const tabs = [
         ))}
       </div>
 
-      <!-- G-Untersuchungen -->
+      <!-- G-Examinations -->
       <div id="panel-g-untersuchungen" role="tabpanel" aria-labelledby="tab-g-untersuchungen">
         <div class="mb-6 no-print" data-animate>
-          <h2 class="text-[1.4rem] mb-2">G-Untersuchungen</h2>
-          <p class="text-muted">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
+          <h2 class="text-[1.4rem] mb-2">G-Examinations</h2>
+          <p class="text-muted">Occupational health surveillance and fitness examinations based on DGUV guidelines.</p>
         </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+        <!-- Info note -->
+        <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
+          <svg class="shrink-0 mt-0.5 text-mint" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <p class="text-navy text-[0.88rem] leading-relaxed">
+            Service designations follow German regulatory standards (DGUV) and are therefore listed in German. All prices are in EUR, net (excl. VAT).
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="2">
           <button
             data-print-tab="panel-g-untersuchungen"
             class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Als PDF speichern
+            Save as PDF
           </button>
         </div>
         <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" />
-        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Kombi-Preise gelten bei gleichzeitiger Durchführung.</p>
+        <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Combined prices apply when examinations are carried out simultaneously.</p>
       </div>
 
-      <!-- Sonderuntersuchungen -->
+      <!-- Special Examinations -->
       <div id="panel-sonderuntersuchungen" role="tabpanel" aria-labelledby="tab-sonderuntersuchungen" hidden>
         <div class="mb-6 no-print" data-animate>
-          <h2 class="text-[1.4rem] mb-2">Sonderuntersuchungen</h2>
-          <p class="text-muted">Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.</p>
+          <h2 class="text-[1.4rem] mb-2">Special Examinations</h2>
+          <p class="text-muted">Specialist occupational health examinations — please enquire for individual arrangements.</p>
         </div>
         <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
           <button
@@ -151,51 +197,65 @@ const tabs = [
             class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Als PDF speichern
+            Save as PDF
           </button>
         </div>
-        <PreisTabelle daten={tabelleFor('sonderuntersuchungen', sonderuntersuchungen)} modus="sonderuntersuchungen" />
-        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Preise auf Anfrage individuell anpassbar.</p>
+        <PreisTabelle daten={sonderEN} modus="sonderuntersuchungen" />
+        <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Prices are individually adjustable on request.</p>
       </div>
 
-      <!-- Labor -->
+      <!-- Laboratory -->
       <div id="panel-labor" role="tabpanel" aria-labelledby="tab-labor" hidden>
         <div class="mb-6 no-print" data-animate>
-          <h2 class="text-[1.4rem] mb-2">Laborleistungen</h2>
-          <p class="text-muted">Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.</p>
+          <h2 class="text-[1.4rem] mb-2">Laboratory Services</h2>
+          <p class="text-muted">Laboratory diagnostics as part of occupational health surveillance.</p>
         </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+        <!-- Info note -->
+        <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
+          <svg class="shrink-0 mt-0.5 text-mint" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <p class="text-navy text-[0.88rem] leading-relaxed">
+            Service designations follow German regulatory standards (DGUV) and are therefore listed in German. All prices are in EUR, net (excl. VAT).
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="2">
           <button
             data-print-tab="panel-labor"
             class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Als PDF speichern
+            Save as PDF
           </button>
         </div>
         <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" />
-        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
+        <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT).</p>
       </div>
 
-      <!-- Impfungen -->
+      <!-- Vaccinations -->
       <div id="panel-impfungen" role="tabpanel" aria-labelledby="tab-impfungen" hidden>
         <div class="mb-6 no-print" data-animate>
-          <h2 class="text-[1.4rem] mb-2">Impfungen</h2>
-          <p class="text-muted">Schutzimpfungen im betriebsärztlichen Kontext.</p>
+          <h2 class="text-[1.4rem] mb-2">Vaccinations</h2>
+          <p class="text-muted">Protective vaccinations in an occupational health context.</p>
         </div>
         {cmsTabelle('impfungen') ? (
           <>
-            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+            <!-- Info note -->
+            <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
+              <svg class="shrink-0 mt-0.5 text-mint" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <p class="text-navy text-[0.88rem] leading-relaxed">
+                Service designations follow German regulatory standards (DGUV) and are therefore listed in German. All prices are in EUR, net (excl. VAT).
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="2">
               <button
                 data-print-tab="panel-impfungen"
                 class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                Als PDF speichern
+                Save as PDF
               </button>
             </div>
             <PreisTabelle daten={cmsTabelle('impfungen')!} modus="standard" />
-            <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
+            <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT).</p>
           </>
         ) : (
           <div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
@@ -203,13 +263,13 @@ const tabs = [
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
               <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
             </svg>
-            <p class="font-medium text-navy mb-2">Impfpreise auf Anfrage</p>
-            <p class="text-muted text-[0.95rem] mb-5">Wir stellen Ihnen die aktuelle Impfpreisliste gerne auf Anfrage zur Verfügung.</p>
+            <p class="font-medium text-navy mb-2">Vaccination prices on request</p>
+            <p class="text-muted text-[0.95rem] mb-5">We are happy to provide our current vaccination price list on request.</p>
             <a
-              href="mailto:info@samedos.de?subject=Anfrage Impfpreisliste"
+              href="mailto:info@samedos.de?subject=Vaccination Price List Request"
               class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
             >
-              Preisliste anfordern →
+              Request price list →
             </a>
           </div>
         )}
@@ -223,15 +283,15 @@ const tabs = [
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
             <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
           </svg>
-          <h2 class="text-[1.3rem] mb-3">Preislisten auf Anfrage</h2>
+          <h2 class="text-[1.3rem] mb-3">Price lists available on request</h2>
           <p class="text-muted text-[1rem] mb-7">
-            Unsere aktuellen Preislisten für G-Untersuchungen, Sonderuntersuchungen, Labor und Impfungen stellen wir Ihnen gerne auf Anfrage zur Verfügung.
+            We are happy to provide our current price lists for G-Examinations, Special Examinations, Laboratory and Vaccinations on request.
           </p>
           <a
-            href="mailto:info@samedos.de?subject=Anfrage Preisliste"
+            href="mailto:info@samedos.de?subject=Price List Request"
             class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
           >
-            Preisliste anfordern →
+            Request price list →
           </a>
         </div>
       )}
@@ -242,13 +302,11 @@ const tabs = [
 
 <style is:global>
   @media print {
-    /* margin: 0 entfernt Browser-eigene URL/Datum-Kopf- und Fußzeilen */
     @page {
       size: A4;
       margin: 0;
     }
 
-    /* Website-Chrome verstecken */
     body > header,
     #mobile-menu,
     body > footer,
@@ -257,12 +315,10 @@ const tabs = [
       display: none !important;
     }
 
-    /* Section ohne Web-Padding */
     main > section:last-child {
       padding: 0 !important;
     }
 
-    /* Deckblatt: volle Seite, dann Seitenumbruch */
     #print-cover {
       display: block !important;
       height: 297mm;
@@ -273,22 +329,18 @@ const tabs = [
       break-after: page;
     }
 
-    /* Inhaltsbereich: eigene Ränder (da @page margin: 0) */
     #print-content-wrapper {
       padding: 1.5cm 1.5cm 2cm !important;
       max-width: none !important;
     }
 
-    /* Kompakter Header auf Inhaltsseiten */
     #print-header {
       display: block !important;
     }
 
-    /* Nur aktives Tab-Panel */
     [role="tabpanel"][hidden] { display: none !important; }
     [role="tabpanel"]:not([hidden]) { display: block !important; }
 
-    /* Abschnittsüberschriften */
     .preistabelle .border-l-4 {
       border-left-width: 3pt !important;
       background: #f4f7fa !important;
@@ -296,7 +348,6 @@ const tabs = [
       -webkit-print-color-adjust: exact;
     }
 
-    /* Tabellen */
     .preistabelle {
       margin-top: 0 !important;
     }
@@ -320,7 +371,6 @@ const tabs = [
       margin-top: 16pt !important;
     }
 
-    /* Fußnoten */
     .preistabelle + p {
       font-size: 7.5pt !important;
       color: #666 !important;
@@ -334,10 +384,10 @@ const tabs = [
   const panels = document.querySelectorAll<HTMLElement>('[role="tabpanel"]');
 
   const coverDescs: Record<string, string> = {
-    'panel-g-untersuchungen': 'Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.',
-    'panel-sonderuntersuchungen': 'Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.',
-    'panel-labor': 'Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.',
-    'panel-impfungen': 'Schutzimpfungen im betriebsärztlichen Kontext.',
+    'panel-g-untersuchungen': 'Occupational health surveillance and fitness examinations based on DGUV guidelines.',
+    'panel-sonderuntersuchungen': 'Specialist occupational health examinations — individual arrangements on request.',
+    'panel-labor': 'Laboratory diagnostics as part of occupational health surveillance.',
+    'panel-impfungen': 'Protective vaccinations in an occupational health context.',
   };
 
   function updatePrintMeta(tabLabel: string, panelId: string) {
@@ -366,7 +416,7 @@ const tabs = [
     const panel = document.getElementById(targetId)!;
     panel.removeAttribute('hidden');
 
-    updatePrintMeta(tab.textContent?.trim() ?? 'Preisübersicht', targetId);
+    updatePrintMeta(tab.textContent?.trim() ?? 'Price Overview', targetId);
 
     panel.querySelectorAll('[data-animate]').forEach((el) => {
       el.classList.remove('in-view');
@@ -380,7 +430,6 @@ const tabs = [
     });
   });
 
-  // Print buttons: aktiven Tab setzen, dann drucken
   document.querySelectorAll<HTMLButtonElement>('.print-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const panelId = btn.getAttribute('data-print-tab')!;
@@ -389,13 +438,11 @@ const tabs = [
     });
   });
 
-  // Initiale Print-Metadaten für den ersten Tab setzen
   const firstTab = document.querySelector<HTMLButtonElement>('.tab-btn[aria-selected="true"]');
   if (firstTab) {
-    updatePrintMeta(firstTab.textContent?.trim() ?? 'Preisübersicht', 'panel-g-untersuchungen');
+    updatePrintMeta(firstTab.textContent?.trim() ?? 'Price Overview', 'panel-g-untersuchungen');
   }
 
-  // Animationen für sichtbares Panel beim Laden
   document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-animate]').forEach((el) => {
     el.classList.add('in-view');
   });
