@@ -1,0 +1,468 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Offshore Medical in Bremen – OGUK/OEUK, AWMF & Hardanger"
+  description="Offshore medical examinations in Bremen: OGUK/OEUK, AWMF (Germany), Hardanger/NOGEPA. Appointments within 48 h. Certified physicians with 15+ years of experience."
+  lang="en"
+  alternateHref="/leistungen/offshore-untersuchung"
+>
+
+  <Fragment slot="head">
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://samedos.de/en/" },
+          { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://samedos.de/en/services" },
+          { "@type": "ListItem", "position": 3, "name": "Offshore Medical", "item": "https://samedos.de/en/services/offshore-medical" }
+        ]
+      })}
+    </script>
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "MedicalProcedure",
+        "name": "Offshore Medical Examination",
+        "description": "Certified offshore medical fitness examinations according to OGUK/OEUK, AWMF, and Hardanger/NOGEPA standards for oil & gas, wind energy and marine industry workers.",
+        "procedureType": "https://schema.org/PhysicianExamination",
+        "bodyLocation": "Systematic full-body examination",
+        "status": "EventScheduled",
+        "performer": {
+          "@type": "Physician",
+          "name": "Dr. med. Jörg Janssen",
+          "medicalSpecialty": "Occupational Medicine"
+        },
+        "provider": {
+          "@type": "MedicalBusiness",
+          "name": "Samedos GmbH",
+          "url": "https://samedos.de",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Timmersloher Straße 82",
+            "addressLocality": "Bremen",
+            "postalCode": "28215",
+            "addressCountry": "DE"
+          }
+        }
+      })}
+    </script>
+    <script type="application/ld+json">
+      {JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How quickly can I get an appointment for an offshore medical?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "In most cases we can offer an appointment within 48 hours. For urgent deployments please call us directly on +49 421 63997-76."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between OGUK/OEUK and AWMF offshore medical?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "OGUK/OEUK (formerly OGUK) certificates are required for offshore work on UK continental shelf installations. The AWMF guideline applies for German offshore work (North Sea, Baltic Sea). We perform both examinations."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How long is an offshore medical certificate valid?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The certificate is typically valid for 2 years. For workers aged 40 and above, annual renewals are required for OGUK/OEUK. We will inform you in good time before expiry."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do you also carry out Hardanger/NOGEPA medicals for Norwegian operations?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. We perform examinations according to the Hardanger/NOGEPA standard required for work on the Norwegian continental shelf. Dr. Janssen holds the relevant certifications."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What documents do I need to bring?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Please bring a valid ID or passport, your previous offshore medical certificate (if applicable), a list of current medications, and any recent specialist reports. Further documents may be requested in advance."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Samedos an approved OGUK/OEUK examining centre?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Our lead physician Dr. med. Jörg Janssen is an approved OGUK/OEUK Appointed Doctor and holds certifications for AWMF and Hardanger/NOGEPA examinations."
+            }
+          }
+        ]
+      })}
+    </script>
+  </Fragment>
+
+  <!-- Hero -->
+  <section class="pt-20 pb-16 relative overflow-hidden" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div
+      class="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full pointer-events-none"
+      style="background: radial-gradient(circle, rgba(100,197,174,.18), transparent 70%);"
+      aria-hidden="true"
+    ></div>
+    <div class="max-w-[1200px] mx-auto px-6 relative">
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.8rem]">
+          <li><a href="/en/" class="hover:text-white/80 transition-colors">Home</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href="/en/services" class="hover:text-white/80 transition-colors">Services</a></li>
+          <li aria-hidden="true">/</li>
+          <li class="text-white/80">Offshore Medical</li>
+        </ol>
+      </nav>
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Offshore Medical Examinations
+      </p>
+      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white max-w-3xl leading-tight" data-animate data-delay="1">
+        Offshore Medical in Bremen —<br />OGUK/OEUK, AWMF &amp; Hardanger
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
+        Certified offshore fitness-to-work examinations for oil &amp; gas, wind energy and marine professionals.
+        Appointments within 48 hours — in English, German, French and Spanish.
+      </p>
+      <div class="flex flex-wrap gap-4 mt-8" data-animate data-delay="3">
+        <a
+          href="/en/contact"
+          class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Book appointment →
+        </a>
+        <a
+          href="tel:+494216399776"
+          class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full border border-white/30 text-white font-medium text-[0.95rem] transition-all hover:bg-white/10"
+        >
+          +49 421 63997-76
+        </a>
+      </div>
+
+      <!-- Trust badges -->
+      <div class="flex flex-wrap gap-6 mt-10 pt-8 border-t border-white/15" data-animate data-delay="4">
+        <div class="flex items-center gap-2 text-white/70 text-[0.85rem]">
+          <span class="text-mint text-lg">✓</span> OGUK/OEUK approved
+        </div>
+        <div class="flex items-center gap-2 text-white/70 text-[0.85rem]">
+          <span class="text-mint text-lg">✓</span> AWMF certified
+        </div>
+        <div class="flex items-center gap-2 text-white/70 text-[0.85rem]">
+          <span class="text-mint text-lg">✓</span> Hardanger/NOGEPA
+        </div>
+        <div class="flex items-center gap-2 text-white/70 text-[0.85rem]">
+          <span class="text-mint text-lg">✓</span> Appointments within 48 h
+        </div>
+        <div class="flex items-center gap-2 text-white/70 text-[0.85rem]">
+          <span class="text-mint text-lg">✓</span> 4 languages
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What is an offshore medical? -->
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div data-animate>
+          <p class="text-mint font-heading font-semibold text-[0.9rem] tracking-[0.12em] uppercase mb-3">
+            Overview
+          </p>
+          <h2 class="text-[clamp(1.6rem,3vw,2.2rem)] mb-5">What is an offshore medical?</h2>
+          <p class="text-muted mb-4">
+            An offshore medical — also called an offshore fitness examination — certifies that you are medically fit
+            to work in offshore environments: oil platforms, wind turbines at sea, ships and underwater operations.
+          </p>
+          <p class="text-muted mb-4">
+            International operators require a valid certificate before any deployment. The most recognised
+            standards are <strong class="text-navy">OGUK/OEUK</strong> (UK continental shelf),
+            <strong class="text-navy">AWMF</strong> (German continental shelf) and
+            <strong class="text-navy">Hardanger/NOGEPA</strong> (Norwegian continental shelf).
+          </p>
+          <p class="text-muted">
+            At Samedos in Bremen we issue certificates for all three standards — with short waiting times
+            and consultation in four languages.
+          </p>
+        </div>
+        <div class="grid grid-cols-2 gap-4" data-animate data-delay="1">
+          {[
+            { label: 'OGUK/OEUK', desc: 'UK continental shelf — oil, gas & wind' },
+            { label: 'AWMF', desc: 'German continental shelf — legally required' },
+            { label: 'Hardanger / NOGEPA', desc: 'Norwegian continental shelf' },
+            { label: 'Tauchmedizin', desc: 'Diving fitness examinations' },
+          ].map((card) => (
+            <div class="bg-white border border-border rounded-2xl p-5">
+              <p class="font-heading font-bold text-navy text-[0.95rem] mb-1">{card.label}</p>
+              <p class="text-muted text-[0.82rem]">{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who needs it? -->
+  <section class="py-16 bg-bg-soft">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[0.9rem] tracking-[0.12em] uppercase mb-3">Target group</p>
+        <h2 class="text-[clamp(1.6rem,3vw,2.2rem)]">Who needs an offshore medical?</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { title: 'Oil & Gas', items: ['Drilling engineers', 'Platform workers', 'Technicians & supervisors', 'Catering & logistics staff'] },
+          { title: 'Wind Energy', items: ['Service technicians', 'Construction crews', 'Inspection engineers', 'Project managers (offshore)'] },
+          { title: 'Maritime & Diving', items: ['Saturation divers', 'ROV pilots', 'Marine surveyors', 'Offshore crane operators'] },
+        ].map((group) => (
+          <div class="bg-white border border-border rounded-2xl p-6" data-animate>
+            <h3 class="font-heading font-bold text-navy text-[1rem] mb-4">{group.title}</h3>
+            <ul class="space-y-2">
+              {group.items.map((item) => (
+                <li class="flex items-start gap-2.5 text-[0.9rem] text-muted">
+                  <span class="mt-1.5 w-1.5 h-1.5 bg-mint rounded-full shrink-0"></span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Standards comparison -->
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[0.9rem] tracking-[0.12em] uppercase mb-3">Standards</p>
+        <h2 class="text-[clamp(1.6rem,3vw,2.2rem)]">OGUK/OEUK, AWMF and Hardanger at a glance</h2>
+      </div>
+      <div class="overflow-x-auto" data-animate data-delay="1">
+        <table class="w-full text-[0.9rem]">
+          <thead>
+            <tr class="border-b border-border">
+              <th class="text-left py-3 pr-6 font-heading font-semibold text-navy">Standard</th>
+              <th class="text-left py-3 pr-6 font-heading font-semibold text-navy">Region</th>
+              <th class="text-left py-3 pr-6 font-heading font-semibold text-navy">Validity</th>
+              <th class="text-left py-3 font-heading font-semibold text-navy">Typical industries</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-border">
+            <tr>
+              <td class="py-4 pr-6 font-medium text-navy">OGUK/OEUK</td>
+              <td class="py-4 pr-6 text-muted">UK continental shelf</td>
+              <td class="py-4 pr-6 text-muted">2 years (annual from age 40)</td>
+              <td class="py-4 text-muted">Oil & Gas, Offshore Wind</td>
+            </tr>
+            <tr>
+              <td class="py-4 pr-6 font-medium text-navy">AWMF</td>
+              <td class="py-4 pr-6 text-muted">German continental shelf</td>
+              <td class="py-4 pr-6 text-muted">2 years</td>
+              <td class="py-4 text-muted">Offshore Wind, Research</td>
+            </tr>
+            <tr>
+              <td class="py-4 pr-6 font-medium text-navy">Hardanger / NOGEPA</td>
+              <td class="py-4 pr-6 text-muted">Norwegian continental shelf</td>
+              <td class="py-4 pr-6 text-muted">2 years</td>
+              <td class="py-4 text-muted">Oil & Gas, Diving</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="py-16 bg-bg-soft">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[0.9rem] tracking-[0.12em] uppercase mb-3">Process</p>
+        <h2 class="text-[clamp(1.6rem,3vw,2.2rem)]">How the examination works</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          { step: '01', title: 'Book appointment', desc: 'Phone, email or contact form — usually within 48 hours.' },
+          { step: '02', title: 'Medical history', desc: 'Brief questionnaire about previous illnesses and current medication.' },
+          { step: '03', title: 'Clinical examination', desc: 'Vision, hearing, ECG, blood pressure, lung function, blood test.' },
+          { step: '04', title: 'Certificate issued', desc: 'Immediately after the examination if all criteria are met.' },
+        ].map((s) => (
+          <div class="bg-white border border-border rounded-2xl p-6" data-animate>
+            <span class="font-heading font-bold text-mint text-[1rem]">{s.step}</span>
+            <h3 class="font-heading font-bold text-navy text-[1rem] mt-2 mb-2">{s.title}</h3>
+            <p class="text-muted text-[0.88rem]">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- E-A-T / Expertise -->
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div data-animate>
+          <p class="text-mint font-heading font-semibold text-[0.9rem] tracking-[0.12em] uppercase mb-3">Our expertise</p>
+          <h2 class="text-[clamp(1.6rem,3vw,2.2rem)] mb-5">Dr. med. Jörg Janssen — Your offshore physician in Bremen</h2>
+          <p class="text-muted mb-6">
+            Dr. Janssen holds specialist qualifications in occupational medicine, diving medicine and emergency medicine.
+            He has over 15 years of experience performing offshore medical examinations and is an approved Appointed
+            Doctor for OGUK/OEUK, AWMF and Hardanger/NOGEPA.
+          </p>
+          <ul class="space-y-3">
+            {[
+              'Specialist in occupational medicine (Facharzt für Arbeitsmedizin)',
+              'Specialist in general medicine (Facharzt für Allgemeinmedizin)',
+              'Diving medicine examiner (GTÜM/EDTC)',
+              'Approved OGUK/OEUK Appointed Doctor',
+              'AWMF certified offshore physician (Germany)',
+              'Hardanger/NOGEPA certified',
+              'Emergency medicine & pre-hospital care',
+              'Languages: German · English · French · Spanish',
+            ].map((q) => (
+              <li class="flex items-start gap-3 text-[0.92rem] text-muted">
+                <span class="mt-1 text-mint shrink-0">✓</span>
+                {q}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
+          <h3 class="font-heading font-bold text-navy text-[1.05rem] mb-4">Samedos GmbH — Bremen</h3>
+          <ul class="space-y-4 text-[0.92rem] text-muted">
+            <li class="flex items-start gap-3">
+              <span class="text-mint shrink-0 mt-0.5">📍</span>
+              Timmersloher Straße 82, 28215 Bremen
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-mint shrink-0 mt-0.5">📞</span>
+              <a href="tel:+494216399776" class="hover:text-mint transition-colors">+49 421 63997-76</a>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-mint shrink-0 mt-0.5">✉</span>
+              <a href="mailto:info@samedos.de" class="hover:text-mint transition-colors">info@samedos.de</a>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-mint shrink-0 mt-0.5">🕐</span>
+              Mon–Fri 08:00–15:00<br /><span class="text-[0.8rem]">Urgent appointments by arrangement</span>
+            </li>
+          </ul>
+          <div class="mt-6 pt-6 border-t border-border">
+            <p class="text-[0.82rem] text-muted mb-3">
+              Bremen is conveniently located for offshore workers travelling from Hamburg, Bremerhaven,
+              Wilhelmshaven and across Lower Saxony.
+            </p>
+            <a
+              href="/en/contact"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Book now →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 bg-bg-soft">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="text-center mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[0.9rem] tracking-[0.12em] uppercase mb-3">FAQ</p>
+        <h2 class="text-[clamp(1.6rem,3vw,2.2rem)]">Frequently asked questions</h2>
+      </div>
+      <div class="space-y-3" data-animate data-delay="1">
+        {[
+          {
+            q: 'How quickly can I get an appointment?',
+            a: 'In most cases we can offer a slot within 48 hours. For urgent deployments, please call us directly on +49 421 63997-76.',
+          },
+          {
+            q: 'What is the difference between OGUK/OEUK and AWMF?',
+            a: 'OGUK/OEUK certificates are required for work on the UK continental shelf. The AWMF guideline covers German offshore sites (North Sea and Baltic Sea). We issue both certificates.',
+          },
+          {
+            q: 'How long is the certificate valid?',
+            a: 'Certificates are generally valid for 2 years. Workers aged 40 and over must renew their OGUK/OEUK certificate annually. We will remind you in good time.',
+          },
+          {
+            q: 'Do you perform Hardanger/NOGEPA medicals for Norwegian operations?',
+            a: 'Yes. Dr. Janssen holds the relevant certifications and we carry out Hardanger/NOGEPA examinations for work on the Norwegian continental shelf.',
+          },
+          {
+            q: 'What documents should I bring?',
+            a: 'Please bring a valid ID or passport, your previous offshore medical certificate (if any), a list of current medications, and relevant specialist reports.',
+          },
+          {
+            q: 'Is Samedos an approved OGUK/OEUK examining centre?',
+            a: 'Yes. Dr. med. Jörg Janssen is an approved Appointed Doctor for OGUK/OEUK examinations. He also holds AWMF and Hardanger/NOGEPA certifications.',
+          },
+          {
+            q: 'Can the examination be conducted in English?',
+            a: 'Absolutely. Dr. Janssen speaks German, English, French and Spanish. The consultation and examination can be held entirely in English.',
+          },
+          {
+            q: 'What happens if I do not pass the medical?',
+            a: 'If you do not meet all criteria at the time of examination, we will advise you on what steps to take. A temporary restricted certificate or a follow-up examination may be possible depending on the findings.',
+          },
+        ].map(({ q, a }) => (
+          <details class="group bg-white border border-border rounded-2xl overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none font-heading font-semibold text-navy text-[0.95rem]">
+              {q}
+              <svg
+                class="w-4 h-4 shrink-0 text-muted transition-transform duration-200 group-open:rotate-180"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-5 text-muted text-[0.92rem] leading-relaxed">{a}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-[1200px] mx-auto px-6 py-24">
+    <div
+      class="relative rounded-[28px] px-12 py-16 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] mb-4">Ready to book your offshore medical?</h2>
+      <p class="text-white/80 max-w-[520px] mx-auto mb-7">
+        Contact us now — appointments usually available within 48 hours.
+        We look forward to supporting your offshore career.
+      </p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a
+          href="/en/contact"
+          class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Book appointment →
+        </a>
+        <a
+          href="tel:+494216399776"
+          class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full border border-white/30 text-white font-medium text-[0.95rem] transition-all hover:bg-white/10"
+        >
+          +49 421 63997-76
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

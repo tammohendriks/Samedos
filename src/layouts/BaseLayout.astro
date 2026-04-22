@@ -9,6 +9,8 @@ interface Props {
   description?: string;
   ogImage?: string;
   noindex?: boolean;
+  lang?: 'de' | 'en';
+  alternateHref?: string;
 }
 
 const {
@@ -16,11 +18,13 @@ const {
   description = 'Samedos ist Ihr Partner für moderne Arbeitsmedizin nach DGUV Vorschrift 2 — mit Sitz in Bremen, überregional tätig.',
   ogImage,
   noindex,
+  lang = 'de',
+  alternateHref,
 } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="de">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,23 +32,37 @@ const {
     <link rel="shortcut icon" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <Seo title={title} description={description} ogImage={ogImage} noindex={noindex} />
+    <Seo title={title} description={description} ogImage={ogImage} noindex={noindex} lang={lang} alternateHref={alternateHref} />
+    <slot name="head" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=League+Spartan:wght@600;700;800&display=swap"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=League+Spartan:wght@600;700;800&display=optional"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=League+Spartan:wght@600;700;800&display=optional"
       rel="stylesheet"
     />
+    <!-- Set overlay opaque before first paint if we just switched language -->
+    <script is:inline>
+      if (sessionStorage.getItem('lang-switch') === '1') {
+        document.documentElement.classList.add('lang-entering');
+      }
+    </script>
   </head>
   <body>
-    <Header />
+    <div id="lang-overlay" aria-hidden="true"></div>
+    <Header lang={lang} alternateHref={alternateHref} />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
   <script>
+    // ── Scroll-in animation observer ─────────────────────────────────────
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -57,5 +75,31 @@ const {
       { threshold: 0.12 }
     );
     document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
+
+    // ── Language-switch transition ────────────────────────────────────────
+    const overlay = document.getElementById('lang-overlay') as HTMLElement;
+
+    if (sessionStorage.getItem('lang-switch') === '1') {
+      sessionStorage.removeItem('lang-switch');
+      // Give browser one frame to paint the opaque overlay, then fade out
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          overlay.style.transition = 'opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1)';
+          overlay.style.opacity = '0';
+        });
+      });
+    }
+
+    document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href')!;
+        sessionStorage.setItem('lang-switch', '1');
+        overlay.style.transition = 'opacity 0.25s cubic-bezier(0.4, 0, 1, 1)';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'all';
+        setTimeout(() => { window.location.href = href; }, 280);
+      });
+    });
   </script>
 </html>

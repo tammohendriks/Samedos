@@ -5,7 +5,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout
   title="Kontakt — Samedos Arbeitsmedizin Bremen"
   description="Kontaktieren Sie Samedos: Timmersloher Str. 82, 28215 Bremen. Tel: 0421 63997761. Mo–Fr 08–15 Uhr. Auch außerhalb der Öffnungszeiten erreichbar."
+  alternateHref="/en/contact"
 >
+
+  <Fragment slot="head">
+    <script type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://samedos.de/" },
+        { "@type": "ListItem", "position": 2, "name": "Kontakt", "item": "https://samedos.de/kontakt" }
+      ]
+    })}</script>
+  </Fragment>
 
   <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
     <div class="max-w-[1200px] mx-auto px-6">

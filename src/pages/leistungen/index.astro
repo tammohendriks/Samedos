@@ -36,7 +36,7 @@ const categories = [
     description:
       'Fachuntersuchungen für besondere Tätigkeiten und Branchen — national wie international anerkannt.',
     items: [
-      'Offshore (OGUK/OLF, OGEPA/Hardanger, AWMF Deutschland)',
+      'Offshore (OGUK/OEUK, OGEPA/Hardanger, AWMF Deutschland)',
       'Tauchmedizinische Untersuchungen',
       'Strahlenschutz (Röntgen & ionisierende Strahlung)',
       'Führerschein FEV (LKW, Taxi, Rettungsdienst)',
@@ -62,7 +62,19 @@ const categories = [
 <BaseLayout
   title="Leistungen — Samedos Arbeitsmedizin Bremen"
   description="Unsere Leistungen: Arbeitsmedizinische Vorsorge, BGM, Spezialuntersuchungen (Offshore, Tauchmedizin, FEV) und psychologische Betreuung — aus Bremen, überregional tätig."
+  alternateHref="/en/services"
 >
+
+  <Fragment slot="head">
+    <script type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://samedos.de/" },
+        { "@type": "ListItem", "position": 2, "name": "Leistungen", "item": "https://samedos.de/leistungen" }
+      ]
+    })}</script>
+  </Fragment>
 
   <!-- Hero -->
   <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
@@ -89,12 +101,22 @@ const categories = [
             <span class="font-heading font-bold text-mint text-[1.1rem]">{cat.number}</span>
             <h2 class="mt-2 mb-4 text-[1.6rem]">{cat.title}</h2>
             <p class="text-muted">{cat.description}</p>
-            <a
-              href="/kontakt"
-              class="inline-flex items-center gap-2 mt-6 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-            >
-              Jetzt anfragen →
-            </a>
+            <div class="flex flex-wrap gap-3 mt-6">
+              <a
+                href="/kontakt"
+                class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+              >
+                Jetzt anfragen →
+              </a>
+              {cat.number === '03.' && (
+                <a
+                  href="/leistungen/offshore-untersuchung"
+                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border border-navy text-navy font-medium text-[0.95rem] transition-all hover:bg-navy hover:text-white"
+                >
+                  Offshore-Untersuchung →
+                </a>
+              )}
+            </div>
           </div>
           <div class={`bg-white border border-border rounded-2xl p-8 ${i % 2 === 1 ? 'lg:[direction:ltr]' : ''}`}>
             <ul class="space-y-3">

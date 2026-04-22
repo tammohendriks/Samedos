@@ -1,0 +1,503 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const faqs = [
+  {
+    question: 'Wie lange ist eine OGUK-/OEUK-Untersuchung gültig?',
+    answer: 'Die OGUK-/OEUK-Untersuchung ist in der Regel zwei Jahre gültig. Für Beschäftigte ab 40 Jahren wird oft eine jährliche Wiederholung empfohlen. Die genaue Gültigkeit hängt vom Befund und dem jeweiligen Arbeitgeber ab.',
+  },
+  {
+    question: 'Was kostet eine Offshore-Untersuchung in Deutschland?',
+    answer: 'Die Kosten für eine OGUK/OEUK- oder AWMF-Untersuchung variieren je nach Umfang. Bei Samedos erhalten Sie transparente Preisangaben — schauen Sie auf unsere Preisseite oder fragen Sie direkt an. In den meisten Fällen übernimmt der Arbeitgeber die Kosten.',
+  },
+  {
+    question: 'Kann ich die Offshore-Untersuchung kurzfristig machen?',
+    answer: 'Ja, bei Samedos sind kurzfristige Termine möglich. Kontaktieren Sie uns per Telefon oder E-Mail — wir versuchen, Ihnen innerhalb weniger Tage einen Termin anzubieten.',
+  },
+  {
+    question: 'Ist die OGUK-/OEUK-Untersuchung international anerkannt?',
+    answer: 'Ja. Das OGUK-/OEUK-Zertifikat (ehemals OGUK, seit 2022 OEUK) wird international auf Offshore-Plattformen und Versorgungsschiffen anerkannt, insbesondere in der britischen Nordsee. Für norwegische Plattformen ist das OGEPA/Hardanger-Zertifikat maßgeblich, das wir ebenfalls ausstellen.',
+  },
+  {
+    question: 'Was ist der Unterschied zwischen OGUK und AWMF?',
+    answer: 'Das OGUK-/OEUK-Medical ist ein britischer Standard für internationale Offshore-Tätigkeit. Das AWMF-Zertifikat ist der deutsche Standard, der vor allem für deutsche Offshore-Anlagen (z. B. Windparks in der Deutschen Bucht) gilt. Viele Arbeitgeber verlangen beide Bescheinigungen — wir stellen beide aus.',
+  },
+  {
+    question: 'Wer muss eine Offshore-Untersuchung machen?',
+    answer: 'Eine Offshore-Tauglichkeitsuntersuchung ist Pflicht für alle Personen, die auf Offshore-Plattformen, Windkraftanlagen auf See oder Versorgungsschiffen tätig sind. Das umfasst Techniker, Ingenieure, Taucher, Schiffsbesatzungen und weitere Berufsgruppen.',
+  },
+  {
+    question: 'Was passiert, wenn ich den Chester Step Test nicht bestehe?',
+    answer: 'Ein nicht bestandener Chester Step Test bedeutet nicht automatisch eine Ablehnung. Der Arzt bewertet das Ergebnis im klinischen Gesamtbild. Bei Grenzwerten wird das Befundergebnis mit dem Arbeitgeber besprochen. In manchen Fällen ist eine kardiologische Weiteruntersuchung der nächste Schritt.',
+  },
+  {
+    question: 'Welche Untersuchung brauche ich für norwegische Offshore-Plattformen?',
+    answer: 'Für Tätigkeiten auf norwegischen Plattformen ist das OGEPA/Hardanger-Zertifikat erforderlich, das auf dem norwegischen Offshore-Standard basiert. Bei Samedos führen wir diese Untersuchung durch und stellen das entsprechende Zertifikat aus.',
+  },
+];
+
+const steps = [
+  { nr: '01', titel: 'Terminvereinbarung', text: 'Kurzfristige Termine möglich — per Telefon, E-Mail oder Kontaktformular.' },
+  { nr: '02', titel: 'Anamnese & Vorgespräch', text: 'Ausführliche Befragung zu Vorerkrankungen, Medikamenten und bisherigen Offshore-Einsätzen.' },
+  { nr: '03', titel: 'Klinische Untersuchung', text: 'Körperlicher Status, Blutdruck, Puls, allgemeine Untersuchung durch den Arzt.' },
+  { nr: '04', titel: 'Chester Step Test / Belastungs-EKG', text: 'Kardiovaskuläre Belastungsuntersuchung — zentrales Element der Offshore-Tauglichkeit.' },
+  { nr: '05', titel: 'Sehtest, Farbtafel & Hörtest', text: 'Überprüfung von Visus, Farbsehen und Hörvermögen nach den jeweiligen Standard-Anforderungen.' },
+  { nr: '06', titel: 'Labor & Urinprobe', text: 'Standardlabor (Blutbild, Niere, Leber) sowie ggf. spezifische Parameter je nach Anforderung.' },
+  { nr: '07', titel: 'Lungenfunktion', text: 'Spirometrische Messung der Atemkapazität.' },
+  { nr: '08', titel: 'Arztgespräch & Zertifikat', text: 'Auswertung aller Befunde, Arztgespräch und Ausstellung des international anerkannten Zertifikats.' },
+];
+---
+
+<BaseLayout
+  title="Offshore-Untersuchung Bremen – OGUK/OEUK & AWMF | Samedos"
+  description="OGUK/OEUK- und AWMF-Offshore-Untersuchung in Bremen. Chester Step Test, Tauchtauglichkeit & Hardanger – alle Standards aus einer Praxis. Termin kurzfristig möglich."
+  alternateHref="/en/services/offshore-medical"
+>
+
+  <!-- ═══ Seitenspezifische JSON-LD ═══ -->
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Start", "item": "https://samedos.de/" },
+        { "@type": "ListItem", "position": 2, "name": "Leistungen", "item": "https://samedos.de/leistungen" },
+        { "@type": "ListItem", "position": 3, "name": "Offshore-Untersuchung", "item": "https://samedos.de/leistungen/offshore-untersuchung" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalProcedure",
+      "name": "Offshore-Tauglichkeitsuntersuchung (OGUK/OEUK, AWMF, OGEPA)",
+      "description": "Arbeitsmedizinische Tauglichkeitsuntersuchung für Offshore-Tätigkeiten nach OGUK/OEUK-, AWMF- und OGEPA/Hardanger-Standard, einschließlich Chester Step Test, Seh- und Hörtest, Labor und Lungenfunktion.",
+      "procedureType": "https://schema.org/PhysicalExam",
+      "status": "https://schema.org/ActiveActionStatus",
+      "followup": "Zertifikat gültig in der Regel 2 Jahre",
+      "preparation": "Personalausweis, Impfpass, Brille/Linsen, Medikamentenliste",
+      "howPerformed": "Klinische Untersuchung, Chester Step Test, EKG, Sehtest, Hörtest, Labor, Lungenfunktion",
+      "performedBy": {
+        "@type": "Physician",
+        "name": "Dr. med. Jörg Janssen",
+        "worksFor": { "@type": "MedicalOrganization", "name": "Samedos GmbH" }
+      }
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+      }))
+    })} />
+  </Fragment>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <!-- Breadcrumb -->
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/" class="hover:text-white/80 transition-colors">Start</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/leistungen" class="hover:text-white/80 transition-colors">Leistungen</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">Offshore-Untersuchung</li>
+        </ol>
+      </nav>
+
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Offshore-Arbeitsmedizin
+      </p>
+      <h1 class="text-[clamp(1.9rem,4vw,3rem)] text-white max-w-3xl leading-[1.15]" data-animate data-delay="1">
+        Offshore-Untersuchung in Bremen –<br class="hidden sm:block" /> OGUK/OEUK, AWMF & Hardanger
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
+        Deutschland- und europaweit anerkannte Zertifikate — alle Offshore-Standards aus einer Praxis in Bremen, kurzfristige Termine möglich.
+      </p>
+      <div class="flex flex-wrap gap-3 mt-8" data-animate data-delay="3">
+        <a
+          href="/kontakt"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Termin anfragen →
+        </a>
+        <a
+          href="/preise#sonderuntersuchungen"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border border-white/30 text-white font-medium text-[0.95rem] transition-all hover:bg-white/10"
+        >
+          Preise ansehen
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Intro ═══ -->
+  <section class="py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <h2 class="text-[1.5rem] mb-5">Was ist eine OGUK-/OEUK-Untersuchung?</h2>
+      <div class="prose prose-lg text-muted space-y-4 text-[1.05rem] leading-relaxed">
+        <p>
+          Eine <strong>Offshore-Untersuchung in Bremen</strong> ist die gesetzlich vorgeschriebene Tauglichkeitsuntersuchung für alle Personen, die auf Offshore-Plattformen, Windenergieanlagen auf See oder Versorgungsschiffen tätig sind. Die Untersuchung stellt sicher, dass Beschäftigte den körperlichen und mentalen Anforderungen im Offshore-Umfeld gewachsen sind — weit entfernt von medizinischer Sofortversorgung.
+        </p>
+        <p>
+          Die bekannteste internationale Norm ist das <strong>OGUK Medical</strong> (seit 2022 umbenannt in <strong>OEUK</strong> — Offshore Energies UK). Beide Bezeichnungen sind noch geläufig und bezeichnen denselben Standard. Für deutsche Offshore-Anlagen gilt das <strong>AWMF-Offshore-Zertifikat</strong>, für norwegische Gewässer das <strong>OGEPA/Hardanger-Zertifikat</strong>.
+        </p>
+        <p>
+          Bei Samedos führt <strong>Dr. med. Jörg Janssen</strong> diese Untersuchungen durch — mit über 23 Jahren Erfahrung in der Arbeitsmedizin und spezialisierter Kenntnis der Offshore-Standards. Wir sind Ihre Anlaufstelle für <strong>Offshore Medical Deutschland</strong> — aus Bremen, mit überregionaler Reichweite.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Welche Untersuchungen ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          Unser Angebot
+        </p>
+        <h2 class="text-[1.7rem]">Welche Offshore-Untersuchungen bieten wir an?</h2>
+        <p class="text-muted mt-3 max-w-2xl">
+          Alle relevanten internationalen Standards — aus einer Praxis, ohne Umwege.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- OGUK / OEUK -->
+        <article class="bg-white border border-border rounded-2xl p-8" data-animate>
+          <div class="w-10 h-10 bg-mint/15 rounded-xl flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h3 class="text-[1.15rem] font-heading font-bold text-navy mb-2">OGUK / OEUK Medical</h3>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Der britische Offshore-Standard für internationale Tätigkeiten in der Nordsee und weltweit. OGUK wurde 2022 in <strong>OEUK</strong> (Offshore Energies UK) umbenannt — beide Begriffe bezeichnen denselben Standard. Das Zertifikat wird von nahezu allen Offshore-Arbeitgebern weltweit anerkannt und ist Voraussetzung für Arbeiten auf Plattformen und FPSO-Einheiten in britischen Gewässern.
+          </p>
+        </article>
+
+        <!-- AWMF -->
+        <article class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
+          <div class="w-10 h-10 bg-mint/15 rounded-xl flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2" aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <h3 class="text-[1.15rem] font-heading font-bold text-navy mb-2">AWMF-Offshore-Untersuchung (Deutschland)</h3>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Der deutsche Offshore-Standard für Tätigkeiten auf deutschen Offshore-Anlagen, insbesondere Windkraftanlagen in der Deutschen Bucht. Die <strong>AWMF-Offshore-Untersuchung</strong> ist Pflicht für alle Personen, die auf deutschen Offshore-Installationen eingesetzt werden, und wird von deutschen Arbeitgebern und Behörden anerkannt.
+          </p>
+        </article>
+
+        <!-- OGEPA / Hardanger -->
+        <article class="bg-white border border-border rounded-2xl p-8" data-animate>
+          <div class="w-10 h-10 bg-mint/15 rounded-xl flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2" aria-hidden="true">
+              <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+            </svg>
+          </div>
+          <h3 class="text-[1.15rem] font-heading font-bold text-navy mb-2">OGEPA / Hardanger (Norwegen)</h3>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Der norwegische Offshore-Standard für Tätigkeiten auf norwegischen Plattformen und in norwegischen Gewässern. Die <strong>OGEPA/Hardanger-Untersuchung</strong> hat spezifische Anforderungen an Herz-Kreislauf-Fitness und Sehvermögen. Wir führen diese Untersuchung durch und stellen das entsprechende Zertifikat aus.
+          </p>
+        </article>
+
+        <!-- Chester Step Test -->
+        <article class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
+          <div class="w-10 h-10 bg-mint/15 rounded-xl flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2" aria-hidden="true">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3 class="text-[1.15rem] font-heading font-bold text-navy mb-2">Chester Step Test</h3>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Der Chester Step Test ist ein standardisierter Belastungstest zur Beurteilung der kardiovaskulären Fitness — zentrales Element der meisten Offshore-Tauglichkeitsuntersuchungen. Er misst die maximale Sauerstoffaufnahme (VO₂max) und ist Voraussetzung für das OGUK/OEUK- und AWMF-Zertifikat. Bei Samedos wird er unter kontrollierten Bedingungen durchgeführt.
+          </p>
+        </article>
+
+        <!-- Tauchtauglichkeit -->
+        <article class="bg-white border border-border rounded-2xl p-8 md:col-span-2" data-animate>
+          <div class="w-10 h-10 bg-mint/15 rounded-xl flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2" aria-hidden="true">
+              <path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/><path d="M12 8v8M8 12h8"/>
+            </svg>
+          </div>
+          <h3 class="text-[1.15rem] font-heading font-bold text-navy mb-2">Tauchtauglichkeitsuntersuchung</h3>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Für kommerzielle Taucher und Offshore-Taucher führen wir die arbeitsmedizinische <strong>Tauchtauglichkeitsuntersuchung</strong> durch. Diese umfasst neben dem Standardprogramm erweiterte HNO- und Lungenfunktionsuntersuchungen sowie eine Beurteilung der Druckausgleichsfähigkeit. Das Zertifikat ist Grundlage für die Berufszulassung als Taucher.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Für wen Pflicht ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-12 items-start">
+        <div data-animate>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            Zielgruppen
+          </p>
+          <h2 class="text-[1.7rem] mb-4">Für wen ist die Offshore-Untersuchung Pflicht?</h2>
+          <p class="text-muted leading-relaxed">
+            Eine <strong>Offshore-Tauglichkeitsuntersuchung</strong> ist gesetzlich verpflichtend für alle Personen, die in der Offshore-Energiebranche tätig sind. Die Anforderungen basieren auf der Offshore Industry Recommended Practice (OIR) und den jeweiligen nationalen Regelwerken.
+          </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" data-animate data-delay="1">
+          {[
+            { titel: 'Plattform-Personal', beschreibung: 'Alle Beschäftigten auf Öl-, Gas- und Offshore-Windenergieplattformen, unabhängig von Tätigkeit oder Arbeitgeber.' },
+            { titel: 'Offshore-Windtechniker', beschreibung: 'Techniker und Ingenieure auf Offshore-Windkraftanlagen in deutschen, britischen oder norwegischen Gewässern.' },
+            { titel: 'Versorgungsschiff-Crews', beschreibung: 'Besatzungen von Offshore Service Vessels (OSV) und anderen Versorgungseinheiten.' },
+            { titel: 'Kommerzielle Taucher', beschreibung: 'Taucher für Wartungs- und Inspektionsarbeiten an Unterwasserkonstruktionen.' },
+            { titel: 'Hubschrauberpassagiere', beschreibung: 'Personen, die für den Offshore-Transport in Hubschrauber einsteigen — HUET-Zertifizierung oft gleichzeitig.' },
+            { titel: 'Wissenschaftler & Gäste', beschreibung: 'Auch Nicht-Offshore-Arbeiter (Journalisten, Forscher, Behördenvertreter), die eine Plattform betreten.' },
+          ].map(item => (
+            <div class="bg-bg-soft border border-border rounded-xl p-5">
+              <p class="font-heading font-semibold text-navy text-[0.95rem] mb-1">{item.titel}</p>
+              <p class="text-muted text-[0.88rem] leading-relaxed">{item.beschreibung}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Ablauf ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          Schritt für Schritt
+        </p>
+        <h2 class="text-[1.7rem]">Ablauf einer Offshore-Untersuchung bei Samedos</h2>
+        <p class="text-muted mt-3">Typische Gesamtdauer: <strong>1,5 – 2 Stunden</strong></p>
+      </div>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {steps.map((step, i) => (
+          <li class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i % 4)}>
+            <span class="font-heading font-bold text-mint text-[1.3rem] mb-3">{step.nr}</span>
+            <p class="font-heading font-semibold text-navy text-[0.95rem] mb-2">{step.titel}</p>
+            <p class="text-muted text-[0.88rem] leading-relaxed">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ Mitbringen ═══ -->
+  <section class="py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-10 items-start">
+        <div data-animate>
+          <h2 class="text-[1.5rem] mb-4">Was muss ich zur Untersuchung mitbringen?</h2>
+          <ul class="space-y-3">
+            {[
+              'Gültiger Personalausweis oder Reisepass',
+              'Impfpass',
+              'Brille oder Kontaktlinsen (falls getragen)',
+              'Medikamentenliste / aktuelle Medikamente',
+              'Frühere Offshore-Zertifikate (falls vorhanden)',
+              'Vorbefunde relevanter Erkrankungen',
+            ].map(item => (
+              <li class="flex items-start gap-3 text-[0.95rem] text-muted">
+                <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p class="mt-5 text-[0.88rem] text-muted italic">
+            Ob Sie nüchtern erscheinen müssen, hängt vom Umfang der Laboruntersuchung ab. Wir informieren Sie bei der Terminvereinbarung.
+          </p>
+        </div>
+
+        <!-- Dauer / Kosten / Gültigkeit -->
+        <div data-animate data-delay="1">
+          <h2 class="text-[1.5rem] mb-4">Dauer, Kosten & Gültigkeit</h2>
+          <div class="space-y-4">
+            {[
+              { label: 'Dauer', wert: '1,5 – 2 Stunden' },
+              { label: 'Gültigkeit', wert: 'Regel 2 Jahre (je nach Standard & Befund)' },
+              { label: 'Kosten', wert: 'Auf Anfrage / Preisseite' },
+              { label: 'Kostenträger', wert: 'Meist Arbeitgeber' },
+            ].map(row => (
+              <div class="flex gap-4 border-b border-border pb-3 last:border-0 last:pb-0">
+                <span class="font-semibold text-navy text-[0.9rem] w-28 shrink-0">{row.label}</span>
+                <span class="text-muted text-[0.9rem]">{row.wert}</span>
+              </div>
+            ))}
+          </div>
+          <a
+            href="/preise#sonderuntersuchungen"
+            class="inline-flex items-center gap-2 mt-6 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+          >
+            Preise ansehen →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Arzt / E-A-T ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-12 items-start" data-animate>
+
+        <!-- Foto -->
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
+          <img
+            src="/images/team/joerg-janssen.png"
+            alt="Dr. med. Jörg Janssen, Facharzt für Arbeitsmedizin und Offshore-Arzt bei Samedos Bremen"
+            class="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        </div>
+
+        <!-- Text -->
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            Ihr Arzt
+          </p>
+          <h2 class="text-[1.7rem] mb-4">Ihr Arzt für Offshore-Medizin in Bremen</h2>
+
+          <p class="text-muted leading-relaxed mb-6">
+            Dr. med. Jörg Janssen ist Gründer und Geschäftsführer von Samedos. Er ist Facharzt für Arbeitsmedizin und Allgemeinmedizin mit Zusatzqualifikationen in Sportmedizin, Strahlenschutz und Manueller Medizin — und führt alle Offshore-Tauglichkeitsuntersuchungen persönlich durch. Regelmäßige Fortbildungen zu den aktuellen Offshore-Standards gehören für ihn zum Berufsbild.
+          </p>
+
+          <!-- Qualifikationen — Platzhalter für echte Daten -->
+          <div class="bg-white border border-border rounded-2xl p-6 mb-6 space-y-5">
+
+            <div>
+              <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">Facharztqualifikationen & Weiterbildungen</p>
+              <ul class="space-y-2">
+                {[
+                  'Facharzt für Arbeitsmedizin (Ärztekammer Hamburg, 2004)',
+                  'Facharzt für Allgemeinmedizin (Ärztekammer Niedersachsen, 2002)',
+                  'Sportmedizin (Ärztekammer Hamburg, 2004)',
+                  'Manuelle Medizin / Chirotherapie (Ärztekammer Niedersachsen, 2010)',
+                  'Fachkunde Strahlenschutz, Notfalldiagnostik (Landesärztekammer Hessen, 1999)',
+                  'Ermächtigung zur Überwachung beruflich strahlenexponierter Personen (Ärztekammer Bremen, 2013)',
+                  'Arbeitsmedizinische Zusammenhangsbegutachtung (DGAUM, 2006)',
+                  'Certified Disability Management Professional – CDMP (IDMSC, 2005)',
+                  'Promotion Dr. med., Georg-August-Universität Göttingen (1997)',
+                ].map(item => (
+                  <li class="flex items-start gap-3 text-[0.88rem] text-muted">
+                    <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="border-t border-border pt-4">
+              <p class="font-heading font-semibold text-navy mb-2 text-[0.95rem]">Offshore-spezifische Weiterbildungen</p>
+              <p class="text-muted text-[0.88rem] leading-relaxed">
+                Regelmäßige Fortbildungen zur Offshore-Tauglichkeitsuntersuchung, inklusive Chester Step Test, Belastbarkeits- und Rettungsfähigkeitsprüfung nach aktuellen branchenüblichen Standards.
+              </p>
+            </div>
+
+            <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
+              <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Sprachen</p>
+              {['Deutsch', 'Englisch', 'Spanisch', 'Niederländisch'].map(lang => (
+                <span class="text-muted text-[0.88rem]">{lang}</span>
+              ))}
+            </div>
+
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="/ueber-uns"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+            >
+              Mehr über uns →
+            </a>
+            <a
+              href="/kontakt"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              Termin anfragen →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="mb-10 text-center" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          FAQ
+        </p>
+        <h2 class="text-[1.7rem]">Häufige Fragen zur Offshore-Untersuchung</h2>
+      </div>
+      <div class="space-y-3">
+        {faqs.map((faq, i) => (
+          <details class="group bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay={String(i % 4)}>
+            <summary class="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none font-heading font-semibold text-navy text-[0.97rem] hover:bg-bg-soft transition-colors select-none">
+              {faq.question}
+              <span class="shrink-0 w-6 h-6 rounded-full border border-border flex items-center justify-center text-mint transition-transform group-open:rotate-45" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 1v10M1 6h10"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-5 pt-1 text-muted text-[0.95rem] leading-relaxed border-t border-border">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA / Termin ═══ -->
+  <section class="max-w-[1200px] mx-auto px-6 pb-24">
+    <div
+      class="relative rounded-[28px] px-12 py-16 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3">Termin vereinbaren</p>
+      <h2 class="text-white text-[clamp(1.6rem,3vw,2.3rem)] mb-4">
+        Offshore-Untersuchung in Bremen —<br class="hidden sm:block" /> jetzt Termin anfragen
+      </h2>
+      <p class="text-white/80 max-w-[520px] mx-auto mb-7">
+        Kurzfristige Termine möglich. Wir beraten Sie zu allen Offshore-Standards und sorgen für ein reibungsloses Zertifizierungsverfahren.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a
+          href="/kontakt"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Termin anfragen →
+        </a>
+        <a
+          href="tel:+494216399776"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border border-white/30 text-white font-medium text-[0.95rem] transition-all hover:bg-white/10"
+        >
+          0421 63997761
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  details[open] > summary {
+    background-color: var(--color-bg-soft, #f8fafc);
+  }
+</style>

@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTeamMembers } from '../../sanity/client';
+
+const team = await getTeamMembers();
+
+const positionMap: Record<string, string> = {
+  'Gründer & Geschäftsführer': 'Founder & Managing Director',
+  'Gründerin & Geschäftsführerin': 'Founder & Managing Director',
+  'Medizinische Fachangestellte': 'Medical Assistant',
+};
+
+const fallbackTeam = [
+  { name: 'Jörg', position: 'Founder & Managing Director', photo: '/images/team/joerg-janssen.png' },
+  { name: 'Simone', position: 'Founder & Managing Director', photo: '/images/team/simone.png' },
+  { name: 'Sigrid', position: 'Medical Assistant', photo: '/images/team/sigrid.png' },
+  { name: 'Claudia', position: 'Medical Assistant', photo: '/images/team/claudia.png' },
+];
+
+const displayTeam = team.length > 0
+  ? team.map((m) => ({
+      name: m.name,
+      position: positionMap[m.position] ?? m.position,
+      bio: m.bio ?? '',
+      photo: m.photo?.asset?.url ?? null,
+    }))
+  : fallbackTeam.map((m) => ({ name: m.name, position: m.position, bio: '', photo: m.photo as string | null }));
+---
+
+<BaseLayout
+  title="About us — Samedos GmbH Bremen"
+  description="Samedos was founded in 2025 by Dr. Jörg and Simone Janssen. Meet our team — modern occupational medicine with experience and a personal touch."
+  lang="en"
+  alternateHref="/ueber-uns"
+>
+
+  <!-- Hero -->
+  <section class="pt-20 pb-14" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        About us
+      </p>
+      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white max-w-2xl" data-animate data-delay="1">
+        Occupational medicine reimagined — from Bremen.
+      </h1>
+    </div>
+  </section>
+
+  <!-- Our story -->
+  <section class="py-16">
+    <div class="max-w-[860px] mx-auto px-6">
+      <div data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          Our story
+        </p>
+        <h2 class="mb-6">Founded with conviction</h2>
+      </div>
+      <div class="space-y-4 text-muted text-[1.05rem]" data-animate data-delay="1">
+        <p>
+          Samedos was founded in October 2025 by Dr. Jörg and Simone Janssen — with the goal of
+          rethinking modern occupational medicine. After many years in group practice and hospital
+          settings, the managing directors bring comprehensive experience and expertise.
+        </p>
+        <p>
+          Together with two dedicated medical assistants, we form a small but well-coordinated team.
+          Personal, reliable, and on equal terms.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          The team
+        </p>
+        <h2>The people behind Samedos</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {displayTeam.map((member, i) => (
+          <div class="bg-white rounded-2xl overflow-hidden border border-border hover:border-mint hover:-translate-y-1 transition-all duration-250" data-animate data-delay={String(i + 1)}>
+            <div class="aspect-square bg-mint-soft">
+              {member.photo ? (
+                <img src={member.photo} alt={member.name} class="w-full h-full object-cover object-top" />
+              ) : (
+                <div class="w-full h-full grid place-items-center">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="text-mint opacity-40">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+            <div class="p-6">
+              <h3 class="text-[1.1rem] mb-1">{member.name}</h3>
+              <p class="text-mint font-medium text-[0.88rem] mb-2">{member.position}</p>
+              {member.bio && <p class="text-muted text-[0.88rem]">{member.bio}</p>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="py-16 bg-bg-soft">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-10 text-center max-w-2xl mx-auto" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          Our values
+        </p>
+        <h2>What drives us</h2>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" data-animate data-delay="1">
+        {['Prevention', 'Reliability', 'Sustainability', 'Trust', 'Expertise', 'Commitment'].map((v) => (
+          <div class="bg-white rounded-xl p-5 text-center border border-border">
+            <p class="font-heading font-bold text-navy text-[0.95rem]">{v}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

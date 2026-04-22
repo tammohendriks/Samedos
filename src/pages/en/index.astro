@@ -1,0 +1,301 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ValueCard from '../../components/ValueCard.astro';
+import { getSiteSettings } from '../../sanity/client';
+
+const settings = await getSiteSettings();
+const heroSrc = settings?.heroImage?.asset?.url ?? '/Titelbild.png';
+const heroAlt = settings?.heroImageAlt ?? 'The Samedos team';
+
+const values = [
+  {
+    title: 'Prevention',
+    description: 'We focus on early intervention and individual advice to prevent risks before they arise.',
+    iconPath: 'M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z',
+  },
+  {
+    title: 'Reliability',
+    description: 'As an experienced partner we stand by companies long-term — from statutory examinations to bespoke solutions.',
+    iconPath: 'M20 6L9 17l-5-5',
+  },
+  {
+    title: 'Sustainability',
+    description: 'Healthy employees are the foundation for lasting business success — that drives our work every day.',
+    iconPath: 'M12 2v20M2 12h20',
+  },
+  {
+    title: 'Trust',
+    description: 'Personal care, clear communication and extensive experience — security for employers and employees alike.',
+    iconPath: 'M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11zM12 10m-3 0a3 3 0 1 0 6 0 3 3 0 1 0-6 0',
+  },
+  {
+    title: 'Expertise',
+    description: 'Dr. Jörg Janssen combines 23+ years of occupational medicine experience with practical, pragmatic solutions.',
+    iconPath: 'M20 7L9 18l-5-5',
+  },
+  {
+    title: 'Commitment',
+    description: 'We support companies through return-to-work processes, risk assessments and all special requirements.',
+    iconPath: 'M12 8m-4 0a4 4 0 1 0 8 0 4 4 0 1 0-8 0M12 2v3M12 19v3M2 12h3M19 12h3',
+  },
+];
+---
+
+<BaseLayout
+  title="Samedos — Occupational Medicine with Responsibility | Bremen"
+  description="Samedos is your partner for modern occupational medicine in Bremen, Germany. DGUV Vorschrift 2 compliance, offshore medicals, BGM and specialist examinations."
+  lang="en"
+  alternateHref="/"
+>
+
+  <Fragment slot="head">
+    <script type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Samedos GmbH",
+      "url": "https://samedos.de/en/",
+      "inLanguage": "en-US",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://samedos.de/en/services" }
+      }
+    })}</script>
+    <script type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://samedos.de/en/" }
+      ]
+    })}</script>
+  </Fragment>
+
+  <!-- Hero -->
+  <section class="relative pt-24 pb-20 overflow-hidden">
+    <div
+      class="absolute -top-[200px] -right-[200px] w-[650px] h-[650px] rounded-full pointer-events-none -z-10"
+      style="background: radial-gradient(circle, #D6EEE7 0%, transparent 60%); filter: blur(10px);"
+      aria-hidden="true"
+    ></div>
+
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-16 items-center">
+
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+            Occupational Medicine from Bremen
+          </p>
+          <h1 class="text-[clamp(2.25rem,5vw,4rem)] mt-2 mb-6">
+            <span class="hero-word" style="animation-delay: 0.05s">Occupational</span>
+            <span class="hero-word" style="animation-delay: 0.18s">Medicine</span>
+            <span class="hero-word text-mint" style="animation-delay: 0.32s">with Responsibility.</span>
+          </h1>
+          <p class="text-[1.15rem] text-muted mb-8 max-w-[520px]" data-animate data-delay="3">
+            Samedos is your partner for modern occupational health services according to DGUV Vorschrift&nbsp;2.
+            We protect the health of your employees — with personal care, professional expertise and clear concepts.
+          </p>
+          <div class="flex gap-4 flex-wrap" data-animate data-delay="4">
+            <a
+              href="/en/contact"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              Book appointment →
+            </a>
+            <a
+              href="/en/services"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Our services
+            </a>
+            <a
+              href="/en/contact#directions"
+              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+            >
+              Directions
+            </a>
+          </div>
+        </div>
+
+        <div class="relative rounded-3xl overflow-hidden aspect-[4/5] max-w-[440px] mx-auto lg:mx-0 lg:max-w-none shadow-[0_20px_60px_rgba(20,43,73,.2)]" data-animate data-delay="2">
+          <img
+            src={heroSrc}
+            alt={heroAlt}
+            class="w-full h-full object-cover"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            width="880"
+            height="1100"
+          />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="bg-bg-soft py-14">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 text-center">
+        {[
+          { number: '+80',  label: 'companies served',       prefix: '+', suffix: '',  target: 80  },
+          { number: '+800', label: 'employees supervised',    prefix: '+', suffix: '',  target: 800 },
+          { number: '36+',  label: 'years of experience',     prefix: '',  suffix: '+', target: 36  },
+          { number: '100%', label: 'individual concepts',     prefix: '',  suffix: '%', target: 100 },
+        ].map((stat) => (
+          <div class="stat-item" data-animate data-target={stat.target} data-prefix={stat.prefix} data-suffix={stat.suffix}>
+            <div class="stat-number font-heading font-extrabold text-mint leading-none mb-2" style="font-size: clamp(2.2rem, 4vw, 3.2rem);">
+              {stat.number}
+            </div>
+            <div class="text-[0.95rem] text-muted font-medium">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="py-16" id="about">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-10">
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          Our values
+        </p>
+        <h2>Our compass for collaboration and health</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {values.map((value) => (
+          <ValueCard title={value.title} description={value.description} iconPath={value.iconPath} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Services teaser -->
+  <section class="bg-bg-soft py-16" id="services">
+    <div class="max-w-[860px] mx-auto px-6 text-center" data-animate>
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+        Our services
+      </p>
+      <h2 class="mb-5">Tailored solutions for a healthy workforce</h2>
+      <p class="text-muted text-[1.05rem] mb-8">
+        From occupational health surveillance and specialist examinations to workplace health management
+        and psychological support — we offer the right solution for companies of all sizes.
+      </p>
+      <a
+        href="/en/services"
+        class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+      >
+        View all services →
+      </a>
+    </div>
+  </section>
+
+  <!-- Founder quote -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-16 items-center">
+
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[440px] mx-auto lg:mx-0 lg:max-w-none" data-animate>
+          <img
+            src="/images/team/joerg-janssen.png"
+            alt="Dr. med. Jörg Janssen"
+            class="w-full h-full object-cover object-top"
+          />
+        </div>
+
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            Our promise
+          </p>
+          <h2>What you can count on</h2>
+          <p class="text-muted mt-4 text-[1.05rem]">
+            We stand for reliable, legally sound and modern occupational medicine according to DGUV Vorschrift&nbsp;2.
+            Our goal: to keep your employees healthy and capable in the long term.
+          </p>
+          <blockquote class="font-heading text-[1.4rem] leading-[1.4] text-mint font-semibold my-6 pl-5 border-l-[3px] border-mint">
+            "Occupational medicine, for me, is the connection between experience, responsibility and
+            humanity — so that work and health remain in balance."
+          </blockquote>
+          <p class="text-navy font-medium">
+            Dr. med. Jörg Janssen<br />
+            <span class="text-muted font-normal text-[0.9rem]">Founder &amp; Managing Director</span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section data-animate class="max-w-[1200px] mx-auto px-6 my-24">
+    <div
+      class="relative rounded-[28px] px-12 py-16 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+        Offshore Medical
+      </p>
+      <h2 class="text-white text-[clamp(1.75rem,3vw,2.5rem)] mb-4">OGUK/OEUK, AWMF &amp; Hardanger — from Bremen</h2>
+      <p class="text-white/80 max-w-[560px] mx-auto mb-7">
+        Certified offshore fitness examinations for all major standards.
+        Appointments available within 48 hours — in English, German, French and Spanish.
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a
+          href="/en/services/offshore-medical"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Offshore medical details →
+        </a>
+        <a
+          href="/en/contact"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border-[1.5px] border-white text-white font-medium text-[0.95rem] transition-all hover:bg-white hover:text-navy"
+        >
+          Book appointment
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('.stat-item');
+
+  function animateCounter(el: HTMLElement) {
+    const numEl = el.querySelector('.stat-number') as HTMLElement;
+    const target = parseInt(el.dataset.target ?? '0', 10);
+    const prefix = el.dataset.prefix ?? '';
+    const suffix = el.dataset.suffix ?? '';
+    const duration = 1400;
+    const start = performance.now();
+
+    function easeOut(t: number) { return 1 - Math.pow(1 - t, 3); }
+
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      numEl.textContent = prefix + Math.round(easeOut(progress) * target) + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target as HTMLElement);
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+  items.forEach((item) => observer.observe(item));
+</script>

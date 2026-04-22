@@ -43,7 +43,29 @@ const values = [
 <BaseLayout
   title="Samedos — Arbeitsmedizin mit Verantwortung | Bremen"
   description="Samedos ist Ihr Partner für moderne Arbeitsmedizin nach DGUV Vorschrift 2. Mit Sitz in Bremen — überregional tätig. Vorsorge, BGM, Spezialuntersuchungen."
+  alternateHref="/en/"
 >
+
+  <Fragment slot="head">
+    <script type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Samedos GmbH",
+      "url": "https://samedos.de",
+      "inLanguage": "de-DE",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://samedos.de/leistungen" }
+      }
+    })}</script>
+    <script type="application/ld+json">{JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://samedos.de/" }
+      ]
+    })}</script>
+  </Fragment>
 
   <Hero />
   <Stats />

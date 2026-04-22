@@ -1,0 +1,257 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contact — Samedos Occupational Medicine Bremen"
+  description="Contact Samedos: Timmersloher Str. 82, 28215 Bremen. Tel: +49 421 63997-76. Mon–Fri 08–15. Reachable outside opening hours too."
+  lang="en"
+  alternateHref="/kontakt"
+>
+
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Contact
+      </p>
+      <h1 class="text-[clamp(2rem,4vw,3rem)] text-white" data-animate data-delay="1">We are here for you</h1>
+      <p class="text-white/75 text-[1.1rem] mt-4 max-w-xl" data-animate data-delay="2">
+        Call us, send an email or use the form — we respond quickly.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16">
+
+        <!-- Contact details -->
+        <div class="space-y-8" data-animate>
+          <div>
+            <h2 class="text-[1.4rem] mb-6">Contact details</h2>
+            <ul class="space-y-5">
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">Address</p>
+                  <p class="text-muted text-[0.95rem]">Timmersloher Straße 82<br />28215 Bremen, Germany</p>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">Phone</p>
+                  <a href="tel:+494216399776" class="text-muted text-[0.95rem] hover:text-mint transition-colors">+49 421 63997-76</a>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">Email</p>
+                  <a href="mailto:info@samedos.de" class="text-muted text-[0.95rem] hover:text-mint transition-colors">info@samedos.de</a>
+                </div>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="w-10 h-10 bg-mint-soft rounded-xl grid place-items-center text-mint shrink-0">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-5 h-5">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </span>
+                <div>
+                  <p class="font-medium text-navy">Opening hours</p>
+                  <p class="text-muted text-[0.95rem]">Mon – Fri: 08:00 – 15:00</p>
+                  <p class="text-mint text-[0.9rem] font-medium mt-1">Reachable outside hours too</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contact form -->
+        <div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="2">
+          <h2 class="text-[1.4rem] mb-6">Send a message</h2>
+
+          <div id="form-success" class="hidden text-center py-10">
+            <div class="w-14 h-14 bg-mint-soft rounded-full grid place-items-center mx-auto mb-4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-7 h-7 text-mint">
+                <path d="M20 6L9 17l-5-5"/>
+              </svg>
+            </div>
+            <h3 class="text-[1.2rem] mb-2">Message sent!</h3>
+            <p class="text-muted text-[0.95rem]">Thank you — we will get back to you as soon as possible.</p>
+          </div>
+
+          <div id="form-error" class="hidden mb-5 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-[0.9rem]">
+            An error occurred. Please try again or write to us directly at <a href="mailto:info@samedos.de" class="underline">info@samedos.de</a>.
+          </div>
+
+          <form id="kontakt-form" method="POST" action="/api/kontakt" class="space-y-5">
+            <input type="text" name="_honeypot" class="hidden" tabindex="-1" autocomplete="off" />
+            <input type="hidden" name="_lang" value="en" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="vorname" class="block text-[0.9rem] font-medium text-navy mb-1.5">First name *</label>
+                <input id="vorname" name="vorname" type="text" required class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors" />
+              </div>
+              <div>
+                <label for="nachname" class="block text-[0.9rem] font-medium text-navy mb-1.5">Last name *</label>
+                <input id="nachname" name="nachname" type="text" required class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors" />
+              </div>
+            </div>
+
+            <div>
+              <label for="email" class="block text-[0.9rem] font-medium text-navy mb-1.5">Email *</label>
+              <input id="email" name="email" type="email" required class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label for="unternehmen" class="block text-[0.9rem] font-medium text-navy mb-1.5">Company</label>
+                <input id="unternehmen" name="unternehmen" type="text" class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors" />
+              </div>
+              <div>
+                <label for="telefon" class="block text-[0.9rem] font-medium text-navy mb-1.5">Phone</label>
+                <input id="telefon" name="telefon" type="tel" class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors" />
+              </div>
+            </div>
+
+            <div>
+              <label for="betreff" class="block text-[0.9rem] font-medium text-navy mb-1.5">Subject *</label>
+              <select id="betreff" name="betreff" required class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors bg-white">
+                <option value="">Please select…</option>
+                <option value="Appointment request">Appointment request</option>
+                <option value="General enquiry">General enquiry</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="nachricht" class="block text-[0.9rem] font-medium text-navy mb-1.5">Message *</label>
+              <textarea id="nachricht" name="nachricht" required rows="5" class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors resize-none"></textarea>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <input id="dsgvo" name="dsgvo" type="checkbox" required class="mt-1 w-4 h-4 accent-mint shrink-0" />
+              <label for="dsgvo" class="text-[0.88rem] text-muted">
+                I have read the <a href="/en/privacy" class="text-navy underline hover:text-mint">privacy policy</a>
+                and consent to the processing of my data to handle my enquiry. *
+              </label>
+            </div>
+
+            <button
+              id="submit-btn"
+              type="submit"
+              class="w-full inline-flex items-center justify-center gap-2 px-[22px] py-3.5 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)] disabled:opacity-60 disabled:pointer-events-none"
+            >
+              <span id="submit-label">Send message →</span>
+              <svg id="submit-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="32" stroke-dashoffset="12"/>
+              </svg>
+            </button>
+
+            <p class="text-muted text-[0.82rem] text-center">
+              * Required fields. Form data is used solely to process your enquiry.
+            </p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Directions -->
+  <section class="py-16 bg-bg-soft" id="directions">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+          Getting here
+        </p>
+        <h2>How to find us</h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-8 items-start" data-animate data-delay="1">
+        <div class="space-y-6">
+          <div class="bg-white border border-border rounded-2xl p-6">
+            <h3 class="text-[1.05rem] mb-3">Address</h3>
+            <p class="text-muted text-[0.95rem]">Timmersloher Straße 82<br />28215 Bremen (Findorff)</p>
+          </div>
+          <div class="bg-white border border-border rounded-2xl p-6">
+            <h3 class="text-[1.05rem] mb-3">Public transport</h3>
+            <p class="text-muted text-[0.95rem]">
+              Stop <strong class="text-navy">Hemmstraße</strong><br />
+              Lines <strong class="text-navy">25, 26, 28</strong><br />
+              from Bremen Hauptbahnhof
+            </p>
+          </div>
+          <div class="bg-white border border-border rounded-2xl p-6">
+            <h3 class="text-[1.05rem] mb-3">By car</h3>
+            <p class="text-muted text-[0.95rem]">
+              Parking on Timmersloher Straße<br />
+              or surrounding side streets.<br />
+              No reserved spaces.
+            </p>
+          </div>
+        </div>
+        <div class="rounded-2xl overflow-hidden border border-border shadow-sm h-[420px]">
+          <iframe
+            src="https://maps.google.com/maps?q=Timmersloher+Stra%C3%9Fe+82,+28215+Bremen&output=embed"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Samedos location on Google Maps"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('kontakt-form') as HTMLFormElement;
+  const btn = document.getElementById('submit-btn') as HTMLButtonElement;
+  const label = document.getElementById('submit-label')!;
+  const spinner = document.getElementById('submit-spinner')!;
+  const success = document.getElementById('form-success')!;
+  const errorBox = document.getElementById('form-error')!;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    label.textContent = 'Sending…';
+    spinner.classList.remove('hidden');
+    errorBox.classList.add('hidden');
+
+    try {
+      const res = await fetch('/api/kontakt', { method: 'POST', body: new FormData(form) });
+      const json = await res.json();
+
+      if (json.ok) {
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+      } else {
+        throw new Error();
+      }
+    } catch {
+      errorBox.classList.remove('hidden');
+      btn.disabled = false;
+      label.textContent = 'Send message →';
+      spinner.classList.add('hidden');
+    }
+  });
+</script>
