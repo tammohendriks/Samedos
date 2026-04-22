@@ -16,7 +16,20 @@ export default defineConfig({
 
   integrations: [
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) =>
+        !page.includes('/impressum') &&
+        !page.includes('/en/legal-notice') &&
+        !page.includes('/studio') &&
+        !page.includes('/api/'),
+      i18n: {
+        defaultLocale: 'de',
+        locales: {
+          de: 'de-DE',
+          en: 'en-US',
+        },
+      },
+    }),
     sanity({
       projectId: 'etmanjr2',
       dataset: 'production',

@@ -1,13 +1,44 @@
 ---
 import tammoStudiosSvg from '../assets/logo-tammo-studios.svg?raw';
 
-const navLinks = [
-  { href: '/leistungen', label: 'Leistungen' },
-  { href: '/ueber-uns', label: 'Über uns' },
-  { href: '/karriere', label: 'Karriere' },
-  { href: '/impressum', label: 'Impressum' },
-  { href: '/datenschutz', label: 'Datenschutz' },
-];
+interface Props {
+  lang?: 'de' | 'en';
+}
+
+const { lang = 'de' } = Astro.props;
+const isEnglish = lang === 'en';
+
+const navLinks = isEnglish
+  ? [
+      { href: '/en/services',                  label: 'Services' },
+      { href: '/en/services/offshore-medical', label: 'Offshore Medical' },
+      { href: '/en/about',                     label: 'About us' },
+      { href: '/en/contact',                   label: 'Contact' },
+      { href: '/en/legal-notice',              label: 'Legal Notice' },
+      { href: '/en/privacy',                   label: 'Privacy Policy' },
+    ]
+  : [
+      { href: '/leistungen',  label: 'Leistungen' },
+      { href: '/ueber-uns',   label: 'Über uns' },
+      { href: '/karriere',    label: 'Karriere' },
+      { href: '/impressum',   label: 'Impressum' },
+      { href: '/datenschutz', label: 'Datenschutz' },
+    ];
+
+const homeHref = isEnglish ? '/en/' : '/';
+const tagline = isEnglish
+  ? 'Occupational medicine with responsibility — from Bremen for companies across Germany.'
+  : 'Arbeitsmedizin mit Verantwortung — aus Bremen für Unternehmen deutschlandweit.';
+const contactHeading  = isEnglish ? 'Contact'        : 'Kontakt';
+const hoursHeading    = isEnglish ? 'Opening hours'  : 'Öffnungszeiten';
+const navHeading      = isEnglish ? 'Navigation'     : 'Navigation';
+const hoursLine1      = isEnglish ? 'Mon – Fri'      : 'Mo – Fr';
+const hoursLine2      = isEnglish ? '08:00 – 15:00'  : '08:00 – 15:00 Uhr';
+const hoursNote       = isEnglish ? 'Reachable outside hours too' : 'Auch außerhalb erreichbar';
+const copyright       = isEnglish
+  ? '© 2026 Samedos GmbH — All rights reserved'
+  : '© 2026 Samedos GmbH — Alle Rechte vorbehalten';
+const designCredit    = isEnglish ? 'Design & concept by' : 'Gestaltung & Konzept von';
 ---
 
 <footer class="bg-navy text-white/85 pt-14 pb-6">
@@ -16,21 +47,21 @@ const navLinks = [
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr] gap-10 pb-10 border-b border-white/10">
 
       <div>
-        <a href="/" class="flex items-center gap-2" aria-label="Samedos – Startseite">
+        <a href={homeHref} class="flex items-center gap-2" aria-label="Samedos – Startseite">
           <img src="/logo-new-white.svg" alt="Samedos" class="h-24 w-auto" />
         </a>
-        <p class="text-white/65 text-[0.9rem] mt-3 max-w-xs">
-          Arbeitsmedizin mit Verantwortung — aus Bremen für Unternehmen deutschlandweit.
-        </p>
+        <p class="text-white/65 text-[0.9rem] mt-3 max-w-xs">{tagline}</p>
       </div>
 
       <div>
-        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">Kontakt</h4>
+        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">{contactHeading}</h4>
         <ul class="space-y-2.5 text-[0.92rem]">
           <li>Timmersloher Str. 82</li>
           <li>28215 Bremen</li>
           <li>
-            <a href="tel:042163997761" class="text-white/70 hover:text-mint transition-colors">0421 63997761</a>
+            <a href="tel:042163997761" class="text-white/70 hover:text-mint transition-colors">
+              {isEnglish ? '+49 421 63997-76' : '0421 63997761'}
+            </a>
           </li>
           <li>
             <a href="mailto:info@samedos.de" class="text-white/70 hover:text-mint transition-colors">info@samedos.de</a>
@@ -39,16 +70,16 @@ const navLinks = [
       </div>
 
       <div>
-        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">Öffnungszeiten</h4>
+        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">{hoursHeading}</h4>
         <ul class="space-y-2.5 text-[0.92rem]">
-          <li>Mo – Fr</li>
-          <li>08:00 – 15:00 Uhr</li>
-          <li class="text-mint mt-2.5">Auch außerhalb erreichbar</li>
+          <li>{hoursLine1}</li>
+          <li>{hoursLine2}</li>
+          <li class="text-mint mt-2.5">{hoursNote}</li>
         </ul>
       </div>
 
       <div>
-        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">Navigation</h4>
+        <h4 class="text-white font-heading text-[0.95rem] uppercase tracking-[0.1em] mb-4">{navHeading}</h4>
         <ul class="space-y-2.5 text-[0.92rem]">
           {navLinks.map((link) => (
             <li>
@@ -61,9 +92,9 @@ const navLinks = [
     </div>
 
     <div class="flex flex-wrap justify-between items-center gap-3 pt-6 text-[0.85rem] text-white/50">
-      <span>© 2026 Samedos GmbH — Alle Rechte vorbehalten</span>
+      <span>{copyright}</span>
       <span class="flex items-center gap-2">
-        Gestaltung &amp; Konzept von
+        {designCredit}
         <span class="block h-8 w-auto [&>svg]:h-full [&>svg]:w-auto" set:html={tammoStudiosSvg} />
       </span>
     </div>

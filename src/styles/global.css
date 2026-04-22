@@ -29,6 +29,26 @@
   .hero-word { animation: none; }
 }
 
+/* ── Language-switch transition overlay ──────────────────────────────── */
+#lang-overlay {
+  position: fixed;
+  inset: 0;
+  background: #142B49;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* Instantly opaque when the html element has this class (set before first paint) */
+html.lang-entering #lang-overlay {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #lang-overlay { display: none !important; }
+}
+
 /* Scroll-in animations */
 [data-animate] {
   opacity: 0;

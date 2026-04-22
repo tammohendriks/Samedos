@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /studio/
+Disallow: /api/
+
+Sitemap: https://samedos.de/sitemap-index.xml
