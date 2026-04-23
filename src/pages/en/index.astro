@@ -1,11 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ValueCard from '../../components/ValueCard.astro';
-import { getSiteSettings } from '../../sanity/client';
-
-const settings = await getSiteSettings();
-const heroSrc = settings?.heroImage?.asset?.url ?? '/Titelbild.png';
-const heroAlt = settings?.heroImageAlt ?? 'The Samedos team';
+const heroSrc = '/Titelbild.png';
+const heroAlt = 'The Samedos team';
 
 const values = [
   {

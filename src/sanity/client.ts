@@ -57,11 +57,6 @@ export interface GalleryImage {
   image: { asset: { url: string }; hotspot?: { x: number; y: number } };
 }
 
-export interface SiteSettings {
-  heroImage?: { asset: { url: string }; hotspot?: { x: number; y: number } };
-  heroImageAlt?: string;
-}
-
 export async function getGalleryImages(category?: string): Promise<GalleryImage[]> {
   const filter = category
     ? `*[_type == "galleryImage" && category == $category]`
@@ -106,11 +101,5 @@ export async function getPriceLists(): Promise<PriceList[]> {
         zeilen[] { code, bezeichnung, bezeichnungEN, preis, einheit, hinweis }
       }
     }`
-  );
-}
-
-export async function getSiteSettings(): Promise<SiteSettings | null> {
-  return sanityClient.fetch(
-    `*[_type == "siteSettings"][0] { heroImage { asset->{ url }, hotspot }, heroImageAlt }`
   );
 }

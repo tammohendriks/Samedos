@@ -1,9 +1,6 @@
 ---
-import { getSiteSettings } from '../sanity/client';
-
-const settings = await getSiteSettings();
-const heroSrc = settings?.heroImage?.asset?.url ?? '/Titelbild.png';
-const heroAlt = settings?.heroImageAlt ?? 'Das Samedos-Team';
+const heroSrc = '/Titelbild.png';
+const heroAlt = 'Das Samedos-Team';
 ---
 
 <section class="relative pt-24 pb-20 overflow-hidden">
