@@ -45,14 +45,40 @@ export const jobPosting = defineType({
       ],
     }),
     defineField({
-      name: 'tasks',
-      title: 'Aufgaben',
+      name: 'whatToExpect',
+      title: 'Was dich bei uns erwartet',
+      type: 'array',
+      description: 'Beschreibung des Arbeitsalltags. Fett und kursiv möglich.',
+      of: [
+        {
+          type: 'block',
+          styles: [{ title: 'Normal', value: 'normal' }],
+          lists: [],
+          marks: {
+            decorators: [
+              { title: 'Fett', value: 'strong' },
+              { title: 'Kursiv', value: 'em' },
+            ],
+            annotations: [],
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'tasksOutdoor',
+      title: 'Aufgaben – Im Außendienst',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'tasksOffice',
+      title: 'Aufgaben – In der Praxis in Findorff',
       type: 'array',
       of: [{ type: 'string' }],
     }),
     defineField({
       name: 'requirements',
-      title: 'Anforderungen',
+      title: 'Was du mitbringst',
       type: 'array',
       of: [{ type: 'string' }],
     }),

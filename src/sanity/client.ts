@@ -30,13 +30,15 @@ export interface JobPosting {
   slug: { current: string };
   active: boolean;
   description?: PortableTextBlock[];
-  tasks?: string[];
+  whatToExpect?: PortableTextBlock[];
+  tasksOutdoor?: string[];
+  tasksOffice?: string[];
   requirements?: string[];
+  benefits?: string[];
   scope?: string;
   location?: string;
   publishedAt?: string;
   validThrough?: string;
-  benefits?: string[];
 }
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
@@ -47,13 +49,13 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 
 export async function getActiveJobPostings(): Promise<JobPosting[]> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, description, tasks, requirements, benefits, scope, location, publishedAt, validThrough }`
+    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, description, whatToExpect, tasksOutdoor, tasksOffice, requirements, benefits, scope, location, publishedAt, validThrough }`
   );
 }
 
 export async function getJobPosting(slug: string): Promise<JobPosting | null> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, description, tasks, requirements, benefits, scope, location, publishedAt, validThrough }`,
+    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, description, whatToExpect, tasksOutdoor, tasksOffice, requirements, benefits, scope, location, publishedAt, validThrough }`,
     { slug }
   );
 }

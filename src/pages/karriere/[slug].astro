@@ -15,26 +15,31 @@ if (!job) return Astro.redirect('/karriere', 302);
 
 const siteUrl = 'https://www.samedos.de';
 
-// description can be legacy string or Portable Text array
-const descriptionHtml = Array.isArray(job.description) && job.description.length
-  ? toHTML(job.description as PortableTextBlock[])
-  : typeof job.description === 'string' && job.description
-    ? `<p>${job.description}</p>`
-    : '';
+function renderPortableText(blocks: unknown): string {
+  if (Array.isArray(blocks) && blocks.length) return toHTML(blocks as PortableTextBlock[]);
+  if (typeof blocks === 'string' && blocks) return `<p>${blocks}</p>`;
+  return '';
+}
 
-function buildDescriptionHtml(j: typeof job): string {
+const descriptionHtml  = renderPortableText(job.description);
+const whatToExpectHtml = renderPortableText(job.whatToExpect);
+
+function buildDescriptionHtml(): string {
   const parts: string[] = [];
-  if (descriptionHtml) parts.push(descriptionHtml);
-  if (j!.tasks?.length) {
-    parts.push(`<h2>Deine Aufgaben</h2><ul>${j!.tasks.map((t) => `<li>${t}</li>`).join('')}</ul>`);
+  if (descriptionHtml)  parts.push(descriptionHtml);
+  if (whatToExpectHtml) parts.push(`<h2>Was dich bei uns erwartet</h2>${whatToExpectHtml}`);
+  if (job.tasksOutdoor?.length || job.tasksOffice?.length) {
+    parts.push('<h2>Deine Aufgaben im Überblick</h2>');
+    if (job.tasksOutdoor?.length)
+      parts.push(`<h3>Im Außendienst</h3><ul>${job.tasksOutdoor.map((t) => `<li>${t}</li>`).join('')}</ul>`);
+    if (job.tasksOffice?.length)
+      parts.push(`<h3>In der Praxis in Findorff</h3><ul>${job.tasksOffice.map((t) => `<li>${t}</li>`).join('')}</ul>`);
   }
-  if (j!.requirements?.length) {
-    parts.push(`<h2>Das bringst du mit</h2><ul>${j!.requirements.map((r) => `<li>${r}</li>`).join('')}</ul>`);
-  }
-  if (j!.benefits?.length) {
-    parts.push(`<h2>Was du bei uns bekommst</h2><ul>${j!.benefits.map((b) => `<li>${b}</li>`).join('')}</ul>`);
-  }
-  parts.push(`<p>Bewerbungen bitte per E-Mail an janssen@samedos.de. Standort: ${j!.location ?? 'Bremen'}.</p>`);
+  if (job.requirements?.length)
+    parts.push(`<h2>Was du mitbringst</h2><ul>${job.requirements.map((r) => `<li>${r}</li>`).join('')}</ul>`);
+  if (job.benefits?.length)
+    parts.push(`<h2>Was du bei uns bekommst</h2><ul>${job.benefits.map((b) => `<li>${b}</li>`).join('')}</ul>`);
+  parts.push(`<p>Bewerbungen per E-Mail an janssen@samedos.de oder telefonisch unter 0421 354366. Standort: ${job.location ?? 'Bremen'}.</p>`);
   return parts.join('\n');
 }
 
@@ -54,7 +59,7 @@ const jobPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'JobPosting',
   title: job.title,
-  description: buildDescriptionHtml(job),
+  description: buildDescriptionHtml(),
   datePosted,
   validThrough,
   employmentType: scopeToEmploymentType(job.scope),
@@ -85,10 +90,12 @@ const jobPostingSchema = {
 };
 
 const metaTitle = `${job.title} – Karriere bei Samedos Bremen`;
-const plainDescription = Array.isArray(job.description)
+const plainIntro = Array.isArray(job.description)
   ? job.description.flatMap((b) => b.children?.map((s: { text: string }) => s.text) ?? []).join(' ')
   : (job.description as unknown as string) ?? 'Jetzt bewerben.';
-const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${plainDescription}`.slice(0, 155);
+const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${plainIntro}`.slice(0, 155);
+
+const richTextClasses = 'text-muted text-[1.05rem] space-y-4 [&_strong]:text-navy [&_strong]:font-semibold [&_em]:italic';
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription}>
@@ -126,28 +133,55 @@ const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${pl
 
       {descriptionHtml && (
         <div>
-          <h2 class="text-[1.4rem] mb-4">Über die Stelle</h2>
-          <div class="text-muted text-[1.05rem] space-y-4 [&_strong]:text-navy [&_strong]:font-semibold" set:html={descriptionHtml} />
+          <h2 class="text-[1.4rem] mb-4">Einleitung</h2>
+          <div class={richTextClasses} set:html={descriptionHtml} />
         </div>
       )}
 
-      {job.tasks && job.tasks.length > 0 && (
+      {whatToExpectHtml && (
         <div>
-          <h2 class="text-[1.4rem] mb-4">Deine Aufgaben</h2>
-          <ul class="space-y-3">
-            {job.tasks.map((task) => (
-              <li class="flex items-start gap-3">
-                <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0"></span>
-                <span class="text-muted">{task}</span>
-              </li>
-            ))}
-          </ul>
+          <h2 class="text-[1.4rem] mb-4">Was dich bei uns erwartet</h2>
+          <div class={richTextClasses} set:html={whatToExpectHtml} />
+        </div>
+      )}
+
+      {(job.tasksOutdoor?.length || job.tasksOffice?.length) && (
+        <div>
+          <h2 class="text-[1.4rem] mb-6">Deine Aufgaben im Überblick</h2>
+          <div class="space-y-8">
+            {job.tasksOutdoor && job.tasksOutdoor.length > 0 && (
+              <div>
+                <h3 class="text-[1.05rem] font-semibold text-navy mb-3">Im Außendienst</h3>
+                <ul class="space-y-3">
+                  {job.tasksOutdoor.map((task) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0"></span>
+                      <span class="text-muted">{task}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {job.tasksOffice && job.tasksOffice.length > 0 && (
+              <div>
+                <h3 class="text-[1.05rem] font-semibold text-navy mb-3">In der Praxis in Findorff</h3>
+                <ul class="space-y-3">
+                  {job.tasksOffice.map((task) => (
+                    <li class="flex items-start gap-3">
+                      <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0"></span>
+                      <span class="text-muted">{task}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
       {job.requirements && job.requirements.length > 0 && (
         <div>
-          <h2 class="text-[1.4rem] mb-4">Das bringst du mit</h2>
+          <h2 class="text-[1.4rem] mb-4">Was du mitbringst</h2>
           <ul class="space-y-3">
             {job.requirements.map((req) => (
               <li class="flex items-start gap-3">
@@ -174,12 +208,17 @@ const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${pl
       )}
 
       <div class="bg-mint-soft rounded-2xl p-8">
-        <h2 class="text-[1.3rem] mb-3">Klingt gut?</h2>
-        <p class="text-muted mb-5">
-          Schick uns deine Bewerbung direkt per E-Mail an{' '}
-          <a href="mailto:janssen@samedos.de" class="text-mint font-medium">janssen@samedos.de</a>{' '}
-          — wir freuen uns auf dich!
+        <h2 class="text-[1.3rem] mb-3">Klingt nach dir?</h2>
+        <p class="text-muted mb-2">
+          Dann freuen wir uns auf deine Bewerbung — ganz unkompliziert per Mail an{' '}
+          <a href="mailto:janssen@samedos.de" class="text-mint font-medium">janssen@samedos.de</a>.
+          Anschreiben, Lebenslauf und Zeugnisse reichen uns.
         </p>
+        <p class="text-muted mb-6">
+          Bei Fragen meldest du dich gern vorab telefonisch unter{' '}
+          <a href="tel:0421354366" class="text-mint font-medium">0421 354366</a> — wir nehmen uns Zeit.
+        </p>
+        <p class="text-[0.9rem] text-navy font-medium mb-6">Dr. Jörg Janssen & das Samedos-Team</p>
         <a
           href={`mailto:janssen@samedos.de?subject=Bewerbung: ${job.title}`}
           class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
