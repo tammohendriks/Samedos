@@ -105,8 +105,8 @@ const jobs = await getActiveJobPostings();
                     <span class="text-[0.85rem] text-muted">{job.location}</span>
                   )}
                 </div>
-                {job.description && (
-                  <p class="text-muted mt-3 max-w-2xl">{job.description}</p>
+                {job.teaser && (
+                  <p class="text-muted mt-3 max-w-2xl">{job.teaser}</p>
                 )}
               </div>
               <a

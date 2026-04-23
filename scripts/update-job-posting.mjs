@@ -76,6 +76,7 @@ console.log(`🔄 Aktualisiere Stellenanzeige (${DOC_ID})...`);
 await client
   .patch(DOC_ID)
   .set({
+    teaser: 'Arbeitsmedizinische Assistenz (m/w/d) in Vollzeit oder Teilzeit — abwechslungsreich, mobil und mit direktem Kundenkontakt in Bremen und Umgebung.',
     description: mdToPortableText(descriptionMd),
     whatToExpect: mdToPortableText(whatToExpectMd),
     tasksOutdoor,

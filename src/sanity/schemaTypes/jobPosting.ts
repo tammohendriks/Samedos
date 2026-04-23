@@ -25,6 +25,13 @@ export const jobPosting = defineType({
       initialValue: true,
     }),
     defineField({
+      name: 'teaser',
+      title: 'Kurzbeschreibung (Stellenübersicht)',
+      type: 'text',
+      rows: 2,
+      description: 'Kurzer Satz, der in der Stellenübersicht unter dem Titel erscheint.',
+    }),
+    defineField({
       name: 'description',
       title: 'Einleitungstext',
       type: 'array',
