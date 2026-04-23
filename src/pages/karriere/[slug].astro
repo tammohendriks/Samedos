@@ -23,6 +23,9 @@ function buildDescriptionHtml(j: typeof job): string {
   if (j!.requirements?.length) {
     parts.push(`<h2>Das bringst du mit</h2><ul>${j!.requirements.map((r) => `<li>${r}</li>`).join('')}</ul>`);
   }
+  if (j!.benefits?.length) {
+    parts.push(`<h2>Was du bei uns bekommst</h2><ul>${j!.benefits.map((b) => `<li>${b}</li>`).join('')}</ul>`);
+  }
   parts.push(`<p>Bewerbungen bitte per E-Mail an janssen@samedos.de. Standort: ${j!.location ?? 'Bremen'}.</p>`);
   return parts.join('\n');
 }
@@ -139,6 +142,20 @@ const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${jo
               <li class="flex items-start gap-3">
                 <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0"></span>
                 <span class="text-muted">{req}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {job.benefits && job.benefits.length > 0 && (
+        <div>
+          <h2 class="text-[1.4rem] mb-4">Was du bei uns bekommst</h2>
+          <ul class="space-y-3">
+            {job.benefits.map((benefit) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0"></span>
+                <span class="text-muted">{benefit}</span>
               </li>
             ))}
           </ul>

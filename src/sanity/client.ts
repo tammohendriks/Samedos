@@ -28,6 +28,7 @@ export interface JobPosting {
   location?: string;
   publishedAt?: string;
   validThrough?: string;
+  benefits?: string[];
 }
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
@@ -38,13 +39,13 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 
 export async function getActiveJobPostings(): Promise<JobPosting[]> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, description, tasks, requirements, scope, location, publishedAt, validThrough }`
+    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, description, tasks, requirements, benefits, scope, location, publishedAt, validThrough }`
   );
 }
 
 export async function getJobPosting(slug: string): Promise<JobPosting | null> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, description, tasks, requirements, scope, location, publishedAt, validThrough }`,
+    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, description, tasks, requirements, benefits, scope, location, publishedAt, validThrough }`,
     { slug }
   );
 }

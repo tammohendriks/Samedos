@@ -26,9 +26,10 @@ export const jobPosting = defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Kurzbeschreibung',
+      title: 'Einleitungstext',
       type: 'text',
-      rows: 3,
+      rows: 8,
+      description: 'Einführender Text am Anfang der Stellenanzeige (Firma vorstellen, Atmosphäre beschreiben).',
     }),
     defineField({
       name: 'tasks',
@@ -39,6 +40,12 @@ export const jobPosting = defineType({
     defineField({
       name: 'requirements',
       title: 'Anforderungen',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'benefits',
+      title: 'Was du bei uns bekommst',
       type: 'array',
       of: [{ type: 'string' }],
     }),
