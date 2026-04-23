@@ -4,6 +4,7 @@ import type { StringInputProps } from 'sanity';
 interface PreisZeile {
   code?: string;
   bezeichnung?: string;
+  bezeichnungEN?: string;
   preis?: string;
   einheit?: string;
   hinweis?: string;
@@ -11,21 +12,36 @@ interface PreisZeile {
 
 interface PreisSektion {
   titel?: string;
+  titelEN?: string;
   zeilen?: PreisZeile[];
 }
 
-const categoryLabels: Record<string, string> = {
+const categoryLabelsDE: Record<string, string> = {
   'g-untersuchungen': 'G-Untersuchungen',
   'sonderuntersuchungen': 'Sonderuntersuchungen',
   'labor': 'Labor',
   'impfungen': 'Impfungen',
 };
 
-const categoryDescs: Record<string, string> = {
+const categoryLabelsEN: Record<string, string> = {
+  'g-untersuchungen': 'G-Examinations',
+  'sonderuntersuchungen': 'Special Examinations',
+  'labor': 'Laboratory',
+  'impfungen': 'Vaccinations',
+};
+
+const categoryDescsDE: Record<string, string> = {
   'g-untersuchungen': 'Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.',
   'sonderuntersuchungen': 'Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.',
   'labor': 'Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.',
   'impfungen': 'Schutzimpfungen im betriebsärztlichen Kontext.',
+};
+
+const categoryDescsEN: Record<string, string> = {
+  'g-untersuchungen': 'Occupational health and fitness-for-work examinations following DGUV guidelines.',
+  'sonderuntersuchungen': 'Specialised occupational health examinations available on request.',
+  'labor': 'Laboratory diagnostics in the context of occupational health care.',
+  'impfungen': 'Vaccinations in the context of occupational medicine.',
 };
 
 function escapeHtml(str: string): string {
@@ -38,21 +54,30 @@ function escapeHtml(str: string): string {
 
 const extraColHeader: Record<string, string | null> = {
   'g-untersuchungen': 'Code',
-  'sonderuntersuchungen': 'Untersuchung',
+  'sonderuntersuchungen': 'Examination',
 };
 
-const bezeichnungHeader: Record<string, string> = {
-  'labor': 'Laborleistung',
-};
+function generatePrintHTML(
+  category: string,
+  sektionen: PreisSektion[],
+  lang: 'de' | 'en'
+): string {
+  const labels = lang === 'en' ? categoryLabelsEN : categoryLabelsDE;
+  const descs  = lang === 'en' ? categoryDescsEN  : categoryDescsDE;
 
-function generatePrintHTML(category: string, sektionen: PreisSektion[]): string {
-  const label = categoryLabels[category] ?? category;
-  const desc = categoryDescs[category] ?? '';
-  const extraHeader = extraColHeader[category] ?? null;
-  const firstColHeader = bezeichnungHeader[category] ?? 'Bezeichnung';
+  const label = labels[category] ?? category;
+  const desc  = descs[category]  ?? '';
+
+  const extraHeader   = extraColHeader[category] ?? null;
+  const firstColHeader = lang === 'en'
+    ? (category === 'labor' ? 'Laboratory Service' : 'Description')
+    : (category === 'labor' ? 'Laborleistung' : 'Bezeichnung');
+  const priceHeader = lang === 'en' ? 'Price (net)' : 'Preis (netto)';
 
   const tableBlocks = sektionen
     .map((sektion) => {
+      const sektionTitle = (lang === 'en' && sektion.titelEN) ? sektion.titelEN : (sektion.titel ?? '');
+
       const rows = (sektion.zeilen ?? [])
         .map((zeile, i) => {
           const preisCell = zeile.preis
@@ -61,9 +86,10 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
           const codeCell = extraHeader
             ? `<td class="td-code">${escapeHtml(zeile.code ?? '')}</td>`
             : '';
+          const bezeichnung = (lang === 'en' && zeile.bezeichnungEN) ? zeile.bezeichnungEN : (zeile.bezeichnung ?? '');
           return `<tr class="${i % 2 === 1 ? 'alt' : ''}">
             ${codeCell}
-            <td>${escapeHtml(zeile.bezeichnung ?? '')}</td>
+            <td>${escapeHtml(bezeichnung)}</td>
             <td class="td-right">${preisCell}</td>
           </tr>`;
         })
@@ -76,14 +102,14 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
       return `
       <div class="section">
         <div class="section-header">
-          <span class="section-title">${escapeHtml(sektion.titel ?? '')}</span>
+          <span class="section-title">${escapeHtml(sektionTitle)}</span>
         </div>
         <table>
           <thead>
             <tr>
               ${extraTh}
               <th class="th-left">${escapeHtml(firstColHeader)}</th>
-              <th class="th-right">Preis (netto)</th>
+              <th class="th-right">${escapeHtml(priceHeader)}</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -92,11 +118,13 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
     })
     .join('\n');
 
+  const isEN = lang === 'en';
+
   return `<!DOCTYPE html>
-<html lang="de">
+<html lang="${lang}">
 <head>
   <meta charset="UTF-8" />
-  <title>Preisliste ${escapeHtml(label)} – Samedos</title>
+  <title>${isEN ? 'Price List' : 'Preisliste'} ${escapeHtml(label)} – Samedos</title>
   <style>
     @page { size: A4; margin: 0; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -155,11 +183,11 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
   <div class="cover">
     <div>
       <div class="cover-logo">SAMEDOS</div>
-      <div class="cover-tagline">Arbeitsmedizin · Bremen</div>
+      <div class="cover-tagline">${isEN ? 'Occupational Medicine · Bremen' : 'Arbeitsmedizin · Bremen'}</div>
     </div>
     <div class="cover-spacer"></div>
     <div>
-      <div class="cover-label">PREISLISTE 2026</div>
+      <div class="cover-label">${isEN ? 'PRICE LIST 2026' : 'PREISLISTE 2026'}</div>
       <div class="cover-title">${escapeHtml(label)}</div>
       <div class="cover-line"></div>
       <div class="cover-desc">${escapeHtml(desc)}</div>
@@ -167,8 +195,8 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
     <div class="cover-spacer"></div>
     <div class="cover-footer">
       <p>Samedos GmbH · Timmersloher Straße 82, 28215 Bremen</p>
-      <p>Telefon 0421 63997761 · info@samedos.de · www.samedos.de</p>
-      <p class="stand">Stand: April 2026</p>
+      <p>${isEN ? 'Phone +49 421 63997-76 · info@samedos.de · www.samedos.de' : 'Telefon 0421 63997761 · info@samedos.de · www.samedos.de'}</p>
+      <p class="stand">${isEN ? 'As of: April 2026' : 'Stand: April 2026'}</p>
     </div>
     <div class="circle circle1"></div>
     <div class="circle circle2"></div>
@@ -180,13 +208,14 @@ function generatePrintHTML(category: string, sektionen: PreisSektion[]): string 
       <div class="page-header-logo">SAMEDOS</div>
       <div class="page-header-right">
         <span class="cat">${escapeHtml(label)}</span>
-        Alle Preise zzgl. MwSt. · Stand: April 2026<br>
-        Samedos GmbH · Timmersloher Str. 82 · 28215 Bremen<br>
-        info@samedos.de · 0421 63997761
+        ${isEN
+          ? `All prices excl. VAT · As of: April 2026<br>Samedos GmbH · Timmersloher Str. 82 · 28215 Bremen<br>info@samedos.de · +49 421 63997-76`
+          : `Alle Preise zzgl. MwSt. · Stand: April 2026<br>Samedos GmbH · Timmersloher Str. 82 · 28215 Bremen<br>info@samedos.de · 0421 63997761`
+        }
       </div>
     </div>
     ${tableBlocks}
-    <p class="footnote">* Alle Preise zzgl. MwSt.</p>
+    <p class="footnote">${isEN ? '* All prices excl. VAT.' : '* Alle Preise zzgl. MwSt.'}</p>
   </div>
 
   <script>window.addEventListener('load', () => window.print());<\/script>
@@ -198,12 +227,12 @@ export function PdfDownloadHint(_props: StringInputProps) {
   const category = useFormValue(['category']) as string | undefined;
   const sektionen = useFormValue(['sektionen']) as PreisSektion[] | undefined;
 
-  const label = category ? (categoryLabels[category] ?? category) : null;
+  const label = category ? (categoryLabelsDE[category] ?? category) : null;
   const hasData = sektionen && sektionen.length > 0;
 
-  function handlePreview() {
+  function openPreview(lang: 'de' | 'en') {
     if (!category || !sektionen?.length) return;
-    const html = generatePrintHTML(category, sektionen);
+    const html = generatePrintHTML(category, sektionen, lang);
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const win = window.open(url, '_blank');
@@ -212,6 +241,16 @@ export function PdfDownloadHint(_props: StringInputProps) {
     }
   }
 
+  const btnStyle = (primary: boolean): React.CSSProperties => ({
+    display: 'inline-flex', alignItems: 'center', gap: '6px',
+    padding: '8px 18px',
+    background: primary ? '#142B49' : 'transparent',
+    color: primary ? 'white' : '#142B49',
+    border: primary ? 'none' : '1.5px solid #142B49',
+    borderRadius: '20px', cursor: 'pointer',
+    fontSize: '13px', fontWeight: 500,
+  });
+
   return (
     <div style={{ padding: '16px', background: '#f0f4f8', borderRadius: '8px', border: '1px solid #dce4ed', fontFamily: 'sans-serif' }}>
       <p style={{ fontWeight: 600, fontSize: '13px', color: '#142B49', marginBottom: '8px' }}>
@@ -219,13 +258,13 @@ export function PdfDownloadHint(_props: StringInputProps) {
       </p>
 
       {!category && (
-        <p style={{ fontSize: '12px', color: '#888', marginBottom: '0' }}>
+        <p style={{ fontSize: '12px', color: '#888' }}>
           Zuerst eine Kategorie auswählen.
         </p>
       )}
 
       {category && !hasData && (
-        <p style={{ fontSize: '12px', color: '#888', marginBottom: '0' }}>
+        <p style={{ fontSize: '12px', color: '#888' }}>
           Zuerst Preisabschnitte mit Zeilen hinzufügen.
         </p>
       )}
@@ -233,22 +272,18 @@ export function PdfDownloadHint(_props: StringInputProps) {
       {category && hasData && (
         <>
           <p style={{ fontSize: '12px', color: '#555', lineHeight: '1.5', marginBottom: '12px' }}>
-            Öffnet eine Druckvorschau für <strong style={{ color: '#142B49' }}>{label}</strong> mit
-            dem korrekten Deckblatt — identisch mit der späteren PDF auf der Website.
+            Öffnet eine Druckvorschau für <strong style={{ color: '#142B49' }}>{label}</strong> —
+            identisch mit der späteren PDF auf der Website.
             Im neuen Tab auf <em>„Als PDF speichern"</em> klicken.
           </p>
-          <button
-            onClick={handlePreview}
-            type="button"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '6px',
-              padding: '8px 18px', background: '#142B49', color: 'white',
-              border: 'none', borderRadius: '20px', cursor: 'pointer',
-              fontSize: '13px', fontWeight: 500,
-            }}
-          >
-            ↓ PDF Vorschau öffnen
-          </button>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button onClick={() => openPreview('de')} type="button" style={btnStyle(true)}>
+              ↓ Deutsch
+            </button>
+            <button onClick={() => openPreview('en')} type="button" style={btnStyle(false)}>
+              ↓ English
+            </button>
+          </div>
         </>
       )}
     </div>
