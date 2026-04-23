@@ -66,6 +66,12 @@ export const jobPosting = defineType({
       title: 'Veröffentlicht am',
       type: 'datetime',
     }),
+    defineField({
+      name: 'validThrough',
+      title: 'Gültig bis (Google for Jobs)',
+      type: 'date',
+      description: '⚠️ Wichtig: Ohne dieses Datum fliegt die Stelle nach ~60 Tagen aus Google for Jobs. Empfehlung: 90 Tage ab Veröffentlichung.',
+    }),
   ],
   preview: {
     select: { title: 'title', subtitle: 'scope', active: 'active' },

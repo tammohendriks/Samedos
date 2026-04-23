@@ -11,12 +11,76 @@ const { slug } = Astro.params;
 const job = await getJobPosting(slug!);
 
 if (!job) return Astro.redirect('/karriere', 302);
+
+const siteUrl = 'https://www.samedos.de';
+
+function buildDescriptionHtml(j: typeof job): string {
+  const parts: string[] = [];
+  if (j!.description) parts.push(`<p>${j!.description}</p>`);
+  if (j!.tasks?.length) {
+    parts.push(`<h2>Deine Aufgaben</h2><ul>${j!.tasks.map((t) => `<li>${t}</li>`).join('')}</ul>`);
+  }
+  if (j!.requirements?.length) {
+    parts.push(`<h2>Das bringst du mit</h2><ul>${j!.requirements.map((r) => `<li>${r}</li>`).join('')}</ul>`);
+  }
+  parts.push(`<p>Bewerbungen bitte per E-Mail an janssen@samedos.de. Standort: ${j!.location ?? 'Bremen'}.</p>`);
+  return parts.join('\n');
+}
+
+function scopeToEmploymentType(scope?: string): string[] {
+  if (scope === 'Vollzeit / Teilzeit') return ['FULL_TIME', 'PART_TIME'];
+  if (scope === 'Teilzeit') return ['PART_TIME'];
+  if (scope === 'Minijob') return ['PART_TIME'];
+  return ['FULL_TIME'];
+}
+
+const datePosted = new Date(job.publishedAt ?? Date.now()).toISOString();
+const validThrough = job.validThrough
+  ? new Date(job.validThrough).toISOString()
+  : new Date(new Date(job.publishedAt ?? Date.now()).getTime() + 90 * 24 * 60 * 60 * 1000).toISOString();
+
+const jobPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'JobPosting',
+  title: job.title,
+  description: buildDescriptionHtml(job),
+  datePosted,
+  validThrough,
+  employmentType: scopeToEmploymentType(job.scope),
+  hiringOrganization: {
+    '@type': 'Organization',
+    name: 'Samedos GmbH',
+    sameAs: siteUrl,
+    logo: `${siteUrl}/logo-new.svg`,
+  },
+  jobLocation: {
+    '@type': 'Place',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Timmersloher Straße 82',
+      addressLocality: 'Bremen',
+      postalCode: '28215',
+      addressRegion: 'HB',
+      addressCountry: 'DE',
+    },
+  },
+  directApply: true,
+  url: `${siteUrl}/karriere/${job.slug.current}`,
+  identifier: {
+    '@type': 'PropertyValue',
+    name: 'Samedos GmbH',
+    value: job._id,
+  },
+};
+
+const metaTitle = `${job.title} – Karriere bei Samedos Bremen`;
+const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${job.description ?? 'Jetzt bewerben.'}`.slice(0, 155);
 ---
 
-<BaseLayout
-  title={`${job.title} — Karriere bei Samedos`}
-  description={job.description ?? `Jetzt als ${job.title} bei Samedos in Bremen bewerben.`}
->
+<BaseLayout title={metaTitle} description={metaDescription}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jobPostingSchema)} />
+  </Fragment>
 
   <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
     <div class="max-w-[1200px] mx-auto px-6">
