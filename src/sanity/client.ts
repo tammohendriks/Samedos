@@ -16,12 +16,20 @@ export interface TeamMember {
   order?: number;
 }
 
+export interface PortableTextBlock {
+  _type: 'block';
+  _key: string;
+  style?: string;
+  children: { _type: 'span'; _key: string; text: string; marks?: string[] }[];
+  markDefs?: unknown[];
+}
+
 export interface JobPosting {
   _id: string;
   title: string;
   slug: { current: string };
   active: boolean;
-  description?: string;
+  description?: PortableTextBlock[];
   tasks?: string[];
   requirements?: string[];
   scope?: string;

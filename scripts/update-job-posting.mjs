@@ -19,11 +19,23 @@ const client = createClient({
 
 const DOC_ID = '30a2f141-5d3f-4e8a-8cd7-b24fce6e4afe';
 
-const description = `Samedos ist im Oktober 2025 gegründet worden — wir sind ein kleines, modernes Team aus vier Leuten (darunter ein Arzt) und bauen gerade eine arbeitsmedizinische Praxis auf, die anders tickt als das, was man aus Klinik oder Hausarztpraxis kennt. Keine Schichtdienste, keine Wochenenden, keine Bereitschaft. Dafür viel Abwechslung, direkte Wege und die Chance, ein Unternehmen von Anfang an mitzuprägen.
+// Convert markdown **bold** to Portable Text blocks
+function mdToPortableText(text) {
+  const paragraphs = text.split('\n\n').filter((p) => p.trim());
+  return paragraphs.map((para, i) => {
+    const parts = para.split(/\*\*(.*?)\*\*/g);
+    const children = parts
+      .map((part, j) => (part ? { _type: 'span', _key: `s${i}${j}`, text: part, marks: j % 2 === 1 ? ['strong'] : [] } : null))
+      .filter(Boolean);
+    return { _type: 'block', _key: `b${i}`, style: 'normal', children, markDefs: [] };
+  });
+}
 
-Kein Tag ist wie der andere. Wir sind regelmäßig bei unseren Kunden vor Ort — auf Baustellen, im Bremer Hafen, in Werkhallen, Büros oder wo immer wir gebraucht werden. Dort führen wir arbeitsmedizinische Vorsorgeuntersuchungen durch: Hör- und Sehtests, Blutabnahmen und weitere Diagnostik. Was du auf diesen Einsätzen erlebst, ist wirklich außergewöhnlich — du bekommst Einblicke in Branchen, Firmen und Arbeitswelten, die die meisten Menschen nie zu sehen bekommen.
+const descriptionMd = `Samedos ist im **Oktober 2025** gegründet worden — wir sind ein kleines, modernes Team aus vier Leuten (darunter ein Arzt) und bauen gerade eine arbeitsmedizinische Praxis auf, die anders tickt als das, was man aus Klinik oder Hausarztpraxis kennt. Keine Schichtdienste, keine Wochenenden, keine Bereitschaft. Dafür viel Abwechslung, direkte Wege und die Chance, ein Unternehmen **von Anfang an mitzuprägen**.
 
-Zwischen den Außeneinsätzen arbeitest du in unserer Praxis in Bremen-Findorff — ruhiger, strukturierter, mit Kaffee in der Hand. Hier beantwortest du Kundenanfragen per Mail und Telefon, stimmst dich mit den betreuten Unternehmen ab, pflegst die Patientendaten und führst Untersuchungen in unserem Untersuchungsraum durch.`;
+**Kein Tag ist wie der andere.** Wir sind regelmäßig bei unseren Kunden vor Ort — auf Baustellen, im Bremer Hafen, in Werkhallen, Büros oder wo immer wir gebraucht werden. Dort führen wir arbeitsmedizinische Vorsorgeuntersuchungen durch: Hör- und Sehtests, Blutabnahmen und weitere Diagnostik. Was du auf diesen Einsätzen erlebst, ist wirklich außergewöhnlich — du bekommst Einblicke in Branchen, Firmen und Arbeitswelten, die die meisten Menschen nie zu sehen bekommen.
+
+**Zwischen den Außeneinsätzen** arbeitest du in unserer Praxis in **Bremen-Findorff** — ruhiger, strukturierter, mit Kaffee in der Hand. Hier beantwortest du Kundenanfragen per Mail und Telefon, stimmst dich mit den betreuten Unternehmen ab, pflegst die Patientendaten und führst Untersuchungen in unserem Untersuchungsraum durch.`;
 
 const tasks = [
   'Durchführung arbeitsmedizinischer Untersuchungen beim Kunden vor Ort',
@@ -62,7 +74,7 @@ console.log(`🔄 Aktualisiere Stellenanzeige (${DOC_ID})...`);
 await client
   .patch(DOC_ID)
   .set({
-    description,
+    description: mdToPortableText(descriptionMd),
     tasks,
     requirements,
     benefits,

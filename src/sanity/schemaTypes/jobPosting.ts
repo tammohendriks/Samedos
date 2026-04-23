@@ -27,9 +27,22 @@ export const jobPosting = defineType({
     defineField({
       name: 'description',
       title: 'Einleitungstext',
-      type: 'text',
-      rows: 8,
-      description: 'Einführender Text am Anfang der Stellenanzeige (Firma vorstellen, Atmosphäre beschreiben).',
+      type: 'array',
+      description: 'Einführender Text am Anfang der Stellenanzeige. Fett, kursiv und Absätze möglich.',
+      of: [
+        {
+          type: 'block',
+          styles: [{ title: 'Normal', value: 'normal' }],
+          lists: [],
+          marks: {
+            decorators: [
+              { title: 'Fett', value: 'strong' },
+              { title: 'Kursiv', value: 'em' },
+            ],
+            annotations: [],
+          },
+        },
+      ],
     }),
     defineField({
       name: 'tasks',

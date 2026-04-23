@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getActiveJobPostings, getJobPosting } from '../../sanity/client';
+import { getActiveJobPostings, getJobPosting, type PortableTextBlock } from '../../sanity/client';
+import { toHTML } from '@portabletext/to-html';
 
 export async function getStaticPaths() {
   const jobs = await getActiveJobPostings();
@@ -14,9 +15,16 @@ if (!job) return Astro.redirect('/karriere', 302);
 
 const siteUrl = 'https://www.samedos.de';
 
+// description can be legacy string or Portable Text array
+const descriptionHtml = Array.isArray(job.description) && job.description.length
+  ? toHTML(job.description as PortableTextBlock[])
+  : typeof job.description === 'string' && job.description
+    ? `<p>${job.description}</p>`
+    : '';
+
 function buildDescriptionHtml(j: typeof job): string {
   const parts: string[] = [];
-  if (j!.description) parts.push(`<p>${j!.description}</p>`);
+  if (descriptionHtml) parts.push(descriptionHtml);
   if (j!.tasks?.length) {
     parts.push(`<h2>Deine Aufgaben</h2><ul>${j!.tasks.map((t) => `<li>${t}</li>`).join('')}</ul>`);
   }
@@ -77,7 +85,10 @@ const jobPostingSchema = {
 };
 
 const metaTitle = `${job.title} – Karriere bei Samedos Bremen`;
-const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${job.description ?? 'Jetzt bewerben.'}`.slice(0, 155);
+const plainDescription = Array.isArray(job.description)
+  ? job.description.flatMap((b) => b.children?.map((s: { text: string }) => s.text) ?? []).join(' ')
+  : (job.description as unknown as string) ?? 'Jetzt bewerben.';
+const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${plainDescription}`.slice(0, 155);
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription}>
@@ -113,10 +124,10 @@ const metaDescription = `${job.title} bei Samedos Arbeitsmedizin in Bremen. ${jo
   <section class="py-16">
     <div class="max-w-[800px] mx-auto px-6 space-y-12">
 
-      {job.description && (
+      {descriptionHtml && (
         <div>
           <h2 class="text-[1.4rem] mb-4">Über die Stelle</h2>
-          <p class="text-muted text-[1.05rem]">{job.description}</p>
+          <div class="text-muted text-[1.05rem] space-y-4 [&_strong]:text-navy [&_strong]:font-semibold" set:html={descriptionHtml} />
         </div>
       )}
 
