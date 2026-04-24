@@ -129,6 +129,13 @@ export const jobPosting = defineType({
       initialValue: 'Bremen',
     }),
     defineField({
+      name: 'startDate',
+      title: 'Besetzung ab',
+      type: 'string',
+      description: 'Z.B. "Ab sofort", "Zum nächstmöglichen Zeitpunkt", "01.06.2026"',
+      initialValue: 'Ab sofort',
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Veröffentlicht am',
       type: 'datetime',

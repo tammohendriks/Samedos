@@ -63,6 +63,7 @@ export interface JobPosting {
   benefits?: string[];
   scope?: string;
   location?: string;
+  startDate?: string;
   publishedAt?: string;
   validThrough?: string;
 }
@@ -96,13 +97,13 @@ export async function getTeamMembersWithProfiles(): Promise<TeamMember[]> {
 
 export async function getActiveJobPostings(): Promise<JobPosting[]> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, publishedAt, validThrough }`
+    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, startDate, publishedAt, validThrough }`
   );
 }
 
 export async function getJobPosting(slug: string): Promise<JobPosting | null> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, publishedAt, validThrough }`,
+    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, startDate, publishedAt, validThrough }`,
     { slug }
   );
 }

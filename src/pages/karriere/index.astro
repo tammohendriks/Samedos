@@ -111,6 +111,11 @@ const jobs = await getActiveJobPostings();
                       {job.scope}
                     </span>
                   )}
+                  {job.startDate && (
+                    <span class="text-[0.85rem] bg-mint/15 text-mint px-3 py-1 rounded-full font-medium">
+                      Besetzung: {job.startDate}
+                    </span>
+                  )}
                   {job.location && (
                     <span class="text-[0.85rem] text-muted">{job.location}</span>
                   )}

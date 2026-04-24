@@ -81,6 +81,7 @@ const jobPostingSchema = {
     },
   },
   directApply: true,
+  ...(job.startDate && { jobStartDate: job.startDate }),
   url: `${siteUrl}/karriere/${job.slug.current}`,
   identifier: {
     '@type': 'PropertyValue',
@@ -112,6 +113,9 @@ const richTextClasses = 'text-muted text-[1.05rem] space-y-4 [&_strong]:text-nav
           <div class="flex flex-wrap gap-3 mt-3">
             {job.scope && (
               <span class="text-[0.85rem] bg-white/15 text-white px-3 py-1 rounded-full font-medium">{job.scope}</span>
+            )}
+            {job.startDate && (
+              <span class="text-[0.85rem] bg-mint/20 text-mint px-3 py-1 rounded-full font-medium">Besetzung: {job.startDate}</span>
             )}
             {job.location && (
               <span class="text-[0.85rem] text-white/65">{job.location}</span>
