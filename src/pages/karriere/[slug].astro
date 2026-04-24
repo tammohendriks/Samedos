@@ -31,9 +31,9 @@ function buildDescriptionHtml(): string {
   if (job.tasksOutdoor?.length || job.tasksOffice?.length) {
     parts.push('<h2>Deine Aufgaben im Überblick</h2>');
     if (job.tasksOutdoor?.length)
-      parts.push(`<h3>Im Außendienst</h3><ul>${job.tasksOutdoor.map((t) => `<li>${t}</li>`).join('')}</ul>`);
+      parts.push(`<h3>${job.tasksOutdoorTitle ?? 'Im Außendienst'}</h3><ul>${job.tasksOutdoor.map((t) => `<li>${t}</li>`).join('')}</ul>`);
     if (job.tasksOffice?.length)
-      parts.push(`<h3>In der Praxis in Findorff</h3><ul>${job.tasksOffice.map((t) => `<li>${t}</li>`).join('')}</ul>`);
+      parts.push(`<h3>${job.tasksOfficeTitle ?? 'In der Praxis in Findorff'}</h3><ul>${job.tasksOffice.map((t) => `<li>${t}</li>`).join('')}</ul>`);
   }
   if (job.requirements?.length)
     parts.push(`<h2>Was du mitbringst</h2><ul>${job.requirements.map((r) => `<li>${r}</li>`).join('')}</ul>`);
@@ -151,7 +151,7 @@ const richTextClasses = 'text-muted text-[1.05rem] space-y-4 [&_strong]:text-nav
           <div class="space-y-8">
             {job.tasksOutdoor && job.tasksOutdoor.length > 0 && (
               <div>
-                <h3 class="text-[1.05rem] font-semibold text-navy mb-3">Im Außendienst</h3>
+                <h3 class="text-[1.05rem] font-semibold text-navy mb-3">{job.tasksOutdoorTitle ?? 'Im Außendienst'}</h3>
                 <ul class="space-y-3">
                   {job.tasksOutdoor.map((task) => (
                     <li class="flex items-start gap-3">
@@ -164,7 +164,7 @@ const richTextClasses = 'text-muted text-[1.05rem] space-y-4 [&_strong]:text-nav
             )}
             {job.tasksOffice && job.tasksOffice.length > 0 && (
               <div>
-                <h3 class="text-[1.05rem] font-semibold text-navy mb-3">In der Praxis in Findorff</h3>
+                <h3 class="text-[1.05rem] font-semibold text-navy mb-3">{job.tasksOfficeTitle ?? 'In der Praxis in Findorff'}</h3>
                 <ul class="space-y-3">
                   {job.tasksOffice.map((task) => (
                     <li class="flex items-start gap-3">
