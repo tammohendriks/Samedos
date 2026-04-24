@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Rundgang360 from '../components/Rundgang360.astro';
+---
+
+<BaseLayout
+  title="360°-Rundgang durch unsere Praxis — Samedos Bremen"
+  description="Entdecken Sie die Samedos-Praxis für Arbeitsmedizin in Bremen-Findorff mit sechs interaktiven 360°-Ansichten. Eingang, Flure und Untersuchungsräume."
+  lang="de"
+  alternateHref="/en/tour"
+>
+
+  <!-- Hero -->
+  <section class="relative pt-20 pb-16 overflow-hidden" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div
+      class="absolute -top-32 -right-32 w-[520px] h-[520px] rounded-full pointer-events-none"
+      style="background: radial-gradient(circle, rgba(100,197,174,.22), transparent 70%);"
+      aria-hidden="true"
+    ></div>
+    <div class="relative max-w-[1200px] mx-auto px-6">
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Unsere Praxis
+      </p>
+      <h1 class="text-white text-[clamp(2rem,4vw,3rem)] max-w-[760px]" data-animate>
+        360°-Rundgang durch unsere Praxis
+      </h1>
+      <p class="text-white/75 text-[1.05rem] max-w-[620px] mt-5" data-animate data-delay="1">
+        Werfen Sie einen Blick in unsere Räume in Bremen-Findorff — bevor Sie zu uns kommen.
+      </p>
+    </div>
+  </section>
+
+  <!-- Intro + Viewer -->
+  <section class="py-16">
+    <div class="max-w-[1000px] mx-auto px-6">
+      <p class="text-muted text-[1.05rem] leading-relaxed max-w-[760px] mb-10" data-animate>
+        Unsere Praxis liegt zentral in Bremen-Findorff und ist auf moderne Arbeitsmedizin ausgelegt.
+        Vom freundlichen Eingangsbereich über die hellen Flure bis in unsere Untersuchungsräume:
+        Jeder Raum ist so gestaltet, dass Sie sich wohlfühlen und wir konzentriert arbeiten können.
+        Nehmen Sie sich einen Moment und erkunden Sie unsere Räume interaktiv — schwenken Sie mit
+        der Maus oder dem Finger durch den Raum und wechseln Sie zwischen sechs Ansichten.
+      </p>
+
+      <div data-animate data-delay="1">
+        <Rundgang360 lang="de" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-[1200px] mx-auto px-6 pb-24">
+    <div
+      class="relative rounded-[28px] px-8 sm:px-12 py-12 sm:py-14 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Sie möchten uns persönlich kennenlernen?</h2>
+      <p class="text-white/80 max-w-[520px] mx-auto mb-7">
+        Vereinbaren Sie einen Termin oder erfahren Sie mehr über die Anfahrt zu unserer Praxis.
+      </p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <a
+          href="/kontakt"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Termin vereinbaren →
+        </a>
+        <a
+          href="/ueber-uns"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border-[1.5px] border-white/70 text-white font-medium text-[0.95rem] transition-all hover:bg-white hover:text-navy"
+        >
+          Mehr über Samedos
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

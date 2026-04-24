@@ -70,7 +70,7 @@ const displayTeam = team.length > 0
   </section>
 
   <!-- Team -->
-  <section class="bg-bg-soft py-16">
+  <section id="team" class="bg-bg-soft py-16 scroll-mt-24">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="mb-10" data-animate>
         <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
@@ -120,6 +120,39 @@ const displayTeam = team.length > 0
             <p class="font-heading font-bold text-navy text-[0.95rem]">{v}</p>
           </div>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 360° Tour Teaser -->
+  <section class="py-20">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center bg-white rounded-3xl border border-border overflow-hidden shadow-[0_8px_32px_rgba(20,43,73,.06)]">
+        <div class="p-8 sm:p-12 order-2 lg:order-1" data-animate>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            360° Tour
+          </p>
+          <h2 class="text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Take a look inside our practice</h2>
+          <p class="text-muted mb-7 leading-relaxed">
+            Our rooms in Bremen-Findorff are bright, modern and designed around your needs.
+            Explore the practice in an interactive 360° tour — six views from the entrance
+            through to our examination rooms.
+          </p>
+          <a
+            href="/en/tour"
+            class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+          >
+            Start the 360° tour →
+          </a>
+        </div>
+        <a href="/en/tour" class="order-1 lg:order-2 block relative aspect-[4/3] lg:aspect-auto lg:h-full overflow-hidden group" data-animate data-delay="1">
+          <img
+            src="/img/rundgang/teaser.svg"
+            alt="360° tour of the Samedos practice"
+            loading="lazy"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        </a>
       </div>
     </div>
   </section>

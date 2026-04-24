@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="360° Rundgang durch die Samedos-Praxis">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#142B49"/>
+      <stop offset="100%" stop-color="#29466B"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="78%" cy="22%" r="45%">
+      <stop offset="0%" stop-color="#64C5AE" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#64C5AE" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <rect width="800" height="600" fill="url(#glow)"/>
+
+  <g transform="translate(400 275)" fill="none" stroke="#64C5AE" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Globe / 360 sphere -->
+    <circle cx="0" cy="0" r="88" stroke-opacity="0.9"/>
+    <ellipse cx="0" cy="0" rx="88" ry="30" stroke-opacity="0.7"/>
+    <ellipse cx="0" cy="0" rx="30" ry="88" stroke-opacity="0.7"/>
+    <line x1="-88" y1="0" x2="88" y2="0" stroke-opacity="0.5"/>
+    <line x1="0" y1="-88" x2="0" y2="88" stroke-opacity="0.5"/>
+  </g>
+
+  <text x="400" y="430" font-family="'League Spartan', 'Helvetica Neue', Arial, sans-serif" font-size="56" font-weight="800" text-anchor="middle" fill="#ffffff" letter-spacing="2">360°</text>
+  <text x="400" y="475" font-family="'DM Sans', 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="500" text-anchor="middle" fill="#ffffff" fill-opacity="0.75">Blick in unsere Praxis</text>
+</svg>

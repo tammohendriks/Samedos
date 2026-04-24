@@ -7,8 +7,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Datenschutzerklärung der Samedos GmbH gemäß DSGVO."
   alternateHref="/en/privacy"
 >
-  <div class="max-w-[1200px] mx-auto px-6 py-24">
-    <h1>Datenschutzerklärung</h1>
-    <p class="text-muted mt-4">Die vollständige Datenschutzerklärung wird ergänzt.</p>
+  <div class="max-w-[800px] mx-auto px-6 py-24 space-y-10">
+    <div>
+      <h1>Datenschutzerklärung</h1>
+      <p class="text-muted mt-4">Die vollständige Datenschutzerklärung wird ergänzt.</p>
+    </div>
+
+    <section>
+      <h2 class="text-[1.4rem] mb-4">Google Maps / Street View (360°-Rundgang)</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          Auf der Seite <a href="/rundgang" class="text-mint hover:underline">/rundgang</a> bieten wir
+          Ihnen einen virtuellen 360°-Rundgang durch unsere Praxis an. Dafür nutzen wir einen
+          Einbettungs-Dienst der Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland).
+        </p>
+        <p>
+          <strong class="text-navy">Wichtig:</strong> Die Einbindung erfolgt <strong class="text-navy">nur nach Ihrer ausdrücklichen Zustimmung</strong>.
+          Erst wenn Sie auf den Button „Rundgang starten" klicken, wird eine Verbindung zu Google-Servern
+          aufgebaut. Dabei werden technische Daten übertragen, insbesondere Ihre IP-Adresse, Browser-
+          und Geräteinformationen sowie die aufgerufene Seite. Google kann diese Daten auch in Drittländer,
+          insbesondere in die USA, übermitteln.
+        </p>
+        <p>
+          <strong class="text-navy">Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).
+          Sie können Ihre Einwilligung jederzeit durch Schließen oder Verlassen der Seite widerrufen.
+        </p>
+        <p>
+          Weitere Informationen finden Sie in Googles Datenschutzerklärung:
+          <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank" class="text-mint hover:underline">policies.google.com/privacy</a>.
+        </p>
+      </div>
+    </section>
   </div>
 </BaseLayout>

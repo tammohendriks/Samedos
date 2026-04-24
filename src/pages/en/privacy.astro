@@ -8,8 +8,36 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   lang="en"
   alternateHref="/datenschutz"
 >
-  <div class="max-w-[1200px] mx-auto px-6 py-24">
-    <h1>Privacy Policy</h1>
-    <p class="text-muted mt-4">The full privacy policy will be added shortly.</p>
+  <div class="max-w-[800px] mx-auto px-6 py-24 space-y-10">
+    <div>
+      <h1>Privacy Policy</h1>
+      <p class="text-muted mt-4">The full privacy policy will be added shortly.</p>
+    </div>
+
+    <section>
+      <h2 class="text-[1.4rem] mb-4">Google Maps / Street View (360° Tour)</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          On <a href="/en/tour" class="text-mint hover:underline">/en/tour</a> we offer a virtual 360°
+          tour of our practice. For this we use an embedding service provided by Google Ireland Limited
+          (Gordon House, Barrow Street, Dublin 4, Ireland).
+        </p>
+        <p>
+          <strong class="text-navy">Important:</strong> The tour is loaded <strong class="text-navy">only after your explicit consent</strong>.
+          A connection to Google servers is established only when you click the "Start tour" button.
+          Technical data is then transmitted, in particular your IP address, browser and device
+          information, and the URL you are visiting. Google may also transfer this data to third
+          countries, in particular the United States.
+        </p>
+        <p>
+          <strong class="text-navy">Legal basis:</strong> Art. 6 (1) (a) GDPR (consent). You may withdraw
+          your consent at any time by closing or leaving the page.
+        </p>
+        <p>
+          For more information, see Google's privacy policy:
+          <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank" class="text-mint hover:underline">policies.google.com/privacy</a>.
+        </p>
+      </div>
+    </section>
   </div>
 </BaseLayout>

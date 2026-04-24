@@ -1,0 +1,147 @@
+---
+import { rundgangRaeume } from '../data/rundgang';
+
+interface Props {
+  lang?: 'de' | 'en';
+}
+
+const { lang = 'de' } = Astro.props;
+const isEN = lang === 'en';
+
+const raeume = rundgangRaeume.map((r) => ({
+  id: r.id,
+  name: isEN ? r.nameEN : r.name,
+  beschreibung: isEN ? r.beschreibungEN : r.beschreibung,
+  embedUrl: r.embedUrl,
+}));
+
+const heading    = isEN ? '360° Tour'               : '360°-Rundgang';
+const intro      = isEN
+  ? 'To start the 360° tour, we load a service from Google (Google Maps). This transmits your IP address to Google.'
+  : 'Um den 360°-Rundgang zu starten, laden wir einen Dienst von Google (Google Maps). Dabei wird Ihre IP-Adresse an Google übertragen.';
+const privacyHref = isEN ? '/en/privacy' : '/datenschutz';
+const privacyLink = isEN ? 'privacy policy' : 'Datenschutzerklärung';
+const moreInfo    = isEN ? 'More info in our ' : 'Weitere Infos in unserer ';
+const startBtn    = isEN ? 'Start tour →' : 'Rundgang starten →';
+const viewerLabel = isEN ? 'Virtual tour viewer' : '360°-Rundgang Ansicht';
+---
+
+<div
+  class="rounded-2xl border border-border overflow-hidden bg-white"
+  data-rundgang
+  data-default={raeume[0].id}
+>
+  <!-- Placeholder -->
+  <div
+    data-placeholder
+    class="relative px-6 py-16 sm:py-20 text-center text-white"
+    style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+  >
+    <div
+      class="absolute -top-20 -right-20 w-[280px] h-[280px] rounded-full pointer-events-none"
+      style="background: radial-gradient(circle, rgba(100,197,174,.22), transparent 70%);"
+      aria-hidden="true"
+    ></div>
+
+    <div class="relative max-w-[560px] mx-auto">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-mint/15 mb-5" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64C5AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 1 0 10 10"/>
+          <path d="M12 2a10 10 0 0 1 10 10"/>
+          <path d="M2 12h20"/>
+          <path d="M12 2v20"/>
+        </svg>
+      </div>
+      <h3 class="font-heading font-bold text-[clamp(1.35rem,2.5vw,1.75rem)] mb-3">{heading}</h3>
+      <p class="text-white/75 text-[0.95rem] leading-relaxed mb-6">
+        {intro} {moreInfo}<a href={privacyHref} class="text-mint hover:underline">{privacyLink}</a>.
+      </p>
+      <button
+        type="button"
+        data-start-btn
+        class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+      >
+        {startBtn}
+      </button>
+    </div>
+  </div>
+
+  <!-- Viewer -->
+  <div data-viewer hidden class="bg-bg-soft">
+    <div class="aspect-[16/10] md:aspect-[16/9] w-full">
+      <iframe
+        data-frame
+        src=""
+        title={viewerLabel}
+        width="100%"
+        height="100%"
+        style="border:0; display:block;"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+
+    <!-- Room picker -->
+    <div class="p-5 sm:p-6 border-t border-border bg-white">
+      <div class="flex gap-2 overflow-x-auto pb-2 sm:flex-wrap sm:overflow-visible" role="tablist" aria-label={viewerLabel}>
+        {raeume.map((raum) => (
+          <button
+            type="button"
+            role="tab"
+            data-room-btn
+            data-room-id={raum.id}
+            aria-selected="false"
+            class="shrink-0 whitespace-nowrap px-4 py-2 rounded-full text-[0.88rem] font-medium border border-border bg-white text-navy transition-colors hover:bg-bg-soft aria-selected:bg-mint aria-selected:text-navy aria-selected:border-mint aria-selected:font-bold"
+          >
+            {raum.name}
+          </button>
+        ))}
+      </div>
+      <p data-room-desc class="text-muted text-[0.9rem] mt-4 leading-relaxed"></p>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ raeume }}>
+  function initRundgang() {
+    document.querySelectorAll('[data-rundgang]').forEach((root) => {
+      if (root.dataset.inited) return;
+      root.dataset.inited = 'true';
+
+      const placeholder = root.querySelector('[data-placeholder]');
+      const viewer      = root.querySelector('[data-viewer]');
+      const frame       = root.querySelector('[data-frame]');
+      const startBtn    = root.querySelector('[data-start-btn]');
+      const desc        = root.querySelector('[data-room-desc]');
+      const buttons     = root.querySelectorAll('[data-room-btn]');
+
+      const defaultId = root.dataset.default;
+      const data = Object.fromEntries(raeume.map((r) => [r.id, r]));
+
+      function setRoom(id) {
+        const raum = data[id];
+        if (!raum) return;
+        frame.src = raum.embedUrl;
+        desc.textContent = raum.beschreibung;
+        buttons.forEach((b) => {
+          const active = b.dataset.roomId === id;
+          b.setAttribute('aria-selected', String(active));
+        });
+      }
+
+      function startTour() {
+        placeholder.setAttribute('hidden', '');
+        viewer.removeAttribute('hidden');
+        setRoom(defaultId);
+      }
+
+      startBtn.addEventListener('click', startTour);
+      buttons.forEach((b) => {
+        b.addEventListener('click', () => setRoom(b.dataset.roomId));
+      });
+    });
+  }
+  initRundgang();
+  document.addEventListener('astro:after-swap', initRundgang);
+</script>
