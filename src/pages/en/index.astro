@@ -1,8 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ValueCard from '../../components/ValueCard.astro';
+import { getTeamMemberBySlug } from '../../sanity/client';
 const heroSrc = '/Titelbild.png';
 const heroAlt = 'The Samedos team';
+
+const janssen = await getTeamMemberBySlug('dr-joerg-janssen');
+const janssenPhoto = janssen?.photoAlt?.asset?.url
+  ?? janssen?.photo?.asset?.url
+  ?? '/images/team/joerg-janssen.png';
+const janssenPhotoAlt = janssen?.photoAlt?.alt ?? janssen?.photo?.alt ?? 'Dr. med. Jörg Janssen';
 
 const values = [
   {
@@ -194,8 +201,8 @@ const values = [
 
         <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[440px] mx-auto lg:mx-0 lg:max-w-none" data-animate>
           <img
-            src="/images/team/joerg-janssen.png"
-            alt="Dr. med. Jörg Janssen"
+            src={janssenPhoto}
+            alt={janssenPhotoAlt}
             class="w-full h-full object-cover object-top"
           />
         </div>

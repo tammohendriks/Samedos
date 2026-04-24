@@ -75,12 +75,28 @@ export const teamMember = defineType({
       title: 'Porträtfoto',
       type: 'image',
       options: { hotspot: true },
+      description: 'Hauptfoto — wird auf Team-Kachel, Profilseite und im Offshore-E-A-T-Block verwendet.',
       fields: [
         defineField({
           name: 'alt',
           title: 'Alt-Text',
           type: 'string',
           description: 'Beschreibung des Bildes für Screenreader und SEO',
+        }),
+      ],
+      group: 'basis',
+    }),
+    defineField({
+      name: 'photoAlt',
+      title: 'Alternativfoto (Startseite etc.)',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Zweites Foto für die Startseite, damit nicht überall dasselbe Porträt erscheint. Optional — wenn leer, wird das Hauptfoto verwendet.',
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt-Text',
+          type: 'string',
         }),
       ],
       group: 'basis',
@@ -177,6 +193,12 @@ export const teamMember = defineType({
               title: 'Bezeichnung',
               type: 'string',
               validation: (r) => r.required(),
+            }),
+            defineField({
+              name: 'titelEN',
+              title: 'Bezeichnung (English)',
+              type: 'string',
+              description: 'Englische Übersetzung der Bezeichnung. Institution, Ort und Jahr bleiben gleich.',
             }),
             defineField({
               name: 'institution',

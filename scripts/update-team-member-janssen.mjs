@@ -72,28 +72,28 @@ const schwerpunkteEN = [
 // per qualification directly in Sanity later.
 const qualifikationen = [
   // Facharzt
-  { titel: 'Facharzt für Arbeitsmedizin',     institution: 'Ärztekammer Hamburg',        ort: 'Hamburg',  jahr: 2004, kategorie: 'facharzt',      offshoreRelevant: true },
-  { titel: 'Facharzt für Allgemeinmedizin',   institution: 'Ärztekammer Niedersachsen',  ort: 'Hannover', jahr: 2002, kategorie: 'facharzt',      offshoreRelevant: true },
+  { titel: 'Facharzt für Arbeitsmedizin',   titelEN: 'Specialist in Occupational Medicine', institution: 'Ärztekammer Hamburg',        ort: 'Hamburg',  jahr: 2004, kategorie: 'facharzt',      offshoreRelevant: true },
+  { titel: 'Facharzt für Allgemeinmedizin', titelEN: 'Specialist in General Medicine',      institution: 'Ärztekammer Niedersachsen',  ort: 'Hannover', jahr: 2002, kategorie: 'facharzt',      offshoreRelevant: true },
 
   // Zusatzqualifikationen
-  { titel: 'Sportmedizin',                                                                institution: 'Ärztekammer Hamburg',        ort: 'Hamburg',  jahr: 2004, kategorie: 'zusatz',        offshoreRelevant: true },
-  { titel: 'Manuelle Medizin / Chirotherapie',                                            institution: 'Ärztekammer Niedersachsen',  ort: 'Hannover', jahr: 2010, kategorie: 'zusatz',        offshoreRelevant: false },
-  { titel: 'Zusatzbezeichnung Qualitätsmanagement',                                       institution: 'Ärztekammer Niedersachsen',  ort: 'Hannover', jahr: 2002, kategorie: 'zusatz',        offshoreRelevant: false },
-  { titel: 'Arbeitsmedizinische Zusammenhangsbegutachtung',                               institution: 'DGAUM',                      ort: 'Düsseldorf', jahr: 2006, kategorie: 'zusatz',      offshoreRelevant: false },
-  { titel: 'Certified Disability Management Professional (CDMP)',                         institution: 'IDMSC',                      ort: 'Köln',     jahr: 2005, kategorie: 'zusatz',        offshoreRelevant: false },
-  { titel: 'Personzentrierter / Systemischer Coach',                                      institution: 'Der W.E.G. e.V.',            ort: 'Bremen',   jahr: 2013, kategorie: 'zusatz',        offshoreRelevant: false },
-  { titel: 'Psychologischer Berater',                                                     institution: 'Der W.E.G. e.V.',            ort: 'Bremen',   jahr: 2010, kategorie: 'zusatz',        offshoreRelevant: false },
-  { titel: 'Fachkunde im Strahlenschutz (Notfalldiagnostik)',                              institution: 'Landesärztekammer Hessen',   ort: 'Frankfurt', jahr: 1999, kategorie: 'zusatz',       offshoreRelevant: true },
-  { titel: 'Rettungsdienst',                                                              institution: 'Landesärztekammer Hessen',   ort: 'Frankfurt', jahr: 1999, kategorie: 'zusatz',       offshoreRelevant: true },
+  { titel: 'Sportmedizin',                                                       titelEN: 'Sports Medicine',                                            institution: 'Ärztekammer Hamburg',        ort: 'Hamburg',   jahr: 2004, kategorie: 'zusatz',        offshoreRelevant: true },
+  { titel: 'Manuelle Medizin / Chirotherapie',                                   titelEN: 'Manual Medicine / Chirotherapy',                             institution: 'Ärztekammer Niedersachsen',  ort: 'Hannover',  jahr: 2010, kategorie: 'zusatz',        offshoreRelevant: false },
+  { titel: 'Zusatzbezeichnung Qualitätsmanagement',                              titelEN: 'Additional qualification in Quality Management',             institution: 'Ärztekammer Niedersachsen',  ort: 'Hannover',  jahr: 2002, kategorie: 'zusatz',        offshoreRelevant: false },
+  { titel: 'Arbeitsmedizinische Zusammenhangsbegutachtung',                      titelEN: 'Occupational Causation Assessment',                          institution: 'DGAUM',                      ort: 'Düsseldorf', jahr: 2006, kategorie: 'zusatz',      offshoreRelevant: false },
+  { titel: 'Certified Disability Management Professional (CDMP)',                titelEN: 'Certified Disability Management Professional (CDMP)',        institution: 'IDMSC',                      ort: 'Köln',      jahr: 2005, kategorie: 'zusatz',        offshoreRelevant: false },
+  { titel: 'Personzentrierter / Systemischer Coach',                             titelEN: 'Person-centred / Systemic Coach',                            institution: 'Der W.E.G. e.V.',            ort: 'Bremen',    jahr: 2013, kategorie: 'zusatz',        offshoreRelevant: false },
+  { titel: 'Psychologischer Berater',                                            titelEN: 'Psychological Counsellor',                                   institution: 'Der W.E.G. e.V.',            ort: 'Bremen',    jahr: 2010, kategorie: 'zusatz',        offshoreRelevant: false },
+  { titel: 'Fachkunde im Strahlenschutz (Notfalldiagnostik)',                     titelEN: 'Radiation Protection Expertise (Emergency Diagnostics)',     institution: 'Landesärztekammer Hessen',   ort: 'Frankfurt', jahr: 1999, kategorie: 'zusatz',        offshoreRelevant: true },
+  { titel: 'Rettungsdienst',                                                     titelEN: 'Emergency Medical Service',                                  institution: 'Landesärztekammer Hessen',   ort: 'Frankfurt', jahr: 1999, kategorie: 'zusatz',        offshoreRelevant: true },
 
   // Ermächtigung
-  { titel: 'Ermächtigung zur Überwachung beruflich strahlenexponierter Personen',         institution: 'Ärztekammer Bremen',         ort: 'Bremen',   jahr: 2013, kategorie: 'ermaechtigung', offshoreRelevant: true },
+  { titel: 'Ermächtigung zur Überwachung beruflich strahlenexponierter Personen', titelEN: 'Authorisation to monitor occupationally radiation-exposed individuals', institution: 'Ärztekammer Bremen',        ort: 'Bremen',    jahr: 2013, kategorie: 'ermaechtigung', offshoreRelevant: true },
 
   // Ausbildung
-  { titel: 'Approbation als Arzt',                                                        institution: 'Landesprüfungsamt für Heilberufe', ort: 'Hannover', jahr: 1998, kategorie: 'ausbildung', offshoreRelevant: false },
+  { titel: 'Approbation als Arzt',                                               titelEN: 'Medical Licence (Approbation)',                              institution: 'Landesprüfungsamt für Heilberufe', ort: 'Hannover', jahr: 1998, kategorie: 'ausbildung', offshoreRelevant: false },
 
   // Promotion
-  { titel: 'Promotion zum Dr. med.',                                                      institution: 'Medizinische Fakultät der Georg-August-Universität Göttingen', ort: 'Göttingen', jahr: 1997, kategorie: 'promotion',   offshoreRelevant: false },
+  { titel: 'Promotion zum Dr. med.',                                             titelEN: 'Doctorate (Dr. med.)',                                       institution: 'Medizinische Fakultät der Georg-August-Universität Göttingen', ort: 'Göttingen', jahr: 1997, kategorie: 'promotion',   offshoreRelevant: false },
 ].map((q, i) => ({ _type: 'qualifikation', _key: `q${i}`, ...q }));
 
 console.log(`🔄 Aktualisiere Dr. Jörg Janssen (${DOC_ID})...`);

@@ -9,6 +9,7 @@ export const sanityClient = createClient({
 
 export interface Qualifikation {
   titel: string;
+  titelEN?: string;
   institution?: string;
   ort?: string;
   jahr?: number;
@@ -25,6 +26,7 @@ export interface TeamMember {
   bio?: string;
   bioEN?: string;
   photo?: { asset: { url: string }; hotspot?: { x: number; y: number }; alt?: string };
+  photoAlt?: { asset: { url: string }; hotspot?: { x: number; y: number }; alt?: string };
   order?: number;
   aktiv?: boolean;
   langBio?: PortableTextBlock[];
@@ -74,8 +76,9 @@ export async function getTeamMembers(): Promise<TeamMember[]> {
 const teamMemberFull = `{
   _id, name, slug, position, jobTitle, bio, bioEN, order, aktiv,
   photo { asset->{ url }, hotspot, alt },
+  photoAlt { asset->{ url }, hotspot, alt },
   langBio, langBioEN, sprachen, schwerpunkte, schwerpunkteEN, telefon, email,
-  qualifikationen[] { titel, institution, ort, jahr, kategorie, offshoreRelevant }
+  qualifikationen[] { titel, titelEN, institution, ort, jahr, kategorie, offshoreRelevant }
 }`;
 
 export async function getTeamMemberBySlug(slug: string): Promise<TeamMember | null> {

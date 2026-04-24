@@ -80,7 +80,7 @@ const hasCredential = qualifikationen.map((q: Qualifikation) => ({
     : q.kategorie === 'promotion'
       ? 'degree'
       : 'certification',
-  name: q.titel,
+  name: q.titelEN ?? q.titel,
   ...(q.institution && {
     recognizedBy: { '@type': 'Organization', name: q.institution },
   }),
@@ -237,7 +237,7 @@ const richTextClasses = 'text-muted text-[1.05rem] leading-relaxed space-y-4 [&_
                       {q.jahr ?? ''}
                     </span>
                     <div class="flex-1">
-                      <p class="text-navy font-medium text-[1rem]">{q.titel}</p>
+                      <p class="text-navy font-medium text-[1rem]">{q.titelEN ?? q.titel}</p>
                       {(q.institution || q.ort) && (
                         <p class="text-muted text-[0.9rem] mt-0.5">
                           {[q.institution, q.ort].filter(Boolean).join(' · ')}

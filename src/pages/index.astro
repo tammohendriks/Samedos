@@ -4,6 +4,13 @@ import Hero from '../components/Hero.astro';
 import Stats from '../components/Stats.astro';
 import ValueCard from '../components/ValueCard.astro';
 import CtaBand from '../components/CtaBand.astro';
+import { getTeamMemberBySlug } from '../sanity/client';
+
+const janssen = await getTeamMemberBySlug('dr-joerg-janssen');
+const janssenPhoto = janssen?.photoAlt?.asset?.url
+  ?? janssen?.photo?.asset?.url
+  ?? '/images/team/joerg-janssen.png';
+const janssenPhotoAlt = janssen?.photoAlt?.alt ?? janssen?.photo?.alt ?? 'Dr. med. Jörg Janssen';
 
 const values = [
   {
@@ -115,8 +122,8 @@ const values = [
         <!-- Foto Dr. Janssen -->
         <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[440px] mx-auto lg:mx-0 lg:max-w-none" data-animate>
           <img
-            src="/images/team/joerg-janssen.png"
-            alt="Dr. med. Jörg Janssen"
+            src={janssenPhoto}
+            alt={janssenPhotoAlt}
             class="w-full h-full object-cover object-top"
           />
         </div>
