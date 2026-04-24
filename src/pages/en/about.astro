@@ -5,13 +5,14 @@ import { getTeamMembers } from '../../sanity/client';
 const team = await getTeamMembers();
 
 const positionMap: Record<string, string> = {
+  'Leitender Arzt & Gründer': 'Lead Doctor & Founder',
   'Gründer & Geschäftsführer': 'Founder & Managing Director',
   'Gründerin & Geschäftsführerin': 'Founder & Managing Director',
   'Medizinische Fachangestellte': 'Medical Assistant',
 };
 
 const fallbackTeam = [
-  { name: 'Jörg', position: 'Founder & Managing Director', photo: '/images/team/joerg-janssen.png' },
+  { name: 'Jörg', position: 'Lead Doctor & Founder', photo: '/images/team/joerg-janssen.png' },
   { name: 'Simone', position: 'Founder & Managing Director', photo: '/images/team/simone.png' },
   { name: 'Sigrid', position: 'Medical Assistant', photo: '/images/team/sigrid.png' },
   { name: 'Claudia', position: 'Medical Assistant', photo: '/images/team/claudia.png' },
@@ -20,11 +21,20 @@ const fallbackTeam = [
 const displayTeam = team.length > 0
   ? team.map((m) => ({
       name: m.name,
+      firstName: m.name.replace(/^Dr\.\s*med\.\s*/, '').split(' ')[0],
       position: positionMap[m.position] ?? m.position,
       bio: m.bio ?? '',
       photo: m.photo?.asset?.url ?? null,
+      slug: m.slug?.current ?? null,
     }))
-  : fallbackTeam.map((m) => ({ name: m.name, position: m.position, bio: '', photo: m.photo as string | null }));
+  : fallbackTeam.map((m) => ({
+      name: m.name,
+      firstName: m.name.split(' ')[0],
+      position: m.position,
+      bio: '',
+      photo: m.photo as string | null,
+      slug: null as string | null,
+    }));
 ---
 
 <BaseLayout
@@ -81,7 +91,7 @@ const displayTeam = team.length > 0
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {displayTeam.map((member, i) => (
-          <div class="bg-white rounded-2xl overflow-hidden border border-border hover:border-mint hover:-translate-y-1 transition-all duration-250" data-animate data-delay={String(i + 1)}>
+          <div class="bg-white rounded-2xl overflow-hidden border border-border hover:border-mint hover:-translate-y-1 transition-all duration-250 flex flex-col" data-animate data-delay={String(i + 1)}>
             <div class="aspect-square bg-mint-soft">
               {member.photo ? (
                 <img src={member.photo} alt={member.name} class="w-full h-full object-cover object-top" />
@@ -94,10 +104,19 @@ const displayTeam = team.length > 0
                 </div>
               )}
             </div>
-            <div class="p-6">
+            <div class="p-6 flex-1 flex flex-col">
               <h3 class="text-[1.1rem] mb-1">{member.name}</h3>
-              <p class="text-mint font-medium text-[0.88rem] mb-2">{member.position}</p>
-              {member.bio && <p class="text-muted text-[0.88rem]">{member.bio}</p>}
+              <p class="text-mint font-medium text-[0.88rem]">{member.position}</p>
+              {member.slug ? (
+                <a
+                  href={`/en/about/${member.slug}`}
+                  class="mt-auto pt-4 inline-flex items-center gap-2 text-navy font-medium text-[0.9rem] hover:text-mint transition-colors"
+                >
+                  More about {member.firstName} →
+                </a>
+              ) : (
+                member.bio && <p class="text-muted text-[0.88rem] mt-2">{member.bio}</p>
+              )}
             </div>
           </div>
         ))}

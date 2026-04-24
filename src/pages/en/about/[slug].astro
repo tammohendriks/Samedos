@@ -1,0 +1,289 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getTeamMembersWithProfiles, getTeamMemberBySlug, type PortableTextBlock, type Qualifikation } from '../../../sanity/client';
+import { toHTML } from '@portabletext/to-html';
+
+export async function getStaticPaths() {
+  const members = await getTeamMembersWithProfiles();
+  return members
+    .filter((m) => m.slug?.current)
+    .map((m) => ({ params: { slug: m.slug!.current } }));
+}
+
+const { slug } = Astro.params;
+const member = await getTeamMemberBySlug(slug!);
+if (!member) return Astro.redirect('/en/about', 302);
+
+const siteUrl = 'https://www.samedos.de';
+
+const positionEN: Record<string, string> = {
+  'Leitender Arzt & Gründer':           'Lead Doctor & Founder',
+  'Gründer & Geschäftsführer':          'Founder & Managing Director',
+  'Gründerin & Geschäftsführerin':      'Founder & Managing Director',
+  'Medizinische Fachangestellte':       'Medical Assistant',
+};
+
+const jobTitleEN: Record<string, string> = {
+  'Facharzt für Arbeitsmedizin': 'Specialist in Occupational Medicine',
+  'Facharzt für Allgemeinmedizin': 'Specialist in General Medicine',
+};
+
+const positionEnLabel = positionEN[member.position] ?? member.position;
+const jobTitleEnLabel = member.jobTitle ? (jobTitleEN[member.jobTitle] ?? member.jobTitle) : undefined;
+const bioEnLabel      = member.bioEN ?? member.bio;
+
+const sprachenMap: Record<string, { label: string; code: string }> = {
+  de: { label: 'German',  code: 'DE' },
+  en: { label: 'English', code: 'EN' },
+  es: { label: 'Spanish', code: 'ES' },
+  nl: { label: 'Dutch',   code: 'NL' },
+  fr: { label: 'French',  code: 'FR' },
+};
+
+const sprachenPills = (member.sprachen ?? []).map((s) => sprachenMap[s]?.code ?? s.toUpperCase());
+
+const kategorieLabels: Record<string, string> = {
+  facharzt:      'Medical specialist qualifications',
+  zusatz:        'Additional qualifications',
+  ermaechtigung: 'Authorisations',
+  ausbildung:    'Medical training',
+  promotion:     'Doctorate',
+  sonstige:      'Further training',
+};
+const kategorieOrder = ['facharzt', 'zusatz', 'ermaechtigung', 'sonstige', 'ausbildung', 'promotion'] as const;
+
+const qualifikationen = member.qualifikationen ?? [];
+const gruppiert = kategorieOrder
+  .map((kat) => ({
+    kategorie: kat,
+    label: kategorieLabels[kat],
+    eintraege: qualifikationen
+      .filter((q) => q.kategorie === kat)
+      .sort((a, b) => (b.jahr ?? 0) - (a.jahr ?? 0)),
+  }))
+  .filter((g) => g.eintraege.length > 0);
+
+const bioBlocks = member.langBioEN?.length ? member.langBioEN : member.langBio;
+const langBioHtml = Array.isArray(bioBlocks) && bioBlocks.length
+  ? toHTML(bioBlocks as PortableTextBlock[])
+  : '';
+
+const schwerpunkte = member.schwerpunkteEN?.length ? member.schwerpunkteEN : member.schwerpunkte;
+
+const photoUrl = member.photo?.asset?.url;
+const photoAlt = member.photo?.alt ?? member.name;
+
+const hasCredential = qualifikationen.map((q: Qualifikation) => ({
+  '@type': 'EducationalOccupationalCredential',
+  credentialCategory: q.kategorie === 'facharzt' || q.kategorie === 'ermaechtigung'
+    ? 'license'
+    : q.kategorie === 'promotion'
+      ? 'degree'
+      : 'certification',
+  name: q.titel,
+  ...(q.institution && {
+    recognizedBy: { '@type': 'Organization', name: q.institution },
+  }),
+  ...(q.jahr && { dateCreated: String(q.jahr) }),
+}));
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: member.name,
+  jobTitle: member.jobTitle ?? member.position,
+  description: member.bio,
+  ...(photoUrl && { image: photoUrl.startsWith('http') ? photoUrl : `${siteUrl}${photoUrl}` }),
+  url: `${siteUrl}/en/about/${member.slug?.current}`,
+  worksFor: {
+    '@type': 'MedicalBusiness',
+    name: 'Samedos GmbH',
+    url: siteUrl,
+  },
+  ...(member.sprachen?.length && { knowsLanguage: member.sprachen }),
+  ...(hasCredential.length && { hasCredential }),
+};
+
+const metaTitle = `${member.name} — ${member.jobTitle ?? member.position} in Bremen | Samedos`;
+const metaDescription = member.bio ?? `${member.name}, ${member.position} at Samedos in Bremen.`;
+
+const richTextClasses = 'text-muted text-[1.05rem] leading-relaxed space-y-4 [&_strong]:text-navy [&_strong]:font-semibold [&_em]:italic';
+---
+
+<BaseLayout
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={photoUrl}
+  lang="en"
+  alternateHref={`/ueber-uns/${member.slug?.current}`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  </Fragment>
+
+  <!-- Hero -->
+  <section class="relative pt-16 pb-20 overflow-hidden" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div
+      class="absolute -top-32 -right-32 w-[520px] h-[520px] rounded-full pointer-events-none"
+      style="background: radial-gradient(circle, rgba(100,197,174,.22), transparent 70%);"
+      aria-hidden="true"
+    ></div>
+    <div class="relative max-w-[1200px] mx-auto px-6">
+      <a href="/en/about" class="text-mint text-[0.9rem] hover:text-white transition-colors">← About us</a>
+      <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-10 lg:gap-14 mt-8 items-start">
+        <div class="relative" data-animate>
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt={photoAlt}
+              class="w-full aspect-[3/4] object-cover rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,.25)]"
+            />
+          ) : (
+            <div class="w-full aspect-[3/4] rounded-2xl bg-white/10 grid place-items-center">
+              <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#64C5AE" stroke-width="1.2">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+              </svg>
+            </div>
+          )}
+        </div>
+        <div class="text-white" data-animate data-delay="1">
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            {positionEnLabel}
+          </p>
+          <h1 class="text-[clamp(2rem,4vw,3rem)] text-white leading-tight">{member.name}</h1>
+          {jobTitleEnLabel && (
+            <p class="text-white/75 text-[1.1rem] mt-3">{jobTitleEnLabel}</p>
+          )}
+          {bioEnLabel && (
+            <p class="text-white/85 text-[1.05rem] leading-relaxed mt-6 max-w-[640px]">{bioEnLabel}</p>
+          )}
+          {sprachenPills.length > 0 && (
+            <div class="flex flex-wrap gap-2 mt-6" aria-label="Languages">
+              {sprachenPills.map((code) => (
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[0.78rem] tracking-wide font-medium">
+                  {code}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {schwerpunkte && schwerpunkte.length > 0 && (
+    <section class="py-16">
+      <div class="max-w-[1200px] mx-auto px-6">
+        <div class="mb-10" data-animate>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            Focus areas
+          </p>
+          <h2>Areas of expertise</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-animate data-delay="1">
+          {schwerpunkte.map((s) => (
+            <div class="bg-white border border-border rounded-2xl p-5 flex items-start gap-3">
+              <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+              <span class="text-navy font-medium">{s}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {langBioHtml && (
+    <section class="py-16 bg-bg-soft">
+      <div class="max-w-[800px] mx-auto px-6">
+        <div class="mb-8" data-animate>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            About me
+          </p>
+          <h2>Personal</h2>
+        </div>
+        <div class={richTextClasses} set:html={langBioHtml} data-animate data-delay="1" />
+        <div class="mt-8" data-animate data-delay="2">
+          <a
+            href="/en/contact"
+            class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+          >
+            Get in touch →
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {gruppiert.length > 0 && (
+    <section class="py-16">
+      <div class="max-w-[1000px] mx-auto px-6">
+        <div class="mb-10" data-animate>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">
+            Credentials
+          </p>
+          <h2>Qualifications & further training</h2>
+        </div>
+        <div class="space-y-10">
+          {gruppiert.map((gruppe, idx) => (
+            <div data-animate data-delay={String((idx % 3) + 1)}>
+              <h3 class="text-[1.15rem] font-heading font-bold text-navy mb-5 pb-2 border-b border-border">
+                {gruppe.label}
+              </h3>
+              <ul class="space-y-4">
+                {gruppe.eintraege.map((q) => (
+                  <li class="flex flex-col sm:flex-row sm:items-baseline sm:gap-4">
+                    <span class="text-mint font-heading font-semibold text-[0.9rem] shrink-0 tabular-nums w-16">
+                      {q.jahr ?? ''}
+                    </span>
+                    <div class="flex-1">
+                      <p class="text-navy font-medium text-[1rem]">{q.titel}</p>
+                      {(q.institution || q.ort) && (
+                        <p class="text-muted text-[0.9rem] mt-0.5">
+                          {[q.institution, q.ort].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="max-w-[1200px] mx-auto px-6 pb-24">
+    <div
+      class="relative rounded-[28px] px-8 sm:px-12 py-12 sm:py-14 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Any questions?</h2>
+      <p class="text-white/80 max-w-[520px] mx-auto mb-7">
+        Our team is here for you — give us a call or drop us a line.
+      </p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <a
+          href="tel:+494216399776"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          +49 421 63997-76
+        </a>
+        <a
+          href="/en/contact"
+          class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border-[1.5px] border-white/70 text-white font-medium text-[0.95rem] transition-all hover:bg-white hover:text-navy"
+        >
+          Contact form
+        </a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

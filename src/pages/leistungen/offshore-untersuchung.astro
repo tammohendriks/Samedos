@@ -1,5 +1,16 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getTeamMemberBySlug } from '../../sanity/client';
+
+const doctor = await getTeamMemberBySlug('dr-joerg-janssen');
+
+const sprachenLabelsDE: Record<string, string> = {
+  de: 'Deutsch', en: 'Englisch', es: 'Spanisch', nl: 'Niederländisch', fr: 'Französisch',
+};
+
+const offshoreQualifications = (doctor?.qualifikationen ?? [])
+  .filter((q) => q.offshoreRelevant)
+  .sort((a, b) => (b.jahr ?? 0) - (a.jahr ?? 0));
 
 const faqs = [
   {
@@ -352,8 +363,8 @@ const steps = [
         <!-- Foto -->
         <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
           <img
-            src="/images/team/joerg-janssen.png"
-            alt="Dr. med. Jörg Janssen, Facharzt für Arbeitsmedizin und Offshore-Arzt bei Samedos Bremen"
+            src={doctor?.photo?.asset?.url ?? '/images/team/joerg-janssen.png'}
+            alt={doctor?.photo?.alt ?? 'Dr. med. Jörg Janssen, Facharzt für Arbeitsmedizin und Offshore-Arzt bei Samedos Bremen'}
             class="w-full h-full object-cover object-top"
             loading="lazy"
           />
@@ -367,58 +378,57 @@ const steps = [
           <h2 class="text-[1.7rem] mb-4">Ihr Arzt für Offshore-Medizin in Bremen</h2>
 
           <p class="text-muted leading-relaxed mb-6">
-            Dr. med. Jörg Janssen ist Gründer und Geschäftsführer von Samedos. Er ist Facharzt für Arbeitsmedizin und Allgemeinmedizin mit Zusatzqualifikationen in Sportmedizin, Strahlenschutz und Manueller Medizin — und begleitet alle Offshore-Tauglichkeitsuntersuchungen direkt mit. Regelmäßige Fortbildungen zu den aktuellen Offshore-Standards gehören für ihn zum Berufsbild.
+            {doctor?.bio ?? 'Dr. med. Jörg Janssen ist Gründer und Geschäftsführer von Samedos. Er ist Facharzt für Arbeitsmedizin und Allgemeinmedizin mit Zusatzqualifikationen in Sportmedizin, Strahlenschutz und Manueller Medizin — und begleitet alle Offshore-Tauglichkeitsuntersuchungen direkt mit. Regelmäßige Fortbildungen zu den aktuellen Offshore-Standards gehören für ihn zum Berufsbild.'}
           </p>
 
-          <!-- Qualifikationen — Platzhalter für echte Daten -->
           <div class="bg-white border border-border rounded-2xl p-6 mb-6 space-y-5">
 
-            <div>
-              <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">Facharztqualifikationen & Weiterbildungen</p>
-              <ul class="space-y-2">
-                {[
-                  'Facharzt für Arbeitsmedizin (Ärztekammer Hamburg, 2004)',
-                  'Facharzt für Allgemeinmedizin (Ärztekammer Niedersachsen, 2002)',
-                  'Sportmedizin (Ärztekammer Hamburg, 2004)',
-                  'Manuelle Medizin / Chirotherapie (Ärztekammer Niedersachsen, 2010)',
-                  'Fachkunde Strahlenschutz, Notfalldiagnostik (Landesärztekammer Hessen, 1999)',
-                  'Ermächtigung zur Überwachung beruflich strahlenexponierter Personen (Ärztekammer Bremen, 2013)',
-                  'Arbeitsmedizinische Zusammenhangsbegutachtung (DGAUM, 2006)',
-                  'Ärztliches Qualitätsmanagement',
-                  'Certified Disability Management Professional – CDMP (IDMSC, 2005)',
-                  'Promotion Dr. med., Georg-August-Universität Göttingen (1997)',
-                ].map(item => (
-                  <li class="flex items-start gap-3 text-[0.88rem] text-muted">
-                    <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {offshoreQualifications.length > 0 && (
+              <div>
+                <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">Offshore-relevante Qualifikationen</p>
+                <ul class="space-y-2">
+                  {offshoreQualifications.map((q) => (
+                    <li class="flex items-start gap-3 text-[0.88rem] text-muted">
+                      <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                      <span>
+                        <strong class="text-navy font-medium">{q.titel}</strong>
+                        {(q.institution || q.jahr) && (
+                          <span class="text-muted"> — {[q.institution, q.jahr].filter(Boolean).join(', ')}</span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-            <div class="border-t border-border pt-4">
+            <div class={offshoreQualifications.length > 0 ? 'border-t border-border pt-4' : ''}>
               <p class="font-heading font-semibold text-navy mb-2 text-[0.95rem]">Offshore-spezifische Weiterbildungen</p>
               <p class="text-muted text-[0.88rem] leading-relaxed">
                 Regelmäßige Fortbildungen zur Offshore-Tauglichkeitsuntersuchung, inklusive Chester Step Test, Belastbarkeits- und Rettungsfähigkeitsprüfung nach aktuellen branchenüblichen Standards.
               </p>
             </div>
 
-            <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
-              <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Sprachen</p>
-              {['Deutsch', 'Englisch', 'Spanisch', 'Niederländisch'].map(lang => (
-                <span class="text-muted text-[0.88rem]">{lang}</span>
-              ))}
-            </div>
+            {doctor?.sprachen && doctor.sprachen.length > 0 && (
+              <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
+                <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Sprachen</p>
+                {doctor.sprachen.map((s) => (
+                  <span class="text-muted text-[0.88rem]">{sprachenLabelsDE[s] ?? s}</span>
+                ))}
+              </div>
+            )}
 
           </div>
 
           <div class="flex flex-wrap gap-3">
-            <a
-              href="/ueber-uns"
-              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
-            >
-              Mehr über uns →
-            </a>
+            {doctor?.slug?.current && (
+              <a
+                href={`/ueber-uns/${doctor.slug.current}`}
+                class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+              >
+                Alle Qualifikationen ansehen →
+              </a>
+            )}
             <a
               href="/kontakt"
               class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"

@@ -7,13 +7,34 @@ export const sanityClient = createClient({
   useCdn: !import.meta.env.DEV,
 });
 
+export interface Qualifikation {
+  titel: string;
+  institution?: string;
+  ort?: string;
+  jahr?: number;
+  kategorie: 'facharzt' | 'zusatz' | 'ermaechtigung' | 'ausbildung' | 'promotion' | 'sonstige';
+  offshoreRelevant?: boolean;
+}
+
 export interface TeamMember {
   _id: string;
   name: string;
+  slug?: { current: string };
   position: string;
+  jobTitle?: string;
   bio?: string;
-  photo?: { asset: { url: string }; hotspot?: { x: number; y: number } };
+  bioEN?: string;
+  photo?: { asset: { url: string }; hotspot?: { x: number; y: number }; alt?: string };
   order?: number;
+  aktiv?: boolean;
+  langBio?: PortableTextBlock[];
+  langBioEN?: PortableTextBlock[];
+  sprachen?: string[];
+  schwerpunkte?: string[];
+  schwerpunkteEN?: string[];
+  telefon?: string;
+  email?: string;
+  qualifikationen?: Qualifikation[];
 }
 
 export interface PortableTextBlock {
@@ -46,7 +67,27 @@ export interface JobPosting {
 
 export async function getTeamMembers(): Promise<TeamMember[]> {
   return sanityClient.fetch(
-    `*[_type == "teamMember"] | order(order asc) { _id, name, position, bio, order, photo { asset->{ url }, hotspot } }`
+    `*[_type == "teamMember" && (aktiv == true || !defined(aktiv))] | order(order asc) { _id, name, slug, position, jobTitle, bio, order, aktiv, photo { asset->{ url }, hotspot, alt } }`
+  );
+}
+
+const teamMemberFull = `{
+  _id, name, slug, position, jobTitle, bio, bioEN, order, aktiv,
+  photo { asset->{ url }, hotspot, alt },
+  langBio, langBioEN, sprachen, schwerpunkte, schwerpunkteEN, telefon, email,
+  qualifikationen[] { titel, institution, ort, jahr, kategorie, offshoreRelevant }
+}`;
+
+export async function getTeamMemberBySlug(slug: string): Promise<TeamMember | null> {
+  return sanityClient.fetch(
+    `*[_type == "teamMember" && slug.current == $slug && aktiv == true][0] ${teamMemberFull}`,
+    { slug }
+  );
+}
+
+export async function getTeamMembersWithProfiles(): Promise<TeamMember[]> {
+  return sanityClient.fetch(
+    `*[_type == "teamMember" && aktiv == true && defined(slug.current)] | order(order asc) ${teamMemberFull}`
   );
 }
 
