@@ -276,7 +276,7 @@ const steps = [
           Schritt für Schritt
         </p>
         <h2 class="text-[1.7rem]">Ablauf einer Offshore-Untersuchung bei Samedos</h2>
-        <p class="text-muted mt-3">Typische Gesamtdauer: <strong>1,5 – 2 Stunden</strong></p>
+        <p class="text-muted mt-3">Bei guter Vorbereitung <strong>unter 1 Stunde</strong> abgeschlossen</p>
       </div>
       <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {steps.map((step, i) => (
@@ -304,6 +304,7 @@ const steps = [
               'Medikamentenliste / aktuelle Medikamente',
               'Frühere Offshore-Zertifikate (falls vorhanden)',
               'Vorbefunde relevanter Erkrankungen',
+              'Safety Pass (hilfreich, aber nicht notwendig — bei uns auch für 3 € erhältlich)',
             ].map(item => (
               <li class="flex items-start gap-3 text-[0.95rem] text-muted">
                 <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
@@ -321,7 +322,7 @@ const steps = [
           <h2 class="text-[1.5rem] mb-4">Dauer, Kosten & Gültigkeit</h2>
           <div class="space-y-4">
             {[
-              { label: 'Dauer', wert: '1,5 – 2 Stunden' },
+              { label: 'Dauer', wert: 'Bei guter Vorbereitung unter 1 Stunde' },
               { label: 'Gültigkeit', wert: 'Regel 2 Jahre (je nach Standard & Befund)' },
               { label: 'Kosten', wert: 'Auf Anfrage / Preisseite' },
               { label: 'Kostenträger', wert: 'Meist Arbeitgeber' },
