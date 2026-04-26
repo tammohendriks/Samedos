@@ -1,5 +1,4 @@
 ---
-import tammoStudiosSvg from '../assets/logo-tammo-studios.svg?raw';
 
 interface Props {
   lang?: 'de' | 'en';
@@ -97,7 +96,15 @@ const designCredit    = isEnglish ? 'Design & concept by' : 'Gestaltung & Konzep
       <span>{copyright}</span>
       <span class="flex items-center gap-2">
         {designCredit}
-        <span class="block h-8 w-auto [&>svg]:h-full [&>svg]:w-auto" set:html={tammoStudiosSvg} />
+        <a
+          href="https://www.tammostudios.de"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Tammo Studios — Webseite öffnen"
+          class="inline-flex items-center transition-opacity hover:opacity-80"
+        >
+          <img src="/logo-tammo-studios.png" alt="Tammo Studios" class="h-8 w-auto" loading="lazy" />
+        </a>
       </span>
     </div>
 
