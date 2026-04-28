@@ -35,7 +35,7 @@ const hoursHeading    = isEnglish ? 'Opening hours'  : 'Öffnungszeiten';
 const navHeading      = isEnglish ? 'Navigation'     : 'Navigation';
 const hoursLine1      = isEnglish ? 'Mon – Fri'      : 'Mo – Fr';
 const hoursLine2      = isEnglish ? '08:00 – 15:00'  : '08:00 – 15:00 Uhr';
-const hoursNote       = isEnglish ? 'Reachable outside hours too' : 'Auch außerhalb erreichbar';
+const mobileNoteLabel = isEnglish ? 'Also reachable on mobile:' : 'Auch mobil erreichbar:';
 const copyright       = isEnglish
   ? '© 2026 Samedos GmbH — All rights reserved'
   : '© 2026 Samedos GmbH — Alle Rechte vorbehalten';
@@ -75,7 +75,12 @@ const designCredit    = isEnglish ? 'Design & concept by' : 'Gestaltung & Konzep
         <ul class="space-y-2.5 text-[0.92rem]">
           <li>{hoursLine1}</li>
           <li>{hoursLine2}</li>
-          <li class="text-mint mt-2.5">{hoursNote}</li>
+          <li class="text-mint mt-2.5">{mobileNoteLabel}</li>
+          <li>
+            <a href="tel:+4915750376234" class="text-white/70 hover:text-mint transition-colors">
+              +49 1575 0376234
+            </a>
+          </li>
         </ul>
       </div>
 

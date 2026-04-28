@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout
   title="Kontakt — Samedos Arbeitsmedizin Bremen"
-  description="Kontaktieren Sie Samedos: Timmersloher Str. 82, 28215 Bremen. Tel: 0421 63997761. Mo–Fr 08–15 Uhr. Auch außerhalb der Öffnungszeiten erreichbar."
+  description="Kontaktieren Sie Samedos: Timmersloher Str. 82, 28215 Bremen. Tel: 0421 63997761. Mo–Fr 08–15 Uhr. Auch mobil unter +49 1575 0376234 erreichbar."
   alternateHref="/en/contact"
 >
 
@@ -82,10 +82,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <div>
                   <p class="font-medium text-navy">Öffnungszeiten</p>
                   <p class="text-muted text-[0.95rem]">Mo – Fr: 08:00 – 15:00 Uhr</p>
-                  <p class="text-mint text-[0.9rem] font-medium mt-1">Auch außerhalb erreichbar</p>
                 </div>
               </li>
             </ul>
+
+            <!-- So erreichen Sie uns sicher -->
+            <div class="mt-8 bg-mint-soft border border-mint/30 rounded-2xl p-6">
+              <h3 class="font-heading font-bold text-navy text-[1.05rem] mb-3">So erreichen Sie uns sicher</h3>
+              <p class="text-muted text-[0.95rem] leading-relaxed mb-3">
+                Da wir oft direkt bei unseren Kunden vor Ort sind, ist unsere Praxis nicht immer
+                telefonisch besetzt. Wenn Sie uns über die Praxisnummer einmal nicht erreichen,
+                rufen Sie gerne mobil an:{' '}
+                <a href="tel:+4915750376234" class="text-mint font-medium hover:underline">+49 1575 0376234</a>.
+                Wir gehen so schnell wie möglich ran.
+              </p>
+              <p class="text-muted text-[0.95rem] leading-relaxed">
+                Per E-Mail sind wir jederzeit erreichbar — schreiben Sie uns an{' '}
+                <a href="mailto:info@samedos.de" class="text-mint font-medium hover:underline">info@samedos.de</a>,
+                wir melden uns zeitnah bei Ihnen zurück.
+              </p>
+            </div>
           </div>
         </div>
 
