@@ -19,15 +19,15 @@ const fallbackTeam = [
 >
 
   <Fragment slot="head">
-    <script type="application/ld+json">{JSON.stringify({
+    <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://samedos.de/" },
         { "@type": "ListItem", "position": 2, "name": "Über uns", "item": "https://samedos.de/ueber-uns" }
       ]
-    })}</script>
-    <script type="application/ld+json">{JSON.stringify({
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "AboutPage",
       "name": "Über Samedos GmbH",
@@ -38,7 +38,7 @@ const fallbackTeam = [
         "name": "Samedos GmbH",
         "url": "https://samedos.de"
       }
-    })}</script>
+    })} />
   </Fragment>
 
   <!-- Hero -->

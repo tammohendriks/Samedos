@@ -64,6 +64,9 @@ export interface JobPosting {
   scope?: string;
   location?: string;
   startDate?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryUnit?: 'MONTH' | 'YEAR' | 'HOUR';
   publishedAt?: string;
   validThrough?: string;
 }
@@ -97,13 +100,13 @@ export async function getTeamMembersWithProfiles(): Promise<TeamMember[]> {
 
 export async function getActiveJobPostings(): Promise<JobPosting[]> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, startDate, publishedAt, validThrough }`
+    `*[_type == "jobPosting" && active == true] | order(publishedAt desc) { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, startDate, salaryMin, salaryMax, salaryUnit, publishedAt, validThrough }`
   );
 }
 
 export async function getJobPosting(slug: string): Promise<JobPosting | null> {
   return sanityClient.fetch(
-    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, startDate, publishedAt, validThrough }`,
+    `*[_type == "jobPosting" && slug.current == $slug && active == true][0] { _id, title, slug, teaser, description, whatToExpect, tasksOutdoorTitle, tasksOutdoor, tasksOfficeTitle, tasksOffice, requirements, benefits, scope, location, startDate, salaryMin, salaryMax, salaryUnit, publishedAt, validThrough }`,
     { slug }
   );
 }
@@ -145,6 +148,7 @@ export interface PreisSektionCMS {
 export interface PriceList {
   _id: string;
   category: 'g-untersuchungen' | 'sonderuntersuchungen' | 'labor' | 'impfungen';
+  sichtbar?: boolean;
   updatedAt?: string;
   sektionen?: PreisSektionCMS[];
 }
@@ -154,6 +158,7 @@ export async function getPriceLists(): Promise<PriceList[]> {
     `*[_type == "priceList"] {
       _id,
       category,
+      sichtbar,
       updatedAt,
       sektionen[] {
         titel,

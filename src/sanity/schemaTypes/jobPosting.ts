@@ -136,6 +136,31 @@ export const jobPosting = defineType({
       initialValue: 'Ab sofort',
     }),
     defineField({
+      name: 'salaryMin',
+      title: 'Gehalt – Minimum (für Google for Jobs)',
+      type: 'number',
+      description: 'Untere Bandbreite, z.B. 2400. Wird intern für die Google-Anzeige genutzt — auf der Website selbst wird das Gehalt nicht ausgespielt.',
+    }),
+    defineField({
+      name: 'salaryMax',
+      title: 'Gehalt – Maximum',
+      type: 'number',
+      description: 'Obere Bandbreite, z.B. 3200.',
+    }),
+    defineField({
+      name: 'salaryUnit',
+      title: 'Gehalt – Einheit',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'pro Monat',  value: 'MONTH' },
+          { title: 'pro Jahr',   value: 'YEAR' },
+          { title: 'pro Stunde', value: 'HOUR' },
+        ],
+      },
+      initialValue: 'MONTH',
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Veröffentlicht am',
       type: 'datetime',

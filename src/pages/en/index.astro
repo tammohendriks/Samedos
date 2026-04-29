@@ -53,7 +53,7 @@ const values = [
 >
 
   <Fragment slot="head">
-    <script type="application/ld+json">{JSON.stringify({
+    <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Samedos GmbH",
@@ -63,14 +63,14 @@ const values = [
         "@type": "SearchAction",
         "target": { "@type": "EntryPoint", "urlTemplate": "https://samedos.de/en/services" }
       }
-    })}</script>
-    <script type="application/ld+json">{JSON.stringify({
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://samedos.de/en/" }
       ]
-    })}</script>
+    })} />
   </Fragment>
 
   <!-- Hero -->

@@ -1,0 +1,28 @@
+---
+interface Props {
+  subject: string;
+  lang?: 'de' | 'en';
+}
+const { subject, lang = 'de' } = Astro.props;
+const isEN = lang === 'en';
+const heading = isEN ? 'Price list available on request'         : 'Preisliste auf Anfrage';
+const body    = isEN
+  ? 'We will be happy to send you our current price list — just drop us a message.'
+  : 'Wir stellen Ihnen die aktuelle Preisliste gerne auf Anfrage zur Verfügung.';
+const cta     = isEN ? 'Request price list →' : 'Preisliste anfordern →';
+---
+
+<div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
+  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mb-4 text-mint opacity-60">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+    <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
+  </svg>
+  <p class="font-medium text-navy mb-2">{heading}</p>
+  <p class="text-muted text-[0.95rem] mb-5">{body}</p>
+  <a
+    href={`mailto:info@samedos.de?subject=${encodeURIComponent(subject)}`}
+    class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
+  >
+    {cta}
+  </a>
+</div>

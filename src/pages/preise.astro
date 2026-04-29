@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PreisTabelle from '../components/PreisTabelle.astro';
+import PriceListRequest from '../components/PriceListRequest.astro';
 import { getPriceLists } from '../sanity/client';
 import { gUntersuchungen, sonderuntersuchungen, labor } from '../data/preise';
 import type { PreisTabelleDaten } from '../data/preise';
@@ -15,6 +16,19 @@ const cmsTabelle = (cat: string): PreisTabelleDaten | null => {
 
 const tabelleFor = (cat: string, fallback: PreisTabelleDaten): PreisTabelleDaten =>
   cmsTabelle(cat) ?? fallback;
+
+// Per-category visibility (default: true if no CMS entry yet)
+const isVisible = (cat: string): boolean => {
+  const entry = priceLists.find(p => p.category === cat);
+  return entry ? entry.sichtbar !== false : true;
+};
+
+const requestSubjects: Record<string, string> = {
+  'g-untersuchungen':       'Anfrage G-Untersuchungen',
+  'sonderuntersuchungen':   'Anfrage Sonderuntersuchungen',
+  'labor':                  'Anfrage Laborpreisliste',
+  'impfungen':              'Anfrage Impfpreisliste',
+};
 
 // Auf false setzen um die Preisliste zu verbergen und stattdessen den Anfrage-Button zu zeigen
 const preislisteAktiv = import.meta.env.PUBLIC_PREISLISTE_AKTIV === 'true';
@@ -126,17 +140,23 @@ const tabs = [
           <h2 class="text-[1.4rem] mb-2">G-Untersuchungen</h2>
           <p class="text-muted">Arbeitsmedizinische Vorsorge- und Eignungsuntersuchungen gemäß DGUV Grundsätzen.</p>
         </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-          <button
-            data-print-tab="panel-g-untersuchungen"
-            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Als PDF speichern
-          </button>
-        </div>
-        <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" />
-        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Kombi-Preise gelten bei gleichzeitiger Durchführung.</p>
+        {isVisible('g-untersuchungen') ? (
+          <>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+              <button
+                data-print-tab="panel-g-untersuchungen"
+                class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Als PDF speichern
+              </button>
+            </div>
+            <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" />
+            <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Kombi-Preise gelten bei gleichzeitiger Durchführung.</p>
+          </>
+        ) : (
+          <PriceListRequest subject={requestSubjects['g-untersuchungen']} />
+        )}
       </div>
 
       <!-- Sonderuntersuchungen -->
@@ -145,17 +165,23 @@ const tabs = [
           <h2 class="text-[1.4rem] mb-2">Sonderuntersuchungen</h2>
           <p class="text-muted">Spezielle arbeitsmedizinische Untersuchungen auf Einzelanfrage.</p>
         </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-          <button
-            data-print-tab="panel-sonderuntersuchungen"
-            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Als PDF speichern
-          </button>
-        </div>
-        <PreisTabelle daten={tabelleFor('sonderuntersuchungen', sonderuntersuchungen)} modus="sonderuntersuchungen" />
-        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Preise auf Anfrage individuell anpassbar.</p>
+        {isVisible('sonderuntersuchungen') ? (
+          <>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+              <button
+                data-print-tab="panel-sonderuntersuchungen"
+                class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Als PDF speichern
+              </button>
+            </div>
+            <PreisTabelle daten={tabelleFor('sonderuntersuchungen', sonderuntersuchungen)} modus="sonderuntersuchungen" />
+            <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt. Preise auf Anfrage individuell anpassbar.</p>
+          </>
+        ) : (
+          <PriceListRequest subject={requestSubjects['sonderuntersuchungen']} />
+        )}
       </div>
 
       <!-- Labor -->
@@ -164,17 +190,23 @@ const tabs = [
           <h2 class="text-[1.4rem] mb-2">Laborleistungen</h2>
           <p class="text-muted">Labordiagnostik im Rahmen arbeitsmedizinischer Vorsorge.</p>
         </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-          <button
-            data-print-tab="panel-labor"
-            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Als PDF speichern
-          </button>
-        </div>
-        <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" />
-        <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
+        {isVisible('labor') ? (
+          <>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+              <button
+                data-print-tab="panel-labor"
+                class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Als PDF speichern
+              </button>
+            </div>
+            <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" />
+            <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
+          </>
+        ) : (
+          <PriceListRequest subject={requestSubjects['labor']} />
+        )}
       </div>
 
       <!-- Impfungen -->
@@ -186,7 +218,7 @@ const tabs = [
             Die Preise können variieren, da sie von externen Anbietern abhängen. Wir achten immer darauf, Ihnen den bestmöglichen Preis anzubieten.
           </p>
         </div>
-        {cmsTabelle('impfungen') ? (
+        {isVisible('impfungen') && cmsTabelle('impfungen') ? (
           <>
             <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
               <button
@@ -201,20 +233,7 @@ const tabs = [
             <p class="mt-4 text-muted text-[0.85rem]">* Alle Preise zzgl. MwSt.</p>
           </>
         ) : (
-          <div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mb-4 text-mint opacity-60">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-            </svg>
-            <p class="font-medium text-navy mb-2">Impfpreise auf Anfrage</p>
-            <p class="text-muted text-[0.95rem] mb-5">Wir stellen Ihnen die aktuelle Impfpreisliste gerne auf Anfrage zur Verfügung.</p>
-            <a
-              href="mailto:info@samedos.de?subject=Anfrage Impfpreisliste"
-              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-            >
-              Preisliste anfordern →
-            </a>
-          </div>
+          <PriceListRequest subject={requestSubjects['impfungen']} />
         )}
       </div>
 

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PreisTabelle from '../../components/PreisTabelle.astro';
+import PriceListRequest from '../../components/PriceListRequest.astro';
 import { getPriceLists } from '../../sanity/client';
 import { gUntersuchungen, sonderuntersuchungen, labor } from '../../data/preise';
 import type { PreisTabelleDaten, PreisSektion } from '../../data/preise';
@@ -15,6 +16,18 @@ const cmsTabelle = (cat: string): PreisTabelleDaten | null => {
 
 const tabelleFor = (cat: string, fallback: PreisTabelleDaten): PreisTabelleDaten =>
   cmsTabelle(cat) ?? fallback;
+
+const isVisible = (cat: string): boolean => {
+  const entry = priceLists.find(p => p.category === cat);
+  return entry ? entry.sichtbar !== false : true;
+};
+
+const requestSubjects: Record<string, string> = {
+  'g-untersuchungen':       'Price list request: G-Examinations',
+  'sonderuntersuchungen':   'Price list request: Special examinations',
+  'labor':                  'Price list request: Laboratory',
+  'impfungen':              'Price list request: Vaccinations',
+};
 
 const preislisteAktiv = import.meta.env.PUBLIC_PREISLISTE_AKTIV === 'true';
 
@@ -181,24 +194,30 @@ const tabs = [
           <h2 class="text-[1.4rem] mb-2">G-Examinations</h2>
           <p class="text-muted">Occupational health surveillance and fitness examinations based on DGUV guidelines.</p>
         </div>
-        <!-- Info note -->
-        <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
-          <svg class="shrink-0 mt-0.5 text-mint" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          <p class="text-navy text-[0.88rem] leading-relaxed">
-            Service designations follow German regulatory standards (DGUV) and are therefore listed in German. All prices are in EUR, net (excl. VAT).
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="2">
-          <button
-            data-print-tab="panel-g-untersuchungen"
-            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Save as PDF
-          </button>
-        </div>
-        <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" lang="en" />
-        <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Combined prices apply when examinations are carried out simultaneously.</p>
+        {isVisible('g-untersuchungen') ? (
+          <>
+            <!-- Info note -->
+            <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
+              <svg class="shrink-0 mt-0.5 text-mint" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <p class="text-navy text-[0.88rem] leading-relaxed">
+                Service designations follow German regulatory standards (DGUV) and are therefore listed in German. All prices are in EUR, net (excl. VAT).
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="2">
+              <button
+                data-print-tab="panel-g-untersuchungen"
+                class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Save as PDF
+              </button>
+            </div>
+            <PreisTabelle daten={tabelleFor('g-untersuchungen', gUntersuchungen)} modus="g-untersuchungen" lang="en" />
+            <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Combined prices apply when examinations are carried out simultaneously.</p>
+          </>
+        ) : (
+          <PriceListRequest subject={requestSubjects['g-untersuchungen']} lang="en" />
+        )}
       </div>
 
       <!-- Special Examinations -->
@@ -207,17 +226,23 @@ const tabs = [
           <h2 class="text-[1.4rem] mb-2">Special Examinations</h2>
           <p class="text-muted">Specialist occupational health examinations — please enquire for individual arrangements.</p>
         </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
-          <button
-            data-print-tab="panel-sonderuntersuchungen"
-            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Save as PDF
-          </button>
-        </div>
-        <PreisTabelle daten={sonderEN} modus="sonderuntersuchungen" lang="en" />
-        <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Prices are individually adjustable on request.</p>
+        {isVisible('sonderuntersuchungen') ? (
+          <>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="1">
+              <button
+                data-print-tab="panel-sonderuntersuchungen"
+                class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Save as PDF
+              </button>
+            </div>
+            <PreisTabelle daten={sonderEN} modus="sonderuntersuchungen" lang="en" />
+            <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT). Prices are individually adjustable on request.</p>
+          </>
+        ) : (
+          <PriceListRequest subject={requestSubjects['sonderuntersuchungen']} lang="en" />
+        )}
       </div>
 
       <!-- Laboratory -->
@@ -226,24 +251,30 @@ const tabs = [
           <h2 class="text-[1.4rem] mb-2">Laboratory Services</h2>
           <p class="text-muted">Laboratory diagnostics as part of occupational health surveillance.</p>
         </div>
-        <!-- Info note -->
-        <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
-          <svg class="shrink-0 mt-0.5 text-mint" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          <p class="text-navy text-[0.88rem] leading-relaxed">
-            Service designations follow German regulatory standards (DGUV) and are therefore listed in German. All prices are in EUR, net (excl. VAT).
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="2">
-          <button
-            data-print-tab="panel-labor"
-            class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Save as PDF
-          </button>
-        </div>
-        <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" lang="en" />
-        <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT).</p>
+        {isVisible('labor') ? (
+          <>
+            <!-- Info note -->
+            <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
+              <svg class="shrink-0 mt-0.5 text-mint" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <p class="text-navy text-[0.88rem] leading-relaxed">
+                Service designations follow German regulatory standards (DGUV) and are therefore listed in German. All prices are in EUR, net (excl. VAT).
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-3 mb-6 no-print" data-animate data-delay="2">
+              <button
+                data-print-tab="panel-labor"
+                class="print-btn inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                Save as PDF
+              </button>
+            </div>
+            <PreisTabelle daten={tabelleFor('labor', labor)} modus="labor" lang="en" />
+            <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT).</p>
+          </>
+        ) : (
+          <PriceListRequest subject={requestSubjects['labor']} lang="en" />
+        )}
       </div>
 
       <!-- Vaccinations -->
@@ -255,7 +286,7 @@ const tabs = [
             Prices may vary as they depend on external providers. We always make sure to offer you the best possible price.
           </p>
         </div>
-        {cmsTabelle('impfungen') ? (
+        {isVisible('impfungen') && cmsTabelle('impfungen') ? (
           <>
             <!-- Info note -->
             <div class="mb-6 flex gap-3 bg-mint-soft border border-mint/30 rounded-xl px-5 py-4 no-print" data-animate data-delay="1">
@@ -277,20 +308,7 @@ const tabs = [
             <p class="mt-4 text-muted text-[0.85rem]">* All prices net (excl. VAT).</p>
           </>
         ) : (
-          <div class="bg-white border border-border rounded-2xl p-8" data-animate data-delay="1">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mb-4 text-mint opacity-60">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-            </svg>
-            <p class="font-medium text-navy mb-2">Vaccination prices on request</p>
-            <p class="text-muted text-[0.95rem] mb-5">We are happy to provide our current vaccination price list on request.</p>
-            <a
-              href="mailto:info@samedos.de?subject=Vaccination Price List Request"
-              class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-            >
-              Request price list →
-            </a>
-          </div>
+          <PriceListRequest subject={requestSubjects['impfungen']} lang="en" />
         )}
       </div>
 

@@ -82,6 +82,16 @@ const jobPostingSchema = {
   },
   directApply: true,
   ...(job.startDate && { jobStartDate: job.startDate }),
+  baseSalary: {
+    '@type': 'MonetaryAmount',
+    currency: 'EUR',
+    value: {
+      '@type': 'QuantitativeValue',
+      minValue: job.salaryMin ?? 2300,
+      maxValue: job.salaryMax ?? 3200,
+      unitText: job.salaryUnit ?? 'MONTH',
+    },
+  },
   url: `${siteUrl}/karriere/${job.slug.current}`,
   identifier: {
     '@type': 'PropertyValue',

@@ -22,6 +22,13 @@ export const priceList = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: 'sichtbar',
+      title: 'Auf Website sichtbar',
+      type: 'boolean',
+      description: 'Wenn deaktiviert, erscheint statt der Preistabelle ein Hinweis mit "Anfrage senden"-Button.',
+      initialValue: true,
+    }),
+    defineField({
       name: 'sektionen',
       title: 'Preisabschnitte',
       type: 'array',
