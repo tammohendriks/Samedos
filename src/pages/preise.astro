@@ -30,9 +30,6 @@ const requestSubjects: Record<string, string> = {
   'impfungen':              'Anfrage Impfpreisliste',
 };
 
-// Auf false setzen um die Preisliste zu verbergen und stattdessen den Anfrage-Button zu zeigen
-const preislisteAktiv = import.meta.env.PUBLIC_PREISLISTE_AKTIV === 'true';
-
 const tabs = [
   { id: 'g-untersuchungen', label: 'G-Untersuchungen' },
   { id: 'sonderuntersuchungen', label: 'Sonderuntersuchungen' },
@@ -113,8 +110,6 @@ const tabs = [
         </div>
       </div>
 
-      {preislisteAktiv ? (
-      <Fragment>
       <!-- Tab navigation -->
       <div class="flex flex-wrap gap-2 mb-10 border-b border-border pb-1 no-print" role="tablist" data-animate>
         {tabs.map((tab, i) => (
@@ -238,25 +233,6 @@ const tabs = [
       </div>
 
     </div>
-      </Fragment>
-      ) : (
-        <div class="flex flex-col items-center text-center py-10 max-w-lg mx-auto" data-animate>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" class="mb-5 text-mint opacity-70">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
-          </svg>
-          <h2 class="text-[1.3rem] mb-3">Preislisten auf Anfrage</h2>
-          <p class="text-muted text-[1rem] mb-7">
-            Unsere aktuellen Preislisten für G-Untersuchungen, Sonderuntersuchungen, Labor und Impfungen stellen wir Ihnen gerne auf Anfrage zur Verfügung.
-          </p>
-          <a
-            href="mailto:info@samedos.de?subject=Anfrage Preisliste"
-            class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
-          >
-            Preisliste anfordern →
-          </a>
-        </div>
-      )}
     </div><!-- /print-content-wrapper -->
   </section>
 
