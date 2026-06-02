@@ -100,7 +100,7 @@ Gesendet via samedos.de/kontakt am ${dateStr}`;
     const { error: notifyError } = await resend.emails.send({
       from: 'Samedos Website <website@samedos.de>',
       to: 'info@samedos.de',
-      replyTo: email,
+      // replyTo: email,   // TEMP: testing if replyTo causes Outlook routing issue
       subject: `Neue Anfrage von ${fullName} – Samedos`,
       text: notificationText,
     });
