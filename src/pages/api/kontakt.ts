@@ -98,7 +98,7 @@ Gesendet via samedos.de/kontakt am ${dateStr}`;
 
   try {
     const { error: notifyError } = await resend.emails.send({
-      from: 'Samedos Kontaktformular <kontakt@samedos.de>',
+      from: 'Samedos Website <website@samedos.de>',
       to: 'info@samedos.de',
       replyTo: email,
       subject: `Neue Anfrage von ${fullName} – Samedos`,
@@ -132,8 +132,8 @@ Gesendet via samedos.de/kontakt am ${dateStr}`;
     const isEN = lang === 'en';
     await resend.emails.send({
       from: isEN
-        ? 'Samedos Occupational Medicine <kontakt@samedos.de>'
-        : 'Samedos Arbeitsmedizin <kontakt@samedos.de>',
+        ? 'Samedos Occupational Medicine <website@samedos.de>'
+        : 'Samedos Arbeitsmedizin <website@samedos.de>',
       to: email,
       replyTo: 'info@samedos.de',
       subject: isEN
