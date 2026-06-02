@@ -119,7 +119,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <h3 class="text-[1.2rem] mb-2">Nachricht gesendet!</h3>
             <p class="text-muted text-[0.95rem]">
               Vielen Dank — wir melden uns innerhalb von 1–2 Werktagen bei Ihnen.
-              Eine Bestätigung haben wir an Ihre E-Mail-Adresse gesendet.
+              Eine Bestätigung haben wir an Ihre E-Mail-Adresse gesendet —
+              falls nichts ankommt, prüfen Sie bitte Ihren Spam-Ordner.
             </p>
           </div>
 
@@ -130,7 +131,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
           <form id="kontakt-form" method="POST" action="/api/kontakt" class="space-y-5">
             <!-- Honeypot -->
-            <input type="text" name="_honeypot" class="hidden" tabindex="-1" autocomplete="off" />
+            <input
+              type="text"
+              name="_honeypot"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+              style="position:absolute;left:-9999px;height:0;width:0;overflow:hidden;"
+            />
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
