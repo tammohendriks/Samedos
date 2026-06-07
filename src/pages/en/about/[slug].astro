@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { getTeamMembersWithProfiles, getTeamMemberBySlug, type PortableTextBlock, type Qualifikation } from '../../../sanity/client';
+import ServiceCrossLinks from '../../../components/ServiceCrossLinks.astro';
+import { getTeamMembersWithProfiles, getTeamMemberBySlug, optimizedSanityImage, type PortableTextBlock, type Qualifikation } from '../../../sanity/client';
 import { toHTML } from '@portabletext/to-html';
 
 export async function getStaticPaths() {
@@ -70,7 +71,7 @@ const langBioHtml = Array.isArray(bioBlocks) && bioBlocks.length
 
 const schwerpunkte = member.schwerpunkteEN?.length ? member.schwerpunkteEN : member.schwerpunkte;
 
-const photoUrl = member.photo?.asset?.url;
+const photoUrl = optimizedSanityImage(member.photo?.asset?.url, { width: 640, quality: 80 });
 const photoAlt = member.photo?.alt ?? member.name;
 
 const hasCredential = qualifikationen.map((q: Qualifikation) => ({
@@ -129,9 +130,17 @@ const richTextClasses = 'text-muted text-[1.05rem] leading-relaxed space-y-4 [&_
       aria-hidden="true"
     ></div>
     <div class="relative max-w-[1200px] mx-auto px-6">
-      <a href="/en/about" class="text-mint text-[0.9rem] hover:text-white transition-colors">← About us</a>
+      <nav aria-label="Breadcrumb" class="mb-2">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/en/" class="hover:text-white/80 transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/en/about" class="hover:text-white/80 transition-colors">About us</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">{member.name}</li>
+        </ol>
+      </nav>
       <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-10 lg:gap-14 mt-8 items-start">
-        <div class="relative" data-animate>
+        <div class="relative max-w-[280px] mx-auto lg:max-w-none lg:mx-0" data-animate>
           {photoUrl ? (
             <img
               src={photoUrl}
@@ -252,6 +261,10 @@ const richTextClasses = 'text-muted text-[1.05rem] leading-relaxed space-y-4 [&_
         </div>
       </div>
     </section>
+  )}
+
+  {member.slug?.current === 'dr-joerg-janssen' && (
+    <ServiceCrossLinks lang="en" />
   )}
 
   <section class="max-w-[1200px] mx-auto px-6 pb-24">

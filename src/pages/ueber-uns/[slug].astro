@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getTeamMembersWithProfiles, getTeamMemberBySlug, type PortableTextBlock, type Qualifikation } from '../../sanity/client';
+import ServiceCrossLinks from '../../components/ServiceCrossLinks.astro';
+import { getTeamMembersWithProfiles, getTeamMemberBySlug, optimizedSanityImage, type PortableTextBlock, type Qualifikation } from '../../sanity/client';
 import { toHTML } from '@portabletext/to-html';
 
 export async function getStaticPaths() {
@@ -52,7 +53,7 @@ const langBioHtml = Array.isArray(member.langBio) && member.langBio.length
   ? toHTML(member.langBio as PortableTextBlock[])
   : '';
 
-const photoUrl = member.photo?.asset?.url;
+const photoUrl = optimizedSanityImage(member.photo?.asset?.url, { width: 640, quality: 80 });
 const photoAlt = member.photo?.alt ?? member.name;
 
 // Schema.org credentials
@@ -112,9 +113,17 @@ const richTextClasses = 'text-muted text-[1.05rem] leading-relaxed space-y-4 [&_
       aria-hidden="true"
     ></div>
     <div class="relative max-w-[1200px] mx-auto px-6">
-      <a href="/ueber-uns" class="text-mint text-[0.9rem] hover:text-white transition-colors">← Über uns</a>
+      <nav aria-label="Breadcrumb" class="mb-2">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/" class="hover:text-white/80 transition-colors">Start</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/ueber-uns" class="hover:text-white/80 transition-colors">Über uns</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">{member.name}</li>
+        </ol>
+      </nav>
       <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-10 lg:gap-14 mt-8 items-start">
-        <div class="relative" data-animate>
+        <div class="relative max-w-[280px] mx-auto lg:max-w-none lg:mx-0" data-animate>
           {photoUrl ? (
             <img
               src={photoUrl}
@@ -240,6 +249,11 @@ const richTextClasses = 'text-muted text-[1.05rem] leading-relaxed space-y-4 [&_
         </div>
       </div>
     </section>
+  )}
+
+  <!-- Services-Cross-Links (nur bei Jörg, zeigt alle Service-Seiten) -->
+  {member.slug?.current === 'dr-joerg-janssen' && (
+    <ServiceCrossLinks lang="de" />
   )}
 
   <!-- CTA -->

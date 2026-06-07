@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { contactSubjects } from '../../data/contactSubjects';
 ---
 
 <BaseLayout
@@ -21,7 +22,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <section class="py-20">
+  <section id="anfrage" class="py-20 scroll-mt-36">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16">
 
@@ -159,15 +160,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <label for="betreff" class="block text-[0.9rem] font-medium text-navy mb-1.5">Subject *</label>
               <select id="betreff" name="betreff" required class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors bg-white">
                 <option value="">Please select…</option>
-                <option value="Appointment request">Appointment request</option>
-                <option value="General enquiry">General enquiry</option>
-                <option value="Other">Other</option>
+                {contactSubjects.map((s) => (
+                  <option value={s.key}>{s.labelEN}</option>
+                ))}
               </select>
             </div>
 
             <div>
               <label for="nachricht" class="block text-[0.9rem] font-medium text-navy mb-1.5">Message *</label>
-              <textarea id="nachricht" name="nachricht" required rows="5" class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors resize-none"></textarea>
+              <textarea
+                id="nachricht" name="nachricht" required rows="7"
+                placeholder="Tell us about your enquiry…"
+                class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors resize-none"
+              ></textarea>
+              <p id="nachricht-hint" class="hidden text-[0.82rem] text-muted mt-1.5">
+                Sample text — please adapt it to your enquiry.
+              </p>
             </div>
 
             <div class="flex items-start gap-3">
@@ -250,35 +258,123 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <script>
-  const form = document.getElementById('kontakt-form') as HTMLFormElement;
-  const btn = document.getElementById('submit-btn') as HTMLButtonElement;
-  const label = document.getElementById('submit-label')!;
-  const spinner = document.getElementById('submit-spinner')!;
-  const success = document.getElementById('form-success')!;
-  const errorBox = document.getElementById('form-error')!;
+  import { findSubjectByParam, findSubjectByKey } from '../../data/contactSubjects';
 
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    btn.disabled = true;
-    label.textContent = 'Sending…';
-    spinner.classList.remove('hidden');
-    errorBox.classList.add('hidden');
+  function initContactForm() {
+    const form      = document.getElementById('kontakt-form') as HTMLFormElement | null;
+    if (!form || form.dataset.inited === 'true') return;
+    form.dataset.inited = 'true';
 
-    try {
-      const res = await fetch('/api/kontakt', { method: 'POST', body: new FormData(form) });
-      const json = await res.json();
+    const btn       = document.getElementById('submit-btn') as HTMLButtonElement;
+    const label     = document.getElementById('submit-label')!;
+    const spinner   = document.getElementById('submit-spinner')!;
+    const success   = document.getElementById('form-success')!;
+    const errorBox  = document.getElementById('form-error')!;
+    const betreff   = document.getElementById('betreff') as HTMLSelectElement;
+    const nachricht = document.getElementById('nachricht') as HTMLTextAreaElement;
+    const hint      = document.getElementById('nachricht-hint')!;
 
-      if (json.ok) {
-        form.classList.add('hidden');
-        success.classList.remove('hidden');
-      } else {
-        throw new Error();
-      }
-    } catch {
-      errorBox.classList.remove('hidden');
-      btn.disabled = false;
-      label.textContent = 'Send message →';
-      spinner.classList.add('hidden');
+    let currentTemplate = '';
+
+    function syncLangSwitch() {
+      const currentKey = betreff.value;
+      document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((sw) => {
+        const base = sw.href.split('?')[0].split('#')[0];
+        const targetIsEN = base.includes('/en/');
+        const paramName  = targetIsEN ? 'subject' : 'betreff';
+        sw.href = currentKey
+          ? `${base}?${paramName}=${encodeURIComponent(currentKey)}#anfrage`
+          : `${base}#anfrage`;
+      });
     }
-  });
+
+    function currentLangMessage(subj: ReturnType<typeof findSubjectByKey>): string {
+      if (!subj) return '';
+      return document.documentElement.lang === 'en'
+        ? subj.messageEN ?? ''
+        : subj.messageDE ?? '';
+    }
+
+    function applyTemplateForKey(key: string) {
+      const subj = findSubjectByKey(key);
+      const msg  = currentLangMessage(subj);
+      const current = nachricht.value;
+
+      if (msg) {
+        if (current.trim() === '' || current === currentTemplate) {
+          nachricht.value = msg;
+          currentTemplate = msg;
+          hint.classList.remove('hidden');
+        }
+      } else {
+        if (current === currentTemplate && currentTemplate !== '') {
+          nachricht.value = '';
+        }
+        currentTemplate = '';
+        hint.classList.add('hidden');
+      }
+    }
+
+    // URL-param pre-fill
+    const params      = new URLSearchParams(window.location.search);
+    const paramValue  = params.get('subject') ?? params.get('betreff');
+    const initial     = findSubjectByParam(paramValue);
+    if (initial) {
+      betreff.value = initial.key;
+      const msg = currentLangMessage(initial);
+      if (msg) {
+        nachricht.value = msg;
+        currentTemplate = msg;
+        hint.classList.remove('hidden');
+      }
+    }
+
+    if (window.location.hash === '#anfrage' || paramValue) {
+      requestAnimationFrame(() => {
+        document.getElementById('anfrage')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    syncLangSwitch();
+
+    betreff.addEventListener('change', () => {
+      applyTemplateForKey(betreff.value);
+      syncLangSwitch();
+    });
+
+    nachricht.addEventListener('input', () => {
+      if (nachricht.value !== currentTemplate) {
+        currentTemplate = '';
+        hint.classList.add('hidden');
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      label.textContent = 'Sending…';
+      spinner.classList.remove('hidden');
+      errorBox.classList.add('hidden');
+
+      try {
+        const res  = await fetch('/api/kontakt', { method: 'POST', body: new FormData(form) });
+        const json = await res.json();
+
+        if (json.ok) {
+          form.classList.add('hidden');
+          success.classList.remove('hidden');
+        } else {
+          throw new Error();
+        }
+      } catch {
+        errorBox.classList.remove('hidden');
+        btn.disabled = false;
+        label.textContent = 'Send message →';
+        spinner.classList.add('hidden');
+      }
+    });
+  }
+
+  initContactForm();
+  document.addEventListener('astro:after-swap', initContactForm);
 </script>

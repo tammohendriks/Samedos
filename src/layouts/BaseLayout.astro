@@ -77,5 +77,21 @@ const {
     document.addEventListener('astro:after-swap', () => {
       document.querySelectorAll('[data-animate]').forEach((el) => el.classList.add('in-view'));
     });
+
+    // Casual-download deterrent — block context menu and drag-out on all
+    // <img> tags except those explicitly marked with data-allow-download.
+    // CSS handles -webkit-user-drag / user-select; this kills the menu hooks.
+    function lockImages() {
+      document
+        .querySelectorAll<HTMLImageElement>('img:not([data-allow-download])')
+        .forEach((img) => {
+          if (img.dataset.lockBound === 'true') return;
+          img.dataset.lockBound = 'true';
+          img.addEventListener('contextmenu', (e) => e.preventDefault());
+          img.addEventListener('dragstart', (e) => e.preventDefault());
+        });
+    }
+    lockImages();
+    document.addEventListener('astro:after-swap', lockImages);
   </script>
 </html>

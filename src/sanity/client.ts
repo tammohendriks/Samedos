@@ -7,6 +7,32 @@ export const sanityClient = createClient({
   useCdn: !import.meta.env.DEV,
 });
 
+/**
+ * Build an optimised Sanity-CDN URL from an asset.
+ *
+ * Sanity's image CDN supports on-the-fly resizing, format conversion and
+ * quality control via query params. Using this everywhere we render Sanity
+ * photos turns multi-MB originals into ~50–200 KB request payloads.
+ *
+ * Pass through any URL that doesn't look like a Sanity asset (so static
+ * fallbacks like `/images/team/joerg-janssen.png` keep working unchanged).
+ */
+export function optimizedSanityImage(
+  url: string | undefined | null,
+  opts: { width?: number; height?: number; quality?: number; fit?: 'crop' | 'clip' | 'max' | 'fill' } = {},
+): string | undefined {
+  if (!url) return undefined;
+  if (!url.includes('cdn.sanity.io')) return url;
+  const { width = 800, height, quality = 80, fit = 'max' } = opts;
+  const params = new URLSearchParams();
+  params.set('w', String(width));
+  if (height) params.set('h', String(height));
+  params.set('q', String(quality));
+  params.set('auto', 'format');
+  params.set('fit', fit);
+  return `${url}?${params.toString()}`;
+}
+
 export interface Qualifikation {
   titel: string;
   titelEN?: string;
@@ -15,6 +41,9 @@ export interface Qualifikation {
   jahr?: number;
   kategorie: 'facharzt' | 'zusatz' | 'ermaechtigung' | 'ausbildung' | 'promotion' | 'sonstige';
   offshoreRelevant?: boolean;
+  bgmRelevant?: boolean;
+  vorsorgeRelevant?: boolean;
+  psychologieRelevant?: boolean;
 }
 
 export interface TeamMember {
@@ -82,7 +111,7 @@ const teamMemberFull = `{
   photo { asset->{ url }, hotspot, alt },
   photoAlt { asset->{ url }, hotspot, alt },
   langBio, langBioEN, sprachen, schwerpunkte, schwerpunkteEN, telefon, email,
-  qualifikationen[] { titel, titelEN, institution, ort, jahr, kategorie, offshoreRelevant }
+  qualifikationen[] { titel, titelEN, institution, ort, jahr, kategorie, offshoreRelevant, bgmRelevant, vorsorgeRelevant, psychologieRelevant }
 }`;
 
 export async function getTeamMemberBySlug(slug: string): Promise<TeamMember | null> {

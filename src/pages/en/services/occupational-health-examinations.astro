@@ -1,0 +1,613 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceCrossLinks from '../../../components/ServiceCrossLinks.astro';
+
+const vorsorgeArten = [
+  {
+    titel: 'Mandatory Examination',
+    paragraph: 'Pflichtvorsorge · § 4 ArbMedVV',
+    teaser: 'Required by the employer for certain activities with specific health risks. Without a current mandatory examination, the activity may not be performed.',
+    examples: [
+      'Working with asbestos, lead, mercury',
+      'Activities with infection risk (TRBA)',
+      'Noise exposure above trigger thresholds',
+      'Welding work in confined spaces',
+    ],
+  },
+  {
+    titel: 'Offered Examination',
+    paragraph: 'Angebotsvorsorge · § 5 ArbMedVV',
+    teaser: 'To be offered by the employer for specific activities — participation is voluntary for employees, but the offer must be documented.',
+    examples: [
+      'Display screen work (no longer mandatory since 2013)',
+      'Activities with musculoskeletal load',
+      'Substances of Category 3 under the Hazardous Substances Ordinance',
+      'Wet work',
+    ],
+  },
+  {
+    titel: 'Requested Examination',
+    paragraph: 'Wunschvorsorge · § 5a ArbMedVV',
+    teaser: 'At the employee\'s request — must be enabled by the employer when a health risk from the activity cannot be ruled out. Despite the "request" nature, it is an employer obligation.',
+    examples: [
+      'Employees who feel burdened by their activity',
+      'For perceived risks without formal threshold breach',
+    ],
+  },
+];
+
+const topGCodes = [
+  {
+    code: 'G25',
+    titel: 'Driving, Operating and Surveillance Activities',
+    teaser: 'For employees who drive vehicles, operate cranes, control machinery or perform safety/surveillance tasks. Typical applications: professional drivers, forklift operators, crane operators, security personnel.',
+    items: [
+      'Medical history, physical examination',
+      'Vision test (including night vision, possibly colour vision)',
+      'Hearing test',
+      'Reaction test',
+    ],
+  },
+  {
+    code: 'G37',
+    titel: 'Display Screen Workstations',
+    teaser: 'Occupational health examination for employees working primarily on display screens. Since 2013, this is offered and requested examination only (no longer mandatory). Focus: vision and visual comfort.',
+    items: [
+      'Vision test (near, far, screen distance)',
+      'Statement on fitness for display screen work',
+      'Consultation on visual aids for screen work',
+    ],
+  },
+  {
+    code: 'G41',
+    titel: 'Work at Heights with Risk of Falling',
+    teaser: 'For employees working at heights above 3 metres — scaffolders, roofers, industrial climbers, offshore personnel. Very strict criteria, because failure is life-threatening.',
+    items: [
+      'Detailed physical examination',
+      'ECG, blood pressure, lung function',
+      'Balance and vertigo tests',
+      'Vision test, hearing test',
+    ],
+  },
+  {
+    code: 'G42',
+    titel: 'Activities with Infection Risk',
+    teaser: 'Mandatory examination for employees with contact to pathogens — nursing staff, laboratory personnel, cleaners with risk exposure, veterinarians, research staff. Often combined with vaccination offers.',
+    items: [
+      'Medical history, physical examination',
+      'Vaccination status check, vaccinations if needed',
+      'Consultation on protective measures',
+      'Documentation of pathogen exposure',
+    ],
+  },
+  {
+    code: 'G46',
+    titel: 'Musculoskeletal System Stress',
+    teaser: 'Offered examination for employees with physically demanding work — construction trades, warehouse logistics, nursing, production. Aim: early detection of wear-related conditions.',
+    items: [
+      'Medical history with musculoskeletal focus',
+      'Functional examination of stressed structures',
+      'Ergonomic consultation',
+      'Further imaging if needed',
+    ],
+  },
+  {
+    code: 'G24',
+    titel: 'Skin Diseases',
+    teaser: 'Offered examination for employees with skin-stressing activities — hairdressers, metal workers, construction trades, food processing, nursing. Skin diseases are the most frequently reported occupational illness.',
+    items: [
+      'Medical history, skin status',
+      'Consultation on skin protection, cleaning, care',
+      'Provocation tests if needed',
+      'Advice on protective gloves and skin protection plans',
+    ],
+  },
+];
+
+const weitereGCodes = [
+  { code: 'G20', bez: 'Noise',                              branchen: 'Production, metalworking, construction' },
+  { code: 'G23', bez: 'Obstructive airway diseases',        branchen: 'Bakery, welders, metal industry' },
+  { code: 'G26', bez: 'Respiratory protective equipment',   branchen: 'Fire brigade, industrial maintenance, asbestos remediation' },
+  { code: 'G31', bez: 'Hyperbaric environment',             branchen: 'Divers, caisson workers' },
+  { code: 'G39', bez: 'Welding fumes',                      branchen: 'Welders, fitters' },
+  { code: 'G44', bez: 'Hardwood dust',                      branchen: 'Carpenters, furniture manufacturing' },
+  { code: 'G45', bez: 'Styrene',                            branchen: 'Boat building, plastics processing' },
+];
+
+const phases = [
+  {
+    nr: '01',
+    titel: 'Schedule appointment',
+    dauer: 'usually within 1–2 weeks',
+    text: 'By phone or contact form. We clarify in advance what type of examination is needed and what documents to bring.',
+  },
+  {
+    nr: '02',
+    titel: 'Examination',
+    dauer: '30–90 minutes per G-code',
+    text: 'At our practice in Bremen-Findorff or on-site at your company. Medical history, physical examination, instrumental diagnostics if needed.',
+  },
+  {
+    nr: '03',
+    titel: 'Certificate & documentation',
+    dauer: 'same day',
+    text: 'Certificate for the occupational health records, entry into electronic documentation, possible feedback to you as employer on recommended measures — GDPR-compliant and without medical details.',
+  },
+];
+
+const credentials = [
+  { title: 'Specialist in Occupational Medicine',                                           meta: 'Ärztekammer Hamburg, 2004' },
+  { title: 'Specialist in General Medicine',                                                meta: 'Ärztekammer Niedersachsen, 2002' },
+  { title: 'Sports Medicine',                                                                meta: 'Ärztekammer Hamburg, 2004' },
+  { title: 'Manual Medicine / Chirotherapy',                                                 meta: 'Ärztekammer Niedersachsen, 2010' },
+  { title: 'Radiation Protection Certification (Emergency Diagnostics)',                     meta: 'Landesärztekammer Hessen, 1999' },
+  { title: 'Authorization for Medical Surveillance of Radiation-Exposed Persons',            meta: 'Ärztekammer Bremen, 2013' },
+  { title: 'Expert Assessment in Occupational Disease Causation',                            meta: 'DGAUM, 2006' },
+  { title: 'Emergency Medical Services',                                                     meta: 'Landesärztekammer Hessen, 1999' },
+];
+
+const faqs = [
+  {
+    question: 'Are occupational health examinations mandatory for my company?',
+    answer: 'It depends on the activities of your employees. Mandatory examinations under § 4 ArbMedVV are required for certain activities with specific health risks (e.g., asbestos exposure, noise above trigger levels, infection risk). Offered examinations under § 5 ArbMedVV must be made available for further activities — even if employees decline, you must document the offer. In an initial consultation we clarify what applies to your company.',
+  },
+  {
+    question: 'What does a G-examination cost at Samedos?',
+    answer: 'Costs vary by G-code and scope. A G25 examination typically costs between €80 and €120, a G41 with detailed physical examination €150–200. A full overview is available in our price list — for larger volumes we offer package pricing.',
+  },
+  {
+    question: 'Where does the examination take place?',
+    answer: 'Either at our practice in Bremen-Findorff or directly on-site at your company. For individual appointments or smaller groups, the practice is more efficient. For larger employee numbers or specific work environments (construction site, port, wind energy), we are happy to come to you — just get in touch.',
+  },
+  {
+    question: 'How long does a G-examination take?',
+    answer: 'Between 20 and 90 minutes depending on the G-code. A G37 display screen examination is usually done in 20–30 minutes; a G41 with detailed physical examination can take 60–90 minutes. We plan accordingly and tell you in advance what to expect.',
+  },
+  {
+    question: 'What do employees need to bring?',
+    answer: 'Valid ID, glasses or contact lenses (if worn), the previous occupational health certificate (if applicable), a list of current medications, and any recent specialist reports. For radiation protection examinations: the radiation passport. For follow-up examinations: the previous occupational health record certificate.',
+  },
+  {
+    question: 'Who covers the cost of occupational health examinations?',
+    answer: 'The cost of occupational health examinations under ArbMedVV is borne entirely by the employer. Examinations take place during working hours and count as working time. We bill directly with your company — employees are not involved in invoicing or payment.',
+  },
+];
+---
+
+<BaseLayout
+  title="Occupational Health Examinations Bremen — G25, G37, G41 & more | Samedos"
+  description="Occupational health examinations in Bremen for SMEs — G25, G37, G41, G42, G46 and other DGUV standards. Appointments within 1–2 weeks, in-house or on-site at your company."
+  lang="en"
+  alternateHref="/leistungen/arbeitsmedizinische-vorsorge"
+>
+
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://samedos.de/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://samedos.de/en/services" },
+        { "@type": "ListItem", "position": 3, "name": "Occupational Health Examinations", "item": "https://samedos.de/en/services/occupational-health-examinations" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalProcedure",
+      "name": "Occupational Health Examination",
+      "alternateName": ["G-Examination", "Arbeitsmedizinische Vorsorge", "DGUV occupational health screening"],
+      "procedureType": "https://schema.org/PreventativeProcedure",
+      "description": "Occupational health examinations according to the German ArbMedVV regulation and DGUV standards — G25 (driving/operating), G37 (display screen work), G41 (work at heights), G42 (infection risk), G46 (musculoskeletal load), G24 (skin diseases) and further specialised examinations.",
+      "performer": {
+        "@type": "MedicalBusiness",
+        "name": "Samedos Arbeitsmedizin",
+        "url": "https://samedos.de"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bremen" },
+        { "@type": "City", "name": "Bremerhaven" },
+        { "@type": "City", "name": "Oldenburg" },
+        { "@type": "City", "name": "Delmenhorst" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+      }))
+    })} />
+  </Fragment>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/en/" class="hover:text-white/80 transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/en/services" class="hover:text-white/80 transition-colors">Services</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">Occupational Health Examinations</li>
+        </ol>
+      </nav>
+
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Occupational Health Bremen
+      </p>
+      <h1 class="text-[clamp(1.9rem,4vw,3rem)] text-white max-w-3xl leading-[1.15]" data-animate data-delay="1">
+        Occupational Health Examinations in Bremen
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
+        Occupational health examinations under the German ArbMedVV regulation and DGUV standards for small and medium-sized businesses in Bremen and surroundings. Appointments at our practice or on-site at your location.
+      </p>
+
+      <ul class="mt-8 space-y-2.5 max-w-2xl" data-animate data-delay="3">
+        {[
+          'All standard G-examinations — G25, G37, G41, G42, G46, G24 and more',
+          'Legally compliant documentation for trade associations and authorities',
+          'On-site directly at your business — construction sites, ports, offices, wherever we are needed',
+        ].map(item => (
+          <li class="flex items-start gap-3 text-white/85 text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0" aria-hidden="true"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div class="flex flex-wrap items-center gap-4 mt-9" data-animate data-delay="4">
+        <a
+          href="/en/contact?subject=vorsorge#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Schedule appointment →
+        </a>
+        <a href="tel:+49421354366" class="text-white/75 hover:text-mint text-[0.95rem] transition-colors">
+          Call 0421 354366
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ What is occupational health examination ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Background</p>
+        <h2 class="text-[1.7rem]">What is an occupational health examination?</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="1">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">The Purpose</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Protect employees from work-related illness. Early detection of health risks, individual consultation — and legal certainty for employers.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="2">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">The Legal Basis</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Governed by the German <strong class="text-navy">Ordinance on Occupational Health Care (ArbMedVV)</strong> in conjunction with the Occupational Safety Act (ArbSchG). The employer is responsible — the examination is performed by an occupational health physician.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="3">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">In Practice</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Most examinations follow the <strong class="text-navy">DGUV standards</strong> (G-examinations). At Samedos in Bremen we perform all standard examinations — at our practice in Bremen-Findorff or directly on-site at your company.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Mandatory / Offered / Requested ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-6" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Three examination types</p>
+        <h2 class="text-[1.7rem]">Mandatory, Offered and Requested examinations — what's the difference?</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        The German ArbMedVV regulation distinguishes three categories of occupational health examinations — depending on who initiates them and whether they are required by law. Correctly classifying them is decisive for your compliance.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {vorsorgeArten.map((art, i) => (
+          <div class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i + 1)}>
+            <p class="text-mint font-heading font-semibold text-[0.78rem] tracking-[0.14em] uppercase mb-2">{art.paragraph}</p>
+            <h3 class="text-[1.1rem] mb-3">{art.titel}</h3>
+            <p class="text-muted text-[0.92rem] leading-relaxed mb-4">{art.teaser}</p>
+            <p class="font-heading font-semibold text-navy text-[0.85rem] mb-2 mt-auto">Examples:</p>
+            <ul class="space-y-1.5 text-[0.88rem] text-muted">
+              {art.examples.map(ex => (
+                <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{ex}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-8 bg-mint-soft border border-mint/30 rounded-2xl p-6 flex gap-4 items-start" data-animate data-delay="4">
+        <span class="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-mint/20 grid place-items-center" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+        </span>
+        <p class="text-navy text-[0.95rem] leading-relaxed">
+          Not sure which type of examination applies to which activity in your business? In a <strong>free initial consultation</strong> we clarify this together and create properly documented occupational health planning for your company.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Top 6 G-Examinations ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-6" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">G-Examinations Bremen</p>
+        <h2 class="text-[1.7rem]">Our most common G-Examinations</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        The DGUV standards define around 40 G-examinations for different fields of work. We perform all standard examinations — here is an overview of the most common ones in Bremen and surroundings.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {topGCodes.map((g, i) => (
+          <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate data-delay={String(i % 3)}>
+            <div class="flex items-baseline gap-3 mb-3">
+              <span class="font-heading font-bold text-mint text-[1.4rem]">{g.code}</span>
+              <span class="text-muted text-[0.78rem] tracking-wide uppercase">Bremen</span>
+            </div>
+            <h3 class="text-[1.05rem] mb-3 leading-snug">{g.titel}</h3>
+            <p class="text-muted text-[0.92rem] leading-relaxed mb-5">{g.teaser}</p>
+            <p class="font-heading font-semibold text-navy text-[0.85rem] mb-2 mt-auto">Examination scope:</p>
+            <ul class="space-y-1.5 text-[0.88rem] text-muted">
+              {g.items.map(item => (
+                <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Further G-Examinations ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-6" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">DGUV standards</p>
+        <h2 class="text-[1.7rem]">Further occupational health examinations</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        Beyond the most common G-codes we perform further occupational health examinations. The list below is a selection — for questions about specific activities, please get in touch.
+      </p>
+
+      <!-- Desktop table -->
+      <div class="hidden md:block bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="2">
+        <table class="w-full text-left text-[0.92rem]">
+          <thead class="bg-bg-soft border-b border-border">
+            <tr>
+              <th class="px-6 py-3 font-heading font-semibold text-navy w-24">G-Code</th>
+              <th class="px-6 py-3 font-heading font-semibold text-navy">Description</th>
+              <th class="px-6 py-3 font-heading font-semibold text-navy">Typical industries</th>
+            </tr>
+          </thead>
+          <tbody>
+            {weitereGCodes.map((g, i) => (
+              <tr class={i % 2 === 1 ? 'bg-bg-soft/40' : ''}>
+                <td class="px-6 py-3 font-heading font-bold text-mint">{g.code}</td>
+                <td class="px-6 py-3 text-navy">{g.bez}</td>
+                <td class="px-6 py-3 text-muted">{g.branchen}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="md:hidden space-y-3" data-animate data-delay="2">
+        {weitereGCodes.map(g => (
+          <div class="bg-white border border-border rounded-xl p-5">
+            <div class="flex items-baseline gap-3 mb-2">
+              <span class="font-heading font-bold text-mint text-[1.05rem]">{g.code}</span>
+              <span class="font-heading font-semibold text-navy text-[0.95rem] leading-snug">{g.bez}</span>
+            </div>
+            <p class="text-muted text-[0.85rem]">{g.branchen}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-muted text-[0.9rem] mt-6 max-w-3xl" data-animate data-delay="3">
+        A complete list is available in our <a href="/en/prices#sonderuntersuchungen" class="text-mint hover:underline">price list</a> or just ask us directly.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ Process ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Process</p>
+        <h2 class="text-[1.7rem]">How an occupational health examination works</h2>
+      </div>
+      <ol class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {phases.map((p, i) => (
+          <li class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i)}>
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="font-heading font-bold text-mint text-[1.3rem]">{p.nr}</span>
+              <span class="text-muted text-[0.75rem] tracking-wide uppercase">{p.dauer}</span>
+            </div>
+            <p class="font-heading font-semibold text-navy text-[1.05rem] mb-2">Phase {p.nr.replace(/^0/, '')} — {p.titel}</p>
+            <p class="text-muted text-[0.9rem] leading-relaxed">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ On-Site ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1000px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">On-site</p>
+        <h2 class="text-[1.7rem]">Examinations directly at your location</h2>
+      </div>
+      <p class="text-muted text-[1.02rem] leading-relaxed mb-8" data-animate data-delay="1">
+        For larger employee numbers or logistically complex deployments, we come directly to you — on construction sites, in ports, in industrial halls. On-site appointments save time, reduce downtime and travel, and are usually much appreciated by employees.
+      </p>
+      <p class="font-heading font-semibold text-navy text-[1rem] mb-4">Typical use cases:</p>
+      <ul class="space-y-3" data-animate data-delay="2">
+        {[
+          'Construction site crews (G25, G41, G42)',
+          'Port and shipyard workers (G25, G41)',
+          'Larger production shifts',
+          'Outdoor industries (wind energy maintenance, logistics)',
+        ].map(p => (
+          <li class="flex items-start gap-3 text-muted text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0"></span>{p}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ E-A-T / Dr. Janssen (hardcoded EN) ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-12 items-start" data-animate>
+
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
+          <img
+            src="/images/team/joerg-janssen.png"
+            alt="Dr. med. Jörg Janssen, occupational medicine specialist at Samedos Bremen"
+            class="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        </div>
+
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Your contact</p>
+          <h2 class="text-[1.7rem] mb-4">Your occupational health physician in Bremen</h2>
+
+          <p class="text-muted leading-relaxed mb-6">
+            Dr. med. Jörg Janssen is founder and managing director of Samedos. Specialist in occupational medicine and general medicine with over 20 years of experience in Bremen and surroundings. He personally oversees most occupational health examinations and continuously updates his expertise on DGUV standards.
+          </p>
+
+          <div class="bg-white border border-border rounded-2xl p-6 mb-6 space-y-5">
+
+            <div>
+              <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">Examination-relevant qualifications</p>
+              <ul class="space-y-2">
+                {credentials.map(q => (
+                  <li class="flex items-start gap-3 text-[0.88rem] text-muted">
+                    <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                    <span>
+                      <strong class="text-navy font-medium">{q.title}</strong>
+                      <span class="text-muted"> — {q.meta}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
+              <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Languages</p>
+              {['German', 'English', 'Spanish', 'Dutch'].map(lang => (
+                <span class="text-muted text-[0.88rem]">{lang}</span>
+              ))}
+            </div>
+
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="/en/about/dr-joerg-janssen"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+            >
+              View full credentials →
+            </a>
+            <a
+              href="/en/contact?subject=vorsorge#anfrage"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              Request appointment →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="mb-10 text-center" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">FAQ</p>
+        <h2 class="text-[1.7rem]">Frequently asked questions about occupational health examinations</h2>
+      </div>
+      <div class="space-y-3">
+        {faqs.map((faq, i) => (
+          <details class="group bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay={String(i % 4)}>
+            <summary class="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none font-heading font-semibold text-navy text-[0.97rem] hover:bg-bg-soft transition-colors select-none">
+              {faq.question}
+              <span class="shrink-0 w-6 h-6 rounded-full border border-border flex items-center justify-center text-mint transition-transform group-open:rotate-45" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 1v10M1 6h10"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-5 pt-1 text-muted text-[0.95rem] leading-relaxed border-t border-border">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cross-Links to other services ═══ -->
+  <ServiceCrossLinks current="vorsorge" lang="en" />
+
+  <!-- ═══ CTA ═══ -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20">
+    <div
+      class="relative rounded-[28px] px-8 sm:px-12 py-12 sm:py-14 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Appointments typically within 1–2 weeks</h2>
+      <p class="text-white/80 max-w-[640px] mx-auto mb-8">
+        Get in touch — we coordinate occupational health appointments quickly and easily. Individual employees or whole crews, at our practice or on-site.
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a
+          href="/en/contact?subject=vorsorge#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Schedule appointment →
+        </a>
+        <a
+          href="tel:+49421354366"
+          class="inline-flex items-center gap-2 px-[22px] py-3.5 rounded-full border-[1.5px] border-white/70 text-white font-medium text-[0.97rem] transition-all hover:bg-white hover:text-navy"
+        >
+          Call 0421 354366
+        </a>
+      </div>
+      <p class="text-white/50 text-[0.85rem] mt-7">
+        We support companies in Bremen, Bremerhaven, Oldenburg, Delmenhorst and surroundings.
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

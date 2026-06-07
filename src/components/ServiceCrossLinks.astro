@@ -1,0 +1,71 @@
+---
+type ServiceKey = 'vorsorge' | 'offshore' | 'bgm' | 'psychologie';
+
+interface Props {
+  /** Service key of the current page — that one is excluded. Omit to show all services. */
+  current?: ServiceKey;
+  lang?: 'de' | 'en';
+}
+
+const { current, lang = 'de' } = Astro.props;
+const isEN = lang === 'en';
+
+// hrefEN: undefined means "EN version not built yet — exclude this card on EN pages"
+const services: Record<ServiceKey, { hrefDE: string; hrefEN?: string; labelDE: string; labelEN: string }> = {
+  vorsorge: {
+    hrefDE: '/leistungen/arbeitsmedizinische-vorsorge',
+    hrefEN: '/en/services/occupational-health-examinations',
+    labelDE: 'Arbeitsmedizinische Vorsorge — G-Untersuchungen, Pflicht- und Angebotsvorsorge',
+    labelEN: 'Occupational Health Examinations — G-examinations under DGUV standards',
+  },
+  offshore: {
+    hrefDE: '/leistungen/offshore-untersuchung',
+    hrefEN: '/en/services/offshore-medical',
+    labelDE: 'Offshore-Untersuchung — OGUK/OEUK, AWMF & Hardanger',
+    labelEN: 'Offshore Medical — OGUK/OEUK, AWMF & Hardanger',
+  },
+  bgm: {
+    hrefDE: '/leistungen/betriebliches-gesundheitsmanagement',
+    hrefEN: '/en/services/workplace-health-management',
+    labelDE: 'Betriebliches Gesundheitsmanagement — BGM, BEM & Gefährdungsbeurteilung',
+    labelEN: 'Workplace Health Management — BGM, BEM & risk assessment',
+  },
+  psychologie: {
+    hrefDE: '/leistungen/psychologische-beratung',
+    hrefEN: '/en/services/psychological-counseling',
+    labelDE: 'Psychologische Beratung & Coaching — Stress, BEM-Begleitung, Führungs-Coaching',
+    labelEN: 'Psychological Counseling & Coaching — stress, return-to-work, leadership coaching',
+  },
+};
+
+const order: ServiceKey[] = ['vorsorge', 'offshore', 'bgm', 'psychologie'];
+const others = order.filter((k) => k !== current && (isEN ? !!services[k].hrefEN : true));
+
+const eyebrow = isEN ? 'Also of interest' : 'Auch interessant';
+const ctaLabel = isEN ? 'Learn more →' : 'Mehr erfahren →';
+---
+
+{others.length > 0 && (
+  <section class="py-10">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {others.map((key) => {
+          const s = services[key];
+          return (
+            <a
+              href={isEN ? s.hrefEN : s.hrefDE}
+              class="group flex flex-wrap items-center justify-between gap-3 bg-bg-soft border border-border rounded-2xl px-6 py-5 hover:border-mint transition-colors"
+              data-animate
+            >
+              <div class="min-w-0">
+                <p class="text-mint text-[0.78rem] font-heading font-semibold tracking-[0.14em] uppercase mb-1">{eyebrow}</p>
+                <p class="font-heading font-semibold text-navy text-[0.97rem] leading-snug">{isEN ? s.labelEN : s.labelDE}</p>
+              </div>
+              <span class="text-mint font-medium text-[0.9rem] group-hover:translate-x-1 transition-transform shrink-0">{ctaLabel}</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+)}

@@ -21,7 +21,10 @@ const dropdowns: Dropdown[] = isEnglish
         basePath: '/en/services',
         items: [
           { href: '/en/services', label: 'All Services', desc: 'Overview of all offerings' },
+          { href: '/en/services/occupational-health-examinations', label: 'Occupational Health Examinations', desc: 'G-examinations under DGUV standards' },
           { href: '/en/services/offshore-medical', label: 'Offshore Medical', desc: 'OGUK/OEUK, AWMF & Hardanger' },
+          { href: '/en/services/workplace-health-management', label: 'Workplace Health Management', desc: 'BGM, BEM & risk assessment' },
+          { href: '/en/services/psychological-counseling', label: 'Psychological Counseling', desc: 'Coaching, stress, return-to-work support' },
         ],
       },
       {
@@ -42,7 +45,10 @@ const dropdowns: Dropdown[] = isEnglish
         basePath: '/leistungen',
         items: [
           { href: '/leistungen', label: 'Alle Leistungen', desc: 'Übersicht aller Angebote' },
+          { href: '/leistungen/arbeitsmedizinische-vorsorge', label: 'Arbeitsmedizinische Vorsorge', desc: 'G-Untersuchungen, Pflicht- & Angebotsvorsorge' },
           { href: '/leistungen/offshore-untersuchung', label: 'Offshore-Untersuchung', desc: 'OGUK/OEUK, AWMF & Hardanger' },
+          { href: '/leistungen/betriebliches-gesundheitsmanagement', label: 'Betriebliches Gesundheitsmanagement', desc: 'BGM, BEM & Gefährdungsbeurteilung' },
+          { href: '/leistungen/psychologische-beratung', label: 'Psychologische Beratung', desc: 'Coaching, Stress, BEM-Begleitung' },
         ],
       },
       {
@@ -82,7 +88,7 @@ const showSwitcher = !!alternateHref;
   <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between py-3">
 
     <a href={homeHref} class="flex items-center gap-2 shrink-0" aria-label="Samedos – Startseite">
-      <img src="/logo-new.svg" alt="Samedos" class="h-24 w-auto" transition:name="nav-logo" />
+      <img src="/logo-new.svg" alt="Samedos" class="h-32 w-auto" transition:name="nav-logo" />
     </a>
 
     <nav class="flex items-center gap-6" aria-label="Hauptnavigation">
@@ -95,17 +101,25 @@ const showSwitcher = !!alternateHref;
 
       {dropdowns.map((dd) => (
         <div class="relative hidden md:block" data-dd data-dd-id={dd.id}>
-          <button
-            data-dd-btn
-            aria-haspopup="true"
-            aria-expanded="false"
-            class={`flex items-center gap-1 font-medium text-[0.95rem] transition-colors hover:text-mint ${dropdownActive(dd) ? 'text-mint' : 'text-navy'}`}
-          >
-            {dd.label}
-            <svg data-dd-chevron width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="transition-transform duration-200" aria-hidden="true">
-              <path d="M6 9l6 6 6-6"/>
-            </svg>
-          </button>
+          <div class={`flex items-center gap-1 ${dropdownActive(dd) ? 'text-mint' : 'text-navy'}`}>
+            <a
+              href={dd.basePath}
+              class="font-medium text-[0.95rem] hover:text-mint transition-colors"
+            >
+              {dd.label}
+            </a>
+            <button
+              data-dd-btn
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label={`${dd.label}-Menü öffnen`}
+              class="p-1 hover:text-mint transition-colors"
+            >
+              <svg data-dd-chevron width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="transition-transform duration-200" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </button>
+          </div>
 
           <div
             data-dd-panel
@@ -146,6 +160,7 @@ const showSwitcher = !!alternateHref;
       {showSwitcher && (
         <a
           href={alternateHref}
+          data-lang-switch
           aria-label={isEnglish ? 'Zur deutschen Version wechseln' : 'Switch to English version'}
           class="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full border border-border text-navy font-medium text-[0.78rem] tracking-wide transition-colors hover:bg-bg-soft"
         >
@@ -181,7 +196,7 @@ const showSwitcher = !!alternateHref;
   aria-hidden="true"
 >
   <div class="flex items-center justify-between mb-6">
-    <img src="/logo-new.svg" alt="Samedos" class="h-24 w-auto" />
+    <img src="/logo-new.svg" alt="Samedos" class="h-32 w-auto" />
     <button
       id="menu-close"
       aria-label="Menü schließen"

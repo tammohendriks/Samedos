@@ -9,9 +9,12 @@ const isEnglish = lang === 'en';
 
 const navLinks = isEnglish
   ? [
-      { href: '/en/services',                  label: 'Services' },
-      { href: '/en/services/offshore-medical', label: 'Offshore Medical' },
-      { href: '/en/about',                     label: 'About us' },
+      { href: '/en/services',                                    label: 'Services' },
+      { href: '/en/services/occupational-health-examinations',   label: 'Occupational Health Examinations' },
+      { href: '/en/services/offshore-medical',                   label: 'Offshore Medical' },
+      { href: '/en/services/workplace-health-management',        label: 'Workplace Health Management' },
+      { href: '/en/services/psychological-counseling',           label: 'Psychological Counseling' },
+      { href: '/en/about',                                       label: 'About us' },
       { href: '/en/prices',                    label: 'Prices' },
       { href: '/en/contact',                   label: 'Contact' },
       { href: '/en/legal-notice',              label: 'Legal Notice' },
@@ -19,6 +22,10 @@ const navLinks = isEnglish
     ]
   : [
       { href: '/leistungen',  label: 'Leistungen' },
+      { href: '/leistungen/arbeitsmedizinische-vorsorge', label: 'Vorsorge Bremen' },
+      { href: '/leistungen/offshore-untersuchung', label: 'Offshore-Untersuchung' },
+      { href: '/leistungen/betriebliches-gesundheitsmanagement', label: 'BGM Bremen' },
+      { href: '/leistungen/psychologische-beratung', label: 'Psychologische Beratung' },
       { href: '/preise',      label: 'Preise' },
       { href: '/ueber-uns',   label: 'Über uns' },
       { href: '/karriere',    label: 'Karriere' },
@@ -49,7 +56,7 @@ const designCredit    = isEnglish ? 'Design & concept by' : 'Gestaltung & Konzep
 
       <div>
         <a href={homeHref} class="flex items-center gap-2" aria-label="Samedos – Startseite">
-          <img src="/logo-new-white.svg" alt="Samedos" class="h-24 w-auto" />
+          <img src="/logo-new-white.svg" alt="Samedos" class="h-32 w-auto" />
         </a>
         <p class="text-white/65 text-[0.9rem] mt-3 max-w-xs">{tagline}</p>
       </div>
@@ -106,9 +113,14 @@ const designCredit    = isEnglish ? 'Design & concept by' : 'Gestaltung & Konzep
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Tammo Studios — Webseite öffnen"
-          class="inline-flex items-center transition-opacity hover:opacity-80"
+          class="group inline-flex items-center"
         >
-          <img src="/logo-tammo-studios.png" alt="Tammo Studios" class="h-8 w-auto" loading="lazy" />
+          <img
+            src="/logo-tammo-studios.png"
+            alt="Tammo Studios"
+            loading="lazy"
+            class="h-8 w-auto brightness-0 invert opacity-50 transition-opacity duration-200 group-hover:opacity-100"
+          />
         </a>
       </span>
     </div>

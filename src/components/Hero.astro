@@ -1,5 +1,6 @@
 ---
-const heroSrc = '/Titelbild.png';
+import { Image } from 'astro:assets';
+import heroSrc from '../assets/images/hero/Titelbild.png';
 const heroAlt = 'Das Samedos-Team';
 ---
 
@@ -31,7 +32,7 @@ const heroAlt = 'Das Samedos-Team';
         </p>
         <div class="flex gap-4 flex-wrap" data-animate data-delay="4">
           <a
-            href="/kontakt"
+            href="/kontakt#anfrage"
             class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
           >
             Termin anfragen →
@@ -53,15 +54,17 @@ const heroAlt = 'Das Samedos-Team';
 
       <!-- Image column -->
       <div class="relative rounded-3xl overflow-hidden aspect-[4/5] max-w-[440px] mx-auto lg:mx-0 lg:max-w-none shadow-[0_20px_60px_rgba(20,43,73,.2)]" data-animate data-delay="2">
-        <img
+        <Image
           src={heroSrc}
           alt={heroAlt}
-          class="w-full h-full object-cover"
+          widths={[440, 720, 1080]}
+          sizes="(max-width: 1024px) 440px, 540px"
+          formats={['avif', 'webp']}
+          quality={80}
           loading="eager"
-          fetchpriority="high"
           decoding="async"
-          width="880"
-          height="1100"
+          fetchpriority="high"
+          class="w-full h-full object-cover"
         />
       </div>
 

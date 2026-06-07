@@ -2,6 +2,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { findSubjectByKey } from '../../data/contactSubjects';
 
 const resend = new Resend(import.meta.env.RESEND_API_KEY);
 
@@ -97,7 +98,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   const email       = data.get('email')?.toString().trim() ?? '';
   const unternehmen = data.get('unternehmen')?.toString().trim() ?? '';
   const telefon     = data.get('telefon')?.toString().trim() ?? '';
-  const betreff     = data.get('betreff')?.toString().trim() ?? '';
+  const betreffKey  = data.get('betreff')?.toString().trim() ?? '';
+  // Form posts the subject KEY (e.g. "bgm"); resolve to the readable German
+  // label for Jörg's notification. Falls back to the raw value for unknown
+  // keys (defensive against direct form posts).
+  const betreff     = findSubjectByKey(betreffKey)?.labelDE ?? betreffKey;
   const nachricht   = data.get('nachricht')?.toString().trim() ?? '';
   const honeypot    = data.get('_honeypot')?.toString() ?? '';
   const lang        = data.get('_lang')?.toString() === 'en' ? 'en' : 'de';

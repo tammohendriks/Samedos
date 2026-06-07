@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getTeamMembers } from '../sanity/client';
+import { getTeamMembers, optimizedSanityImage } from '../sanity/client';
 
 const team = await getTeamMembers();
 
@@ -94,7 +94,7 @@ const fallbackTeam = [
               firstName: m.name.replace(/^Dr\.\s*med\.\s*/, '').split(' ')[0],
               position: m.position,
               bio: m.bio ?? '',
-              photo: m.photo?.asset?.url ?? null,
+              photo: optimizedSanityImage(m.photo?.asset?.url, { width: 600, quality: 80 }) ?? null,
               slug: m.slug?.current ?? null,
             }))
           : fallbackTeam.map((m) => ({

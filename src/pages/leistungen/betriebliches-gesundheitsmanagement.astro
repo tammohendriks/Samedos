@@ -1,0 +1,452 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCrossLinks from '../../components/ServiceCrossLinks.astro';
+import { getTeamMemberBySlug, optimizedSanityImage } from '../../sanity/client';
+
+const doctor = await getTeamMemberBySlug('dr-joerg-janssen');
+
+const sprachenLabelsDE: Record<string, string> = {
+  de: 'Deutsch', en: 'Englisch', es: 'Spanisch', nl: 'Niederländisch', fr: 'Französisch',
+};
+
+const bgmQualifications = (doctor?.qualifikationen ?? [])
+  .filter((q) => q.bgmRelevant)
+  .sort((a, b) => (b.jahr ?? 0) - (a.jahr ?? 0));
+
+const faqs = [
+  {
+    question: 'Ist BGM für mein Unternehmen Pflicht?',
+    answer: 'Bestandteile von BGM sind teilweise gesetzlich vorgeschrieben. Insbesondere die Gefährdungsbeurteilung — inklusive psychischer Belastung — ist nach Arbeitsschutzgesetz § 5 für alle Arbeitgeber verpflichtend, unabhängig von der Unternehmensgröße. Das BEM ist Pflicht, sobald Mitarbeitende länger als sechs Wochen in zwölf Monaten arbeitsunfähig sind (§ 167 SGB IX). Weitere BGM-Maßnahmen sind freiwillig, aber häufig förderfähig.',
+  },
+  {
+    question: 'Was kostet BGM für KMU?',
+    answer: 'Die Kosten variieren stark nach Umfang. Eine Gefährdungsbeurteilung psychischer Belastung in einem Unternehmen mit 30 Mitarbeitenden liegt typischerweise zwischen 1.500 und 3.500 €. Bis zu 600 € pro Mitarbeiter und Jahr können über die gesetzlichen Krankenkassen nach § 20b SGB V erstattet werden — bei guter Vorbereitung deckt diese Förderung einen großen Teil der Maßnahmen ab. Im Erstgespräch klären wir das genau.',
+  },
+  {
+    question: 'Wie läuft eine Gefährdungsbeurteilung psychischer Belastung ab?',
+    answer: 'Wir kombinieren eine anonyme Mitarbeitenden-Befragung mit einer Begehung und Strukturanalyse vor Ort. Aus den Ergebnissen leiten wir konkrete Maßnahmen ab und dokumentieren sie rechtssicher. Der gesamte Prozess dauert in einem KMU typischerweise 6–10 Wochen. Eine Wiederholung im Drei-Jahres-Rhythmus ist Pflicht.',
+  },
+  {
+    question: 'Was passiert beim BEM-Gespräch?',
+    answer: 'Das BEM-Gespräch ist ein vertrauliches, freiwilliges Gespräch zwischen Arbeitgeber, betroffener Person und ggf. weiteren Beteiligten (z.B. Betriebsrat, Schwerbehindertenvertretung). Ziel ist, gemeinsam Wege zur Wiedereingliederung zu finden — von schrittweiser Belastungssteigerung bis hin zu angepassten Tätigkeiten. Als ärztliche Moderation bringen wir Neutralität und Fachkompetenz ein.',
+  },
+  {
+    question: 'Welche Krankenkassen fördern BGM?',
+    answer: 'Alle gesetzlichen Krankenkassen sind nach § 20b SGB V zur Förderung verpflichtet. Konkrete Konditionen und Höchstbeträge variieren — wir kennen die wichtigsten Programme von AOK, Techniker, Barmer, DAK und BKK und übernehmen die Antragstellung für unsere Kunden.',
+  },
+  {
+    question: 'Wir haben weniger als 50 Mitarbeitende — ist BGM da nicht überdimensioniert?',
+    answer: 'Im Gegenteil. Gerade kleine Unternehmen profitieren besonders, weil der Ausfall einer einzelnen Person stark ins Gewicht fällt. Wir skalieren das BGM-Programm exakt auf Ihre Größe — manchmal reichen drei klar definierte Maßnahmen, um den größten Nutzen zu erzielen.',
+  },
+];
+
+const phases = [
+  { nr: '01', titel: 'Analyse', dauer: '1–2 Wochen', text: 'Kostenfreies Erstgespräch, Bestandsaufnahme der bisherigen Maßnahmen, Identifikation von Pflichten und Lücken, Briefing zu Förder-Optionen.' },
+  { nr: '02', titel: 'Maßnahmen', dauer: '3–6 Monate', text: 'Konkrete Umsetzung der priorisierten Punkte — Gefährdungsbeurteilung, Schulungen, Ergonomieberatung, BEM-Aufbau. Inklusive Förderantrag bei der zuständigen Krankenkasse.' },
+  { nr: '03', titel: 'Wirkung', dauer: 'Laufend', text: 'Begleitung über die ersten Monate, Anpassungen, jährliche Kennzahlen-Auswertung (z.B. Krankheitstage, Mitarbeiterzufriedenheit).' },
+];
+---
+
+<BaseLayout
+  title="Betriebliches Gesundheitsmanagement Bremen — BGM für KMU | Samedos"
+  description="Betriebliches Gesundheitsmanagement (BGM) für mittelständische Unternehmen in Bremen. Gefährdungsbeurteilung psychischer Belastung, Ergonomieberatung, BEM. Förderfähig nach § 20b SGB V."
+  alternateHref="/en/services/workplace-health-management"
+>
+
+  <!-- ═══ Seitenspezifische JSON-LD ═══ -->
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Start",       "item": "https://samedos.de/" },
+        { "@type": "ListItem", "position": 2, "name": "Leistungen",  "item": "https://samedos.de/leistungen" },
+        { "@type": "ListItem", "position": 3, "name": "Betriebliches Gesundheitsmanagement", "item": "https://samedos.de/leistungen/betriebliches-gesundheitsmanagement" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalProcedure",
+      "name": "Betriebliches Gesundheitsmanagement (BGM)",
+      "alternateName": ["BGM", "Workplace Health Management"],
+      "procedureType": "https://schema.org/PreventativeProcedure",
+      "description": "Strukturiertes Programm zur Förderung und Erhaltung der Gesundheit von Mitarbeitenden in Unternehmen, einschließlich Gefährdungsbeurteilung psychischer Belastung, Ergonomieberatung und Betrieblichem Eingliederungsmanagement.",
+      "performer": {
+        "@type": "MedicalBusiness",
+        "name": "Samedos Arbeitsmedizin",
+        "url": "https://www.samedos.de",
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bremen" },
+        { "@type": "City", "name": "Bremerhaven" },
+        { "@type": "City", "name": "Oldenburg" },
+        { "@type": "City", "name": "Delmenhorst" },
+      ],
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer },
+      })),
+    })} />
+  </Fragment>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/" class="hover:text-white/80 transition-colors">Start</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/leistungen" class="hover:text-white/80 transition-colors">Leistungen</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">Betriebliches Gesundheitsmanagement</li>
+        </ol>
+      </nav>
+
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        BGM Bremen
+      </p>
+      <h1 class="text-[clamp(1.9rem,4vw,3rem)] text-white max-w-3xl leading-[1.15]" data-animate data-delay="1">
+        Betriebliches Gesundheitsmanagement in Bremen
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
+        BGM-Beratung für kleine und mittelständische Unternehmen aus Bremen und Umgebung. Pragmatisch, fördersicher, persönlich.
+      </p>
+
+      <ul class="mt-8 space-y-2.5 max-w-2xl" data-animate data-delay="3">
+        {[
+          'Erfüllung der gesetzlichen Pflicht zur Gefährdungsbeurteilung psychischer Belastung',
+          'Bis zu 600 € Förderung pro Mitarbeiter/Jahr durch Krankenkassen (§ 20b SGB V)',
+          'Direkt vor Ort in Ihrem Unternehmen — kein Standard-Programm von der Stange',
+        ].map(item => (
+          <li class="flex items-start gap-3 text-white/85 text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0" aria-hidden="true"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div class="flex flex-wrap items-center gap-4 mt-9" data-animate data-delay="4">
+        <a
+          href="/kontakt?betreff=bgm#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Kostenfreies Erstgespräch vereinbaren →
+        </a>
+        <a href="tel:+49421354366" class="text-white/75 hover:text-mint text-[0.95rem] transition-colors">
+          0421 354366 anrufen
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Warum BGM ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Hintergrund</p>
+        <h2 class="text-[1.7rem]">Warum BGM für mittelständische Unternehmen in Bremen sinnvoll ist</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="1">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Das Problem</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Krankheitstage, Fluktuation, demografischer Wandel — gerade KMU spüren die Auswirkungen unverhältnismäßig stark. Eine ausfallende Schlüsselkraft trifft ein 30-Personen-Unternehmen härter als einen Konzern.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="2">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Die gesetzliche Lage</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Seit 2013 sind alle Unternehmen verpflichtet, eine <strong class="text-navy">Gefährdungsbeurteilung psychischer Belastung</strong> nach Arbeitsschutzgesetz § 5 durchzuführen. Viele KMU wissen das nicht oder haben es liegen lassen.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="3">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Die Chance</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            BGM ist nicht nur Pflicht-Erfüllung, sondern messbarer Wettbewerbsvorteil. Krankenkassen fördern viele Maßnahmen über <strong class="text-navy">§ 20b SGB V</strong> mit bis zu 600 € pro Mitarbeiter und Jahr — bei sauberer Umsetzung quasi haushaltsneutral.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Leistungen ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Leistungen</p>
+        <h2 class="text-[1.7rem]">Unsere BGM-Leistungen für Ihr Unternehmen</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Gefährdungsbeurteilung -->
+        <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate>
+          <h3 class="text-[1.15rem] mb-3">Gefährdungsbeurteilung psychischer Belastung</h3>
+          <p class="text-muted text-[0.93rem] leading-relaxed mb-5">
+            Die seit 2013 gesetzlich verpflichtende Erfassung psychischer Arbeitsbelastungen nach ArbSchG § 5. Wir führen die Analyse mit standardisierten und an Ihr Unternehmen angepassten Verfahren durch, dokumentieren rechtssicher und leiten konkrete Maßnahmen ab.
+          </p>
+          <ul class="space-y-2.5 text-[0.9rem] text-muted">
+            {[
+              'Mitarbeitenden-Befragung (anonym, datenschutzkonform)',
+              'Beobachtungs- und Strukturanalyse vor Ort',
+              'Maßnahmenkatalog mit Priorisierung',
+              'Schriftliche Dokumentation für Berufsgenossenschaft und Aufsichtsbehörden',
+              'Wiederholung im 3-Jahres-Rhythmus',
+            ].map(p => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Ergonomieberatung -->
+        <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate data-delay="1">
+          <h3 class="text-[1.15rem] mb-3">Ergonomieberatung am Arbeitsplatz</h3>
+          <p class="text-muted text-[0.93rem] leading-relaxed mb-5">
+            Vorbeugung muskuloskelettaler Erkrankungen — die häufigste Ursache für Krankheitstage in Deutschland. Wir kommen in Ihren Betrieb, beurteilen Arbeitsplätze und beraten konkret. <strong class="text-navy">Ergonomieberatung Arbeitsplatz Bremen</strong> mit DGUV-konformer Beurteilung.
+          </p>
+          <ul class="space-y-2.5 text-[0.9rem] text-muted">
+            {[
+              'Begehung von Büro-, Produktions- und Logistikarbeitsplätzen',
+              'Beurteilung nach DGUV-Grundsätzen',
+              'Konkrete Anpassungsvorschläge (Mobiliar, Arbeitsabläufe, Hilfsmittel)',
+              'Schulung von Mitarbeitenden zur Eigenanwendung',
+              'Nachkontrolle und Erfolgsbewertung',
+            ].map(p => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- BEM -->
+        <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate data-delay="2">
+          <h3 class="text-[1.15rem] mb-3">Betriebliches Eingliederungsmanagement (BEM)</h3>
+          <p class="text-muted text-[0.93rem] leading-relaxed mb-5">
+            Wenn ein Mitarbeitender länger als sechs Wochen in zwölf Monaten arbeitsunfähig war, sind Sie als Arbeitgeber zum <strong class="text-navy">BEM in Bremen</strong> verpflichtet (§ 167 SGB IX). Wir begleiten den gesamten Prozess — vertraulich, strukturiert, lösungsorientiert.
+          </p>
+          <ul class="space-y-2.5 text-[0.9rem] text-muted">
+            {[
+              'BEM-Gespräche unter ärztlicher Moderation',
+              'Erarbeitung individueller Wiedereingliederungspläne',
+              'Koordination mit Krankenkasse, Rentenversicherung und Integrationsamt',
+              'Strukturierte Dokumentation',
+              'Begleitung der Rückkehr in den Arbeitsalltag',
+            ].map(p => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- CDMP Hinweis -->
+      <div class="mt-8 bg-mint-soft border border-mint/30 rounded-2xl p-6 flex gap-4 items-start" data-animate data-delay="3">
+        <span class="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-mint/20 grid place-items-center" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2">
+            <path d="M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        <p class="text-navy text-[0.95rem] leading-relaxed">
+          Dr. Janssen ist <strong>zertifizierter Disability Management Professional (CDMP)</strong> — eine international anerkannte Qualifikation für BEM und Wiedereingliederung. Diese Expertise ist im deutschen KMU-Umfeld selten und für komplexe Fälle entscheidend.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Vorgehen ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Vorgehen</p>
+        <h2 class="text-[1.7rem]">Wie wir BGM in Ihrem Unternehmen umsetzen</h2>
+      </div>
+      <ol class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {phases.map((p, i) => (
+          <li class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i)}>
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="font-heading font-bold text-mint text-[1.3rem]">{p.nr}</span>
+              <span class="text-muted text-[0.78rem] tracking-wide uppercase">{p.dauer}</span>
+            </div>
+            <p class="font-heading font-semibold text-navy text-[1.05rem] mb-2">Phase {p.nr.replace(/^0/, '')} — {p.titel}</p>
+            <p class="text-muted text-[0.9rem] leading-relaxed">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ Für wen lohnt sich BGM ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1000px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Zielgruppe</p>
+        <h2 class="text-[1.7rem]">BGM für KMU — pragmatisch und bezahlbar</h2>
+      </div>
+      <p class="text-muted text-[1.02rem] leading-relaxed mb-8" data-animate data-delay="1">
+        Wir arbeiten mit Unternehmen zwischen <strong class="text-navy">10 und 250 Mitarbeitenden</strong> im Großraum Bremen, Oldenburg und Bremerhaven. Unser Anspruch: Sie bekommen exakt die Maßnahmen, die Sie brauchen — kein Konzern-Standard-Programm, das an Ihrer Realität vorbeigeht.
+      </p>
+      <p class="font-heading font-semibold text-navy text-[1rem] mb-4">Wer profitiert besonders:</p>
+      <ul class="space-y-3" data-animate data-delay="2">
+        {[
+          'Unternehmen mit ersten Verdachtsmomenten (steigende Krankheitstage, Fluktuation)',
+          'Betriebe vor einer Berufsgenossenschafts-Prüfung',
+          'Unternehmen mit ausstehender Gefährdungsbeurteilung psychischer Belastung',
+          'Arbeitgeber mit aktiven BEM-Fällen, die externe Moderation brauchen',
+          'Betriebe, die Krankenkassen-Förderung beantragen wollen, aber den Prozess nicht selbst aufsetzen können',
+        ].map(p => (
+          <li class="flex items-start gap-3 text-muted text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0"></span>{p}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ E-A-T / Dr. Janssen ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-12 items-start" data-animate>
+
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
+          <img
+            src={optimizedSanityImage(doctor?.photo?.asset?.url, { width: 720, quality: 80 }) ?? '/images/team/joerg-janssen.png'}
+            alt={doctor?.photo?.alt ?? 'Dr. med. Jörg Janssen, Facharzt für Arbeitsmedizin und BGM-Berater bei Samedos Bremen'}
+            class="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        </div>
+
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Ihr Ansprechpartner</p>
+          <h2 class="text-[1.7rem] mb-4">Ihr Ansprechpartner für BGM in Bremen</h2>
+
+          <p class="text-muted leading-relaxed mb-6">
+            {doctor?.bio ?? 'Dr. med. Jörg Janssen ist Gründer und Geschäftsführer von Samedos. Facharzt für Arbeitsmedizin und Allgemeinmedizin, zertifizierter Disability Management Professional und seit über 20 Jahren in der arbeitsmedizinischen Betreuung mittelständischer Unternehmen aktiv.'}
+          </p>
+
+          <div class="bg-white border border-border rounded-2xl p-6 mb-6 space-y-5">
+
+            {bgmQualifications.length > 0 && (
+              <div>
+                <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">BGM-relevante Qualifikationen</p>
+                <ul class="space-y-2">
+                  {bgmQualifications.map((q) => (
+                    <li class="flex items-start gap-3 text-[0.88rem] text-muted">
+                      <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                      <span>
+                        <strong class="text-navy font-medium">{q.titel}</strong>
+                        {(q.institution || q.jahr) && (
+                          <span class="text-muted"> — {[q.institution, q.jahr].filter(Boolean).join(', ')}</span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {doctor?.sprachen && doctor.sprachen.length > 0 && (
+              <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
+                <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Sprachen</p>
+                {doctor.sprachen.map((s) => (
+                  <span class="text-muted text-[0.88rem]">{sprachenLabelsDE[s] ?? s}</span>
+                ))}
+              </div>
+            )}
+
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            {doctor?.slug?.current && (
+              <a
+                href={`/ueber-uns/${doctor.slug.current}`}
+                class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+              >
+                Vollständige Qualifikationen ansehen →
+              </a>
+            )}
+            <a
+              href="/kontakt?betreff=bgm#anfrage"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              Erstgespräch anfragen →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cross-Links zu anderen Services ═══ -->
+  <ServiceCrossLinks current="bgm" lang="de" />
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="mb-10 text-center" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">FAQ</p>
+        <h2 class="text-[1.7rem]">Häufige Fragen zum betrieblichen Gesundheitsmanagement</h2>
+      </div>
+      <div class="space-y-3">
+        {faqs.map((faq, i) => (
+          <details class="group bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay={String(i % 4)}>
+            <summary class="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none font-heading font-semibold text-navy text-[0.97rem] hover:bg-bg-soft transition-colors select-none">
+              {faq.question}
+              <span class="shrink-0 w-6 h-6 rounded-full border border-border flex items-center justify-center text-mint transition-transform group-open:rotate-45" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 1v10M1 6h10"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-5 pt-1 text-muted text-[0.95rem] leading-relaxed border-t border-border">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20">
+    <div
+      class="relative rounded-[28px] px-8 sm:px-12 py-12 sm:py-14 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Kostenfreies Erstgespräch — wir hören erst zu, dann beraten</h2>
+      <p class="text-white/80 max-w-[640px] mx-auto mb-8">
+        In einem 30-minütigen Erstgespräch klären wir, wo Ihr Unternehmen aktuell steht, welche Pflichten konkret bestehen und welche Maßnahmen den größten Hebel hätten. Unverbindlich, kostenfrei, ohne Verkaufsdruck.
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a
+          href="/kontakt?betreff=bgm#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Erstgespräch vereinbaren →
+        </a>
+        <a
+          href="tel:+49421354366"
+          class="inline-flex items-center gap-2 px-[22px] py-3.5 rounded-full border-[1.5px] border-white/70 text-white font-medium text-[0.97rem] transition-all hover:bg-white hover:text-navy"
+        >
+          0421 354366 anrufen
+        </a>
+      </div>
+      <p class="text-white/50 text-[0.85rem] mt-7">
+        Wir betreuen Unternehmen in Bremen, Bremerhaven, Oldenburg, Delmenhorst und Umgebung.
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

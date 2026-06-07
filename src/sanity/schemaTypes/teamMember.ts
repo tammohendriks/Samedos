@@ -238,6 +238,27 @@ export const teamMember = defineType({
               description: 'Wenn aktiv, erscheint diese Qualifikation auch im E-A-T-Block der Offshore-Seite.',
               initialValue: false,
             }),
+            defineField({
+              name: 'bgmRelevant',
+              title: 'Auf BGM-Seite anzeigen',
+              type: 'boolean',
+              description: 'Wenn aktiv, erscheint diese Qualifikation auch im E-A-T-Block der BGM-Seite.',
+              initialValue: false,
+            }),
+            defineField({
+              name: 'vorsorgeRelevant',
+              title: 'Auf Vorsorge-Seite anzeigen',
+              type: 'boolean',
+              description: 'Wenn aktiv, erscheint diese Qualifikation auch im E-A-T-Block der Arbeitsmedizinische-Vorsorge-Seite.',
+              initialValue: false,
+            }),
+            defineField({
+              name: 'psychologieRelevant',
+              title: 'Auf Psychologie-Seite anzeigen',
+              type: 'boolean',
+              description: 'Wenn aktiv, erscheint diese Qualifikation auch im E-A-T-Block der Psychologische-Beratung-Seite.',
+              initialValue: false,
+            }),
           ],
           preview: {
             select: { title: 'titel', subtitle: 'institution', jahr: 'jahr' },

@@ -31,6 +31,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
       {[
         {
           number: '01.',
+          subjectKey: 'vorsorge',
           title: 'Occupational Health Surveillance',
           description: 'Statutory examinations and advisory services according to ASiG and DGUV Vorschrift 2 — for companies of all sizes.',
           items: [
@@ -41,24 +42,11 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
             'Medical check-ups',
             'Workplace visits and inspections',
           ],
-          extra: null,
+          extra: { href: '/en/services/occupational-health-examinations', label: 'Learn more →' },
         },
         {
           number: '02.',
-          title: 'Workplace Health Management',
-          description: 'Holistic concepts for the long-term health of your workforce — from analysis to implementation.',
-          items: [
-            'Return-to-work management (BEM)',
-            'BGM concepts & health promotion',
-            'Vaccination advice & company vaccination campaigns',
-            'Workplace ergonomics',
-            'Addiction counselling',
-            'First aid training (coordination)',
-          ],
-          extra: null,
-        },
-        {
-          number: '03.',
+          subjectKey: 'offshore',
           title: 'Specialist Examinations',
           description: 'Expert examinations for specific activities and industries — nationally and internationally recognised.',
           items: [
@@ -69,19 +57,37 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
             'Pleasure craft licence',
             'Sports medicine examinations',
           ],
-          extra: { href: '/en/services/offshore-medical', label: 'Offshore medical →' },
+          extra: { href: '/en/services/offshore-medical', label: 'Learn more →' },
+        },
+        {
+          number: '03.',
+          subjectKey: 'bgm',
+          title: 'Workplace Health Management',
+          description: 'Holistic concepts for the long-term health of your workforce — from analysis to implementation.',
+          items: [
+            'Return-to-work management (BEM)',
+            'BGM concepts & health promotion',
+            'Vaccination advice & company vaccination campaigns',
+            'Workplace ergonomics',
+            'Addiction counselling',
+            'First aid training (coordination)',
+          ],
+          extra: { href: '/en/services/workplace-health-management', label: 'Learn more →' },
         },
         {
           number: '04.',
-          title: 'Psychological Support & Counselling',
-          description: 'Supplementary services for mental health, work-life balance and international assignments.',
+          subjectKey: 'psychologie',
+          title: 'Psychological Counseling & Coaching',
+          description: 'Low-threshold support for stress, burden and professional change — confidential, methodically sound, with an occupational medicine background.',
           items: [
-            'Psychosomatic basic care',
-            'Psychological & family-centred counselling',
-            'Travel medicine advice',
-            'Acupuncture',
+            'Stress, burden & burnout prevention',
+            'Return-to-work coaching alongside BEM',
+            'Coaching during professional crises and transitions',
+            'Person-centered, systemic and wingwave® coaching',
+            'Crisis intervention after critical events',
+            'Confidential under medical confidentiality',
           ],
-          extra: null,
+          extra: { href: '/en/services/psychological-counseling', label: 'Learn more →' },
         },
       ].map((cat, i) => (
         <div data-animate class={`grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-12 items-start ${i % 2 === 1 ? 'lg:[direction:rtl]' : ''}`}>
@@ -91,7 +97,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
             <p class="text-muted">{cat.description}</p>
             <div class="flex flex-wrap gap-3 mt-6">
               <a
-                href="/en/contact"
+                href={`/en/contact?subject=${cat.subjectKey}#anfrage`}
                 class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
               >
                 Enquire now →
@@ -138,7 +144,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
         Just get in touch.
       </p>
       <a
-        href="/en/contact"
+        href="/en/contact#anfrage"
         class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
       >
         Contact us →

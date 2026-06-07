@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { contactSubjects } from '../data/contactSubjects';
 ---
 
 <BaseLayout
@@ -31,7 +32,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <section class="py-20">
+  <section id="anfrage" class="py-20 scroll-mt-36">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-16">
 
@@ -189,18 +190,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors bg-white"
               >
                 <option value="">Bitte wählen…</option>
-                <option value="Terminanfrage">Terminanfrage</option>
-                <option value="Allgemeine Frage">Allgemeine Frage</option>
-                <option value="Sonstiges">Sonstiges</option>
+                {contactSubjects.map((s) => (
+                  <option value={s.key}>{s.labelDE}</option>
+                ))}
               </select>
             </div>
 
             <div>
               <label for="nachricht" class="block text-[0.9rem] font-medium text-navy mb-1.5">Nachricht *</label>
               <textarea
-                id="nachricht" name="nachricht" required rows="5"
+                id="nachricht" name="nachricht" required rows="7"
+                placeholder="Schreiben Sie uns Ihre Anfrage…"
                 class="w-full border border-border rounded-xl px-4 py-3 text-[0.95rem] focus:outline-none focus:border-mint transition-colors resize-none"
               ></textarea>
+              <p id="nachricht-hint" class="hidden text-[0.82rem] text-muted mt-1.5">
+                Beispieltext — passen Sie ihn gerne an Ihre Anfrage an.
+              </p>
             </div>
 
             <div class="flex items-start gap-3">
@@ -317,35 +322,142 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <script>
-  const form = document.getElementById('kontakt-form') as HTMLFormElement;
-  const btn = document.getElementById('submit-btn') as HTMLButtonElement;
-  const label = document.getElementById('submit-label')!;
-  const spinner = document.getElementById('submit-spinner')!;
-  const success = document.getElementById('form-success')!;
-  const errorBox = document.getElementById('form-error')!;
+  import { findSubjectByParam, findSubjectByKey } from '../data/contactSubjects';
 
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    btn.disabled = true;
-    label.textContent = 'Wird gesendet…';
-    spinner.classList.remove('hidden');
-    errorBox.classList.add('hidden');
+  function initContactForm() {
+    const form      = document.getElementById('kontakt-form') as HTMLFormElement | null;
+    if (!form || form.dataset.inited === 'true') return;
+    form.dataset.inited = 'true';
 
-    try {
-      const res = await fetch('/api/kontakt', { method: 'POST', body: new FormData(form) });
-      const json = await res.json();
+    const btn       = document.getElementById('submit-btn') as HTMLButtonElement;
+    const label     = document.getElementById('submit-label')!;
+    const spinner   = document.getElementById('submit-spinner')!;
+    const success   = document.getElementById('form-success')!;
+    const errorBox  = document.getElementById('form-error')!;
+    const betreff   = document.getElementById('betreff') as HTMLSelectElement;
+    const nachricht = document.getElementById('nachricht') as HTMLTextAreaElement;
+    const hint      = document.getElementById('nachricht-hint')!;
 
-      if (json.ok) {
-        form.classList.add('hidden');
-        success.classList.remove('hidden');
-      } else {
-        throw new Error();
-      }
-    } catch {
-      errorBox.classList.remove('hidden');
-      btn.disabled = false;
-      label.textContent = 'Nachricht senden →';
-      spinner.classList.add('hidden');
+    // Track which template (if any) is currently displayed verbatim. As soon
+    // as the user edits the textarea we set this back to empty so a later
+    // subject switch knows not to overwrite their writing.
+    let currentTemplate = '';
+
+    // Keep the language switch link in sync with the currently selected
+    // subject so DE↔EN preserves form state instead of resetting it.
+    function syncLangSwitch() {
+      const currentKey = betreff.value;
+      document.querySelectorAll<HTMLAnchorElement>('[data-lang-switch]').forEach((sw) => {
+        const base = sw.href.split('?')[0].split('#')[0];
+        const targetIsEN = base.includes('/en/');
+        const paramName  = targetIsEN ? 'subject' : 'betreff';
+        sw.href = currentKey
+          ? `${base}?${paramName}=${encodeURIComponent(currentKey)}#anfrage`
+          : `${base}#anfrage`;
+      });
     }
-  });
+
+    // Lang detected per-call via <html lang> — keeps this script
+    // language-agnostic so it does the right thing even if the listener
+    // survived a ViewTransitions swap from the other language.
+    function currentLangMessage(subj: ReturnType<typeof findSubjectByKey>): string {
+      if (!subj) return '';
+      return document.documentElement.lang === 'en'
+        ? subj.messageEN ?? ''
+        : subj.messageDE ?? '';
+    }
+
+    function applyTemplateForKey(key: string) {
+      const subj = findSubjectByKey(key);
+      const msg  = currentLangMessage(subj);
+      const current = nachricht.value;
+
+      if (msg) {
+        // Replace only if textarea is empty OR still holds the previous template unmodified
+        if (current.trim() === '' || current === currentTemplate) {
+          nachricht.value = msg;
+          currentTemplate = msg;
+          hint.classList.remove('hidden');
+        }
+        // else: user has already typed something custom — leave it alone
+      } else {
+        // No template for this subject. Clear textarea only if it still holds
+        // a previously injected template that the user hasn't touched.
+        if (current === currentTemplate && currentTemplate !== '') {
+          nachricht.value = '';
+        }
+        currentTemplate = '';
+        hint.classList.add('hidden');
+      }
+    }
+
+    // 1. URL-param pre-fill on initial mount
+    const params      = new URLSearchParams(window.location.search);
+    const paramValue  = params.get('betreff') ?? params.get('subject');
+    const initial     = findSubjectByParam(paramValue);
+    if (initial) {
+      betreff.value = initial.key;
+      const msg = currentLangMessage(initial);
+      if (msg) {
+        nachricht.value = msg;
+        currentTemplate = msg;
+        hint.classList.remove('hidden');
+      }
+    }
+
+    // Scroll the form section into view if the user came in via a
+    // CTA (#anfrage or a subject param). ViewTransitions can otherwise
+    // swallow the native fragment-scroll.
+    if (window.location.hash === '#anfrage' || paramValue) {
+      requestAnimationFrame(() => {
+        document.getElementById('anfrage')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    // After initial prefill, mirror current state into the lang switch.
+    syncLangSwitch();
+
+    // 2. Manual subject change
+    betreff.addEventListener('change', () => {
+      applyTemplateForKey(betreff.value);
+      syncLangSwitch();
+    });
+
+    // 3. User edits the textarea → invalidate template tracking, hide hint
+    nachricht.addEventListener('input', () => {
+      if (nachricht.value !== currentTemplate) {
+        currentTemplate = '';
+        hint.classList.add('hidden');
+      }
+    });
+
+    // 4. Submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      label.textContent = 'Wird gesendet…';
+      spinner.classList.remove('hidden');
+      errorBox.classList.add('hidden');
+
+      try {
+        const res  = await fetch('/api/kontakt', { method: 'POST', body: new FormData(form) });
+        const json = await res.json();
+
+        if (json.ok) {
+          form.classList.add('hidden');
+          success.classList.remove('hidden');
+        } else {
+          throw new Error();
+        }
+      } catch {
+        errorBox.classList.remove('hidden');
+        btn.disabled = false;
+        label.textContent = 'Nachricht senden →';
+        spinner.classList.add('hidden');
+      }
+    });
+  }
+
+  initContactForm();
+  document.addEventListener('astro:after-swap', initContactForm);
 </script>

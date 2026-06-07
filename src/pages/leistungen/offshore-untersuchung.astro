@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getTeamMemberBySlug } from '../../sanity/client';
+import ServiceCrossLinks from '../../components/ServiceCrossLinks.astro';
+import { getTeamMemberBySlug, optimizedSanityImage } from '../../sanity/client';
 
 const doctor = await getTeamMemberBySlug('dr-joerg-janssen');
 
@@ -131,7 +132,7 @@ const steps = [
       </p>
       <div class="flex flex-wrap gap-3 mt-8" data-animate data-delay="3">
         <a
-          href="/kontakt"
+          href="/kontakt?betreff=offshore#anfrage"
           class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
         >
           Termin anfragen →
@@ -363,7 +364,7 @@ const steps = [
         <!-- Foto -->
         <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
           <img
-            src={doctor?.photo?.asset?.url ?? '/images/team/joerg-janssen.png'}
+            src={optimizedSanityImage(doctor?.photo?.asset?.url, { width: 720, quality: 80 }) ?? '/images/team/joerg-janssen.png'}
             alt={doctor?.photo?.alt ?? 'Dr. med. Jörg Janssen, Facharzt für Arbeitsmedizin und Offshore-Arzt bei Samedos Bremen'}
             class="w-full h-full object-cover object-top"
             loading="lazy"
@@ -430,7 +431,7 @@ const steps = [
               </a>
             )}
             <a
-              href="/kontakt"
+              href="/kontakt?betreff=offshore#anfrage"
               class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
             >
               Termin anfragen →
@@ -470,6 +471,9 @@ const steps = [
     </div>
   </section>
 
+  <!-- ═══ Cross-Links zu anderen Services ═══ -->
+  <ServiceCrossLinks current="offshore" lang="de" />
+
   <!-- ═══ CTA / Termin ═══ -->
   <section class="max-w-[1200px] mx-auto px-6 pb-24">
     <div
@@ -491,7 +495,7 @@ const steps = [
       </p>
       <div class="flex flex-wrap justify-center gap-3">
         <a
-          href="/kontakt"
+          href="/kontakt?betreff=offshore#anfrage"
           class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
         >
           Termin anfragen →

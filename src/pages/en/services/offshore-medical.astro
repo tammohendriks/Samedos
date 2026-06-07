@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceCrossLinks from '../../../components/ServiceCrossLinks.astro';
 ---
 
 <BaseLayout
@@ -130,7 +131,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
       </p>
       <div class="flex flex-wrap gap-4 mt-8" data-animate data-delay="3">
         <a
-          href="/en/contact"
+          href="/en/contact?subject=offshore#anfrage"
           class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
         >
           Book appointment →
@@ -362,7 +363,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
               Wilhelmshaven and across Lower Saxony.
             </p>
             <a
-              href="/en/contact"
+              href="/en/contact?subject=offshore#anfrage"
               class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
             >
               Book now →
@@ -432,6 +433,9 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
     </div>
   </section>
 
+  <!-- Cross-Links to other services -->
+  <ServiceCrossLinks current="offshore" lang="en" />
+
   <!-- CTA -->
   <section class="max-w-[1200px] mx-auto px-6 py-24">
     <div
@@ -450,7 +454,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
       </p>
       <div class="flex flex-wrap gap-4 justify-center">
         <a
-          href="/en/contact"
+          href="/en/contact?subject=offshore#anfrage"
           class="inline-flex items-center gap-2 px-[26px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
         >
           Book appointment →

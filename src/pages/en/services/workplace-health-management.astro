@@ -1,0 +1,457 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ServiceCrossLinks from '../../../components/ServiceCrossLinks.astro';
+
+const faqs = [
+  {
+    question: 'Is BGM mandatory for my company?',
+    answer: 'Parts of BGM are legally required. In particular, the Psychological Risk Assessment under § 5 ArbSchG (German Occupational Safety Act) is mandatory for all employers regardless of company size. BEM (Workplace Reintegration Management) becomes mandatory once an employee has been unable to work for more than six weeks within twelve months (§ 167 SGB IX). Other BGM measures are voluntary but often eligible for funding.',
+  },
+  {
+    question: 'What does BGM cost for SMEs?',
+    answer: 'Costs vary depending on scope. A Psychological Risk Assessment in a company with 30 employees typically ranges between €1,500 and €3,500. Up to €600 per employee per year can be reimbursed through statutory health insurance funds under § 20b SGB V — with good preparation, this funding covers a large share of the measures. We clarify the exact numbers in the initial consultation.',
+  },
+  {
+    question: 'How does a Psychological Risk Assessment work?',
+    answer: 'We combine an anonymous employee survey with an on-site walkthrough and structural analysis. From the results we derive concrete measures and document them compliantly. The full process typically takes 6–10 weeks in an SME. Repetition every three years is mandatory.',
+  },
+  {
+    question: 'What happens during a BEM meeting?',
+    answer: 'A BEM meeting is a confidential, voluntary conversation between the employer, the affected employee, and possibly other stakeholders (e.g., works council, disability representative). The goal is to jointly find ways to reintegrate — from gradual workload increase to adapted tasks. As medical moderators we contribute neutrality and clinical expertise.',
+  },
+  {
+    question: 'Which health insurance funds support BGM?',
+    answer: 'All statutory health insurance funds in Germany are required to provide BGM funding under § 20b SGB V. Specific conditions and limits vary — we know the relevant programs from AOK, Techniker, Barmer, DAK, and BKK, and handle the funding applications for our clients.',
+  },
+  {
+    question: "We have fewer than 50 employees — isn't BGM oversized for us?",
+    answer: 'Quite the opposite. Small companies benefit especially because the absence of one individual carries heavy weight. We scale the BGM program precisely to your size — sometimes three clearly defined measures are enough to achieve maximum impact.',
+  },
+];
+
+const phases = [
+  {
+    nr: '01',
+    titel: 'Analysis',
+    dauer: '1–2 weeks',
+    text: 'Free initial consultation, review of existing measures, identification of obligations and gaps, briefing on funding options.',
+  },
+  {
+    nr: '02',
+    titel: 'Implementation',
+    dauer: '3–6 months',
+    text: 'Concrete execution of prioritized actions — risk assessment, training, ergonomic consulting, BEM setup. Including funding applications to the relevant health insurance funds.',
+  },
+  {
+    nr: '03',
+    titel: 'Impact',
+    dauer: 'Ongoing',
+    text: 'Ongoing support through the first months, adjustments, annual evaluation (e.g., sick days, employee satisfaction).',
+  },
+];
+---
+
+<BaseLayout
+  title="Workplace Health Management Bremen — BGM for SMEs | Samedos"
+  description="Workplace Health Management (BGM) for small and medium-sized enterprises in Bremen. Psychological risk assessment, ergonomic consulting, reintegration management. Eligible for German statutory health insurance funding."
+  lang="en"
+  alternateHref="/leistungen/betriebliches-gesundheitsmanagement"
+>
+
+  <!-- ═══ Page-specific JSON-LD ═══ -->
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://samedos.de/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://samedos.de/en/services" },
+        { "@type": "ListItem", "position": 3, "name": "Workplace Health Management", "item": "https://samedos.de/en/services/workplace-health-management" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalProcedure",
+      "name": "Workplace Health Management",
+      "alternateName": ["BGM", "Betriebliches Gesundheitsmanagement", "Occupational Health Management"],
+      "procedureType": "https://schema.org/PreventativeProcedure",
+      "description": "Structured program to promote and maintain the health of employees in companies, including psychological risk assessment, ergonomic consulting, and workplace reintegration management (BEM).",
+      "performer": {
+        "@type": "MedicalBusiness",
+        "name": "Samedos Arbeitsmedizin",
+        "url": "https://samedos.de"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bremen" },
+        { "@type": "City", "name": "Bremerhaven" },
+        { "@type": "City", "name": "Oldenburg" },
+        { "@type": "City", "name": "Delmenhorst" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+      }))
+    })} />
+  </Fragment>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/en/" class="hover:text-white/80 transition-colors">Home</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/en/services" class="hover:text-white/80 transition-colors">Services</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">Workplace Health Management</li>
+        </ol>
+      </nav>
+
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Workplace Health Management
+      </p>
+      <h1 class="text-[clamp(1.9rem,4vw,3rem)] text-white max-w-3xl leading-[1.15]" data-animate data-delay="1">
+        Workplace Health Management in Bremen
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
+        BGM consulting for small and medium-sized businesses in Bremen and surroundings. Pragmatic, funding-secure, personal.
+      </p>
+
+      <ul class="mt-8 space-y-2.5 max-w-2xl" data-animate data-delay="3">
+        {[
+          'Compliance with legal obligation for psychological risk assessment (§ 5 ArbSchG)',
+          'Up to €600 per employee/year refundable through statutory health insurance (§ 20b SGB V)',
+          'On-site at your company — no off-the-shelf corporate program',
+        ].map(item => (
+          <li class="flex items-start gap-3 text-white/85 text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0" aria-hidden="true"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div class="flex flex-wrap items-center gap-4 mt-9" data-animate data-delay="4">
+        <a
+          href="/en/contact?subject=bgm#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Book free initial consultation →
+        </a>
+        <a href="tel:+49421354366" class="text-white/75 hover:text-mint text-[0.95rem] transition-colors">
+          Call 0421 354366
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Why BGM ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Background</p>
+        <h2 class="text-[1.7rem]">Why BGM matters for mid-sized companies in Bremen</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="1">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">The Problem</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Sick days, employee turnover, demographic change — SMEs feel the impact disproportionately. The loss of a key employee hits a 30-person company harder than a corporation.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="2">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">The Legal Situation</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Since 2013, all companies in Germany are required to conduct a <strong class="text-navy">Psychological Risk Assessment</strong> (Gefährdungsbeurteilung psychischer Belastung) under § 5 ArbSchG (German Occupational Safety Act). Many SMEs are unaware of this or have postponed it.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="3">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">The Opportunity</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            BGM is not just compliance — it is a measurable competitive advantage. Statutory health insurance funds reimburse many measures under <strong class="text-navy">§ 20b SGB V</strong> with up to €600 per employee per year — with proper preparation, almost cost-neutral.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Services ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Services</p>
+        <h2 class="text-[1.7rem]">Our BGM services for your company</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Psychological Risk Assessment -->
+        <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate>
+          <h3 class="text-[1.15rem] mb-3">Psychological Risk Assessment <span class="block text-muted text-[0.85rem] font-normal mt-1">(Gefährdungsbeurteilung psychischer Belastung)</span></h3>
+          <p class="text-muted text-[0.93rem] leading-relaxed mb-5">
+            The legally required assessment of psychological workload under § 5 ArbSchG (mandatory since 2013). We conduct the analysis with standardized and company-specific methods, document compliantly, and derive concrete measures.
+          </p>
+          <ul class="space-y-2.5 text-[0.9rem] text-muted">
+            {[
+              'Employee survey (anonymous, GDPR-compliant)',
+              'On-site observation and structural analysis',
+              'Prioritized catalog of measures',
+              'Written documentation for trade associations and supervisory authorities',
+              'Repetition every 3 years',
+            ].map(p => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Ergonomic Workplace Assessment -->
+        <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate data-delay="1">
+          <h3 class="text-[1.15rem] mb-3">Ergonomic Workplace Assessment</h3>
+          <p class="text-muted text-[0.93rem] leading-relaxed mb-5">
+            Prevention of musculoskeletal disorders — the leading cause of sick days in Germany. We visit your business, assess workstations, and provide concrete recommendations following DGUV (German Statutory Accident Insurance) guidelines.
+          </p>
+          <ul class="space-y-2.5 text-[0.9rem] text-muted">
+            {[
+              'Site visits to office, production, and logistics workstations',
+              'Assessment according to DGUV principles',
+              'Concrete recommendations (furniture, workflow, tools)',
+              'Employee training for self-application',
+              'Follow-up and effectiveness review',
+            ].map(p => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- BEM -->
+        <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate data-delay="2">
+          <h3 class="text-[1.15rem] mb-3">Workplace Reintegration Management <span class="block text-muted text-[0.85rem] font-normal mt-1">(BEM — Betriebliches Eingliederungsmanagement)</span></h3>
+          <p class="text-muted text-[0.93rem] leading-relaxed mb-5">
+            When an employee has been unable to work for more than six weeks within twelve months, German law (§ 167 SGB IX) requires employers to offer BEM. We accompany the entire process — confidential, structured, solution-oriented.
+          </p>
+          <ul class="space-y-2.5 text-[0.9rem] text-muted">
+            {[
+              'BEM conversations under medical moderation',
+              'Individual reintegration plans',
+              'Coordination with health insurance, pension insurance, and integration office',
+              'Structured documentation',
+              'Support during the return to working life',
+            ].map(p => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{p}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <!-- CDMP note -->
+      <div class="mt-8 bg-mint-soft border border-mint/30 rounded-2xl p-6 flex gap-4 items-start" data-animate data-delay="3">
+        <span class="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-mint/20 grid place-items-center" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2">
+            <path d="M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        <p class="text-navy text-[0.95rem] leading-relaxed">
+          Dr. Janssen is a <strong>Certified Disability Management Professional (CDMP)</strong> — an internationally recognized qualification for reintegration management. This expertise is rare in the German SME context and decisive for complex cases.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Process ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Process</p>
+        <h2 class="text-[1.7rem]">How we implement BGM in your company</h2>
+      </div>
+      <ol class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {phases.map((p, i) => (
+          <li class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i)}>
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="font-heading font-bold text-mint text-[1.3rem]">{p.nr}</span>
+              <span class="text-muted text-[0.78rem] tracking-wide uppercase">{p.dauer}</span>
+            </div>
+            <p class="font-heading font-semibold text-navy text-[1.05rem] mb-2">Phase {p.nr.replace(/^0/, '')} — {p.titel}</p>
+            <p class="text-muted text-[0.9rem] leading-relaxed">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ Target Group ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1000px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Who we work with</p>
+        <h2 class="text-[1.7rem]">BGM for SMEs — pragmatic and affordable</h2>
+      </div>
+      <p class="text-muted text-[1.02rem] leading-relaxed mb-8" data-animate data-delay="1">
+        We work with companies between <strong class="text-navy">10 and 250 employees</strong> in the Bremen, Oldenburg, and Bremerhaven region. Our approach: you get exactly the measures you need — not a corporate standard program that misses your reality.
+      </p>
+      <p class="font-heading font-semibold text-navy text-[1rem] mb-4">Who benefits most:</p>
+      <ul class="space-y-3" data-animate data-delay="2">
+        {[
+          'Companies experiencing early warning signs (rising sick days, turnover)',
+          'Businesses facing an accident insurance audit',
+          'Companies with outstanding psychological risk assessments',
+          'Employers with active BEM cases that need external moderation',
+          'Businesses seeking statutory health insurance funding but unable to set up the process themselves',
+        ].map(p => (
+          <li class="flex items-start gap-3 text-muted text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0"></span>{p}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ E-A-T / Dr. Janssen (hardcoded EN) ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-12 items-start" data-animate>
+
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
+          <img
+            src="/images/team/joerg-janssen.png"
+            alt="Dr. med. Jörg Janssen, occupational medicine specialist and BGM consultant at Samedos Bremen"
+            class="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        </div>
+
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Your contact</p>
+          <h2 class="text-[1.7rem] mb-4">Your contact for BGM in Bremen</h2>
+
+          <p class="text-muted leading-relaxed mb-6">
+            Dr. med. Jörg Janssen is founder and managing director of Samedos. Specialist in occupational medicine and general medicine, Certified Disability Management Professional, and active in occupational health support for mid-sized companies for over 20 years.
+          </p>
+
+          <div class="bg-white border border-border rounded-2xl p-6 mb-6 space-y-5">
+
+            <div>
+              <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">BGM-relevant qualifications</p>
+              <ul class="space-y-2">
+                {[
+                  { title: 'Specialist in Occupational Medicine',                        meta: 'Ärztekammer Hamburg, 2004' },
+                  { title: 'Specialist in General Medicine',                              meta: 'Ärztekammer Niedersachsen, 2002' },
+                  { title: 'Certified Disability Management Professional (CDMP)',         meta: 'IDMSC, 2005' },
+                  { title: 'Additional Qualification in Quality Management',              meta: 'Ärztekammer Niedersachsen, 2002' },
+                  { title: 'Expert Assessment in Occupational Disease Causation',         meta: 'DGAUM, 2006' },
+                  { title: 'Person-Centered / Systemic Coach',                            meta: 'W.E.G. e.V., 2013' },
+                  { title: 'Psychological Counselor',                                     meta: 'W.E.G. e.V., 2010' },
+                ].map(q => (
+                  <li class="flex items-start gap-3 text-[0.88rem] text-muted">
+                    <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                    <span>
+                      <strong class="text-navy font-medium">{q.title}</strong>
+                      <span class="text-muted"> — {q.meta}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
+              <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Languages</p>
+              {['German', 'English', 'Spanish', 'Dutch'].map(lang => (
+                <span class="text-muted text-[0.88rem]">{lang}</span>
+              ))}
+            </div>
+
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="/en/about/dr-joerg-janssen"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+            >
+              View full credentials →
+            </a>
+            <a
+              href="/en/contact?subject=bgm#anfrage"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              Request initial consultation →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="mb-10 text-center" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">FAQ</p>
+        <h2 class="text-[1.7rem]">Frequently asked questions about Workplace Health Management</h2>
+      </div>
+      <div class="space-y-3">
+        {faqs.map((faq, i) => (
+          <details class="group bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay={String(i % 4)}>
+            <summary class="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none font-heading font-semibold text-navy text-[0.97rem] hover:bg-bg-soft transition-colors select-none">
+              {faq.question}
+              <span class="shrink-0 w-6 h-6 rounded-full border border-border flex items-center justify-center text-mint transition-transform group-open:rotate-45" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 1v10M1 6h10"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-5 pt-1 text-muted text-[0.95rem] leading-relaxed border-t border-border">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cross-Links to other services ═══ -->
+  <ServiceCrossLinks current="bgm" lang="en" />
+
+  <!-- ═══ CTA ═══ -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20">
+    <div
+      class="relative rounded-[28px] px-8 sm:px-12 py-12 sm:py-14 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Free initial consultation — we listen first, then advise</h2>
+      <p class="text-white/80 max-w-[640px] mx-auto mb-8">
+        In a 30-minute initial consultation we clarify where your company currently stands, which obligations apply, and which measures would have the biggest impact. No commitment, no charge, no sales pressure.
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a
+          href="/en/contact?subject=bgm#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Schedule consultation →
+        </a>
+        <a
+          href="tel:+49421354366"
+          class="inline-flex items-center gap-2 px-[22px] py-3.5 rounded-full border-[1.5px] border-white/70 text-white font-medium text-[0.97rem] transition-all hover:bg-white hover:text-navy"
+        >
+          Call 0421 354366
+        </a>
+      </div>
+      <p class="text-white/50 text-[0.85rem] mt-7">
+        We support companies in Bremen, Bremerhaven, Oldenburg, Delmenhorst, and surroundings.
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

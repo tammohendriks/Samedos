@@ -86,4 +86,13 @@
     max-width: 100%;
     display: block;
   }
+
+  /* Polite download deterrent — no hard protection, just makes
+   * right-click-save and drag-out-to-desktop a no-op for casual users.
+   * Add `data-allow-download` to opt out per element. */
+  img:not([data-allow-download]) {
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
 }

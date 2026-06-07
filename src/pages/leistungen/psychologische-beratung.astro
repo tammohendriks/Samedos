@@ -1,0 +1,618 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCrossLinks from '../../components/ServiceCrossLinks.astro';
+import { getTeamMemberBySlug, optimizedSanityImage } from '../../sanity/client';
+
+const doctor = await getTeamMemberBySlug('dr-joerg-janssen');
+
+const sprachenLabelsDE: Record<string, string> = {
+  de: 'Deutsch', en: 'Englisch', es: 'Spanisch', nl: 'Niederländisch', fr: 'Französisch',
+};
+
+const psychologieQualifications = (doctor?.qualifikationen ?? [])
+  .filter((q) => q.psychologieRelevant)
+  .sort((a, b) => (b.jahr ?? 0) - (a.jahr ?? 0));
+
+const abgrenzungArten = [
+  {
+    titel: 'Psychologische Beratung',
+    teaser: 'Unterstützung bei normalen Lebenslagen, Belastungen und Entscheidungssituationen. Erlebnis-, lösungs- und ressourcenorientiert.',
+    body: 'Keine Heilbehandlung — sie setzt an einer gesunden Person mit konkreten Themen an. Rechtlich kein medizinischer Heilberuf.',
+    flag: 'Beratungsleistung',
+  },
+  {
+    titel: 'Coaching',
+    teaser: 'Strukturierte Begleitung von Personen oder Teams in beruflichen Veränderungs-, Entwicklungs- oder Belastungsphasen. Methodengestützt (z.B. systemisch, personzentriert, wingwave®).',
+    body: 'Keine Heilbehandlung, sondern Lernprozess. Coaches sind in Deutschland kein geschützter Beruf — wir arbeiten mit anerkannten Ausbildungszertifikaten.',
+    flag: 'Beratungsleistung',
+  },
+  {
+    titel: 'Psychotherapie',
+    teaser: 'Behandlung von psychischen Erkrankungen mit Krankheitswert — Depression, Angststörungen, PTBS, Sucht etc.',
+    body: 'Geschützter Heilberuf, in Deutschland ausschließlich durch approbierte Psychotherapeut:innen oder Ärzt:innen mit entsprechender Zusatzbezeichnung. Bieten wir bewusst nicht an — bei Bedarf vermitteln wir an Kolleg:innen mit Approbation.',
+    flag: 'Nicht im Angebot',
+  },
+];
+
+const schwerpunkte = [
+  {
+    titel: 'Stress, Belastung & Burnout-Prävention',
+    teaser: 'Wenn sich Anspannung, Schlafprobleme, Energielosigkeit oder das Gefühl „irgendwie nicht mehr richtig anwesend zu sein" einschleichen — oft der ungünstigste Moment, um darüber zu reden, und gleichzeitig der wichtigste. Wir helfen, Belastungsmuster zu erkennen und konkret an Stellschrauben zu arbeiten.',
+    items: [
+      'Strukturiertes Stressmanagement',
+      'Identifikation von Belastungsquellen (Arbeit, Privat, Beides)',
+      'Erarbeitung individueller Resilienz-Strategien',
+      'Prävention im Vorfeld klinischer Krankheitsbilder',
+    ],
+    inlineLink: null,
+  },
+  {
+    titel: 'BEM-Begleitung & Wiedereingliederung',
+    teaser: 'Wenn Beschäftigte nach längerer Krankschreibung — körperlich oder psychisch — zurückkehren, ist die psychologische Begleitung oft mindestens so wichtig wie die medizinische. Wir unterstützen den Wiedereinstieg parallel zum BEM-Prozess.',
+    items: [
+      'Psychologische Begleitung neben dem BEM-Gespräch',
+      'Coaching während stufenweiser Wiedereingliederung',
+      'Konfliktklärung mit dem direkten Umfeld',
+      'Abstimmung mit Hausärzt:innen und ggf. behandelnden Therapeut:innen',
+    ],
+    inlineLink: { href: '/leistungen/betriebliches-gesundheitsmanagement', label: 'Mehr zum BEM-Prozess →' },
+  },
+  {
+    titel: 'Coaching bei beruflichen Krisen & Veränderungen',
+    teaser: 'Beförderung, Umstrukturierung, Konflikt mit Vorgesetzten, schwierige Personalentscheidungen — Phasen, in denen klare Reflexion und externe Perspektive den Unterschied machen. Auch für Führungskräfte als Einzel- oder Mehrfach-Coaching.',
+    items: [
+      'Führungs- und Rollencoaching',
+      'Konfliktmoderation am Arbeitsplatz',
+      'Begleitung in Veränderungsprozessen',
+      'Krisenintervention nach belastenden Ereignissen (z.B. Unfall, Verlust eines:einer Kolleg:in)',
+    ],
+    inlineLink: null,
+  },
+];
+
+const methoden = [
+  {
+    titel: 'Personzentriertes Coaching',
+    teaser: 'Nach Carl Rogers entwickelter Ansatz, der auf Wertschätzung, Echtheit und Empathie aufbaut. Wirkt besonders dort, wo Menschen sich selbst und ihre Situation klarer verstehen wollen.',
+  },
+  {
+    titel: 'Systemisches Coaching',
+    teaser: 'Blickt über die Person hinaus auf Beziehungen, Rollen, Organisation. Sehr wirksam bei Konflikten, Führungssituationen, Übergängen.',
+  },
+  {
+    titel: 'wingwave®-Coaching',
+    teaser: 'Methode des Besser-Siegmund-Instituts zur Kurzzeit-Bearbeitung von Belastungen, Ängsten und Blockaden. Arbeitet mit bilateraler Hemisphären-Stimulation — wissenschaftlich gut untersucht, hohe Akzeptanz bei rationalen Personen, die „etwas schnell wegbekommen" wollen.',
+  },
+  {
+    titel: 'Klassische psychologische Beratung',
+    teaser: 'Gespräch ohne festes Methodenkorsett — Klärung, Sortieren, Entscheidungshilfe. Oft der niederschwelligste Einstieg, wenn das Thema noch unscharf ist.',
+  },
+];
+
+const anlaesseBeschaeftigte = [
+  'Anhaltender Stress oder Erschöpfung',
+  'Schlafprobleme, Konzentrationsschwierigkeiten',
+  'Konflikte im Team oder mit Vorgesetzten',
+  'Schwierigkeiten nach krankheitsbedingter Pause',
+  'Schwierige Lebenssituation, die ins Berufliche reicht',
+  'Unsicherheit nach belastenden Ereignissen am Arbeitsplatz',
+];
+
+const anlaesseFuehrungskraefte = [
+  'Mitarbeiter:innen mit auffälligen Belastungsmustern',
+  'Teams in Konflikt- oder Umbruchphasen',
+  'Vorbereitung schwieriger Personalgespräche',
+  'BEM-Prozesse, die psychologische Begleitung brauchen',
+  'Akute Krisenintervention nach traumatisierenden Ereignissen',
+  'Coaching von Führungskräften in neuer Rolle',
+];
+
+const phases = [
+  {
+    nr: '01',
+    titel: 'Kontaktaufnahme',
+    dauer: 'vertraulich, niederschwellig',
+    text: 'Per Telefon oder Formular — entweder durch das Unternehmen für eine:n Beschäftigte:n oder direkt durch die betroffene Person. Wir besprechen kurz, worum es geht und ob unser Angebot passt.',
+  },
+  {
+    nr: '02',
+    titel: 'Erstgespräch',
+    dauer: '60 Minuten',
+    text: 'Sortieren, klären, gemeinsame Einschätzung. Am Ende stehen entweder ein konkreter Folgeplan oder die Empfehlung zu einer anderen Anlaufstelle (z.B. Psychotherapeut:in, Beratungsstelle).',
+  },
+  {
+    nr: '03',
+    titel: 'Begleitende Gespräche',
+    dauer: 'je nach Anlass',
+    text: 'Üblich sind 3–8 Termine in Abständen von 1–4 Wochen. Methode und Frequenz richten sich nach Thema und Tempo — kein vorgegebenes Programm.',
+  },
+];
+
+const vertraulichkeit = [
+  {
+    titel: 'Ärztliche Schweigepflicht',
+    text: 'Alle Gespräche unterliegen der ärztlichen Schweigepflicht nach § 203 StGB. Inhalte werden niemals an Dritte weitergegeben — auch nicht an den Arbeitgeber.',
+  },
+  {
+    titel: 'Was Ihr Arbeitgeber erfährt',
+    text: 'Bei Unternehmens-finanzierten Beratungen erhält der Arbeitgeber lediglich die Information, dass Gespräche stattgefunden haben (für Abrechnungszwecke) — niemals worum es ging. Auf Wunsch lässt sich auch das über eine Pauschalabrechnung vermeiden.',
+  },
+  {
+    titel: 'Datenschutz',
+    text: 'Wir dokumentieren minimal und DSGVO-konform. Sie haben jederzeit das Recht auf Einsicht und Löschung Ihrer Daten.',
+  },
+  {
+    titel: 'Keine Stigmatisierung im Betrieb',
+    text: 'Termine werden so geplant, dass sie organisatorisch unauffällig sind. Sie erscheinen nicht als psychologische Beratung in Kalendern oder Personalsystemen, sondern als normale arbeitsmedizinische Termine.',
+  },
+];
+
+const faqs = [
+  {
+    question: 'Ist das eine Psychotherapie?',
+    answer: 'Nein. Wir bieten psychologische Beratung und Coaching im Vorfeld klinischer Krankheitsbilder — bei normalen, aber belastenden Lebenssituationen, Stressphasen, Konflikten und Veränderungen. Psychotherapie ist die Behandlung von psychischen Erkrankungen mit Krankheitswert und einem approbierten Psychotherapeut:innen vorbehalten. Wenn sich im Erstgespräch zeigt, dass ein psychotherapeutischer Bedarf besteht, vermitteln wir an entsprechende Kolleg:innen.',
+  },
+  {
+    question: 'Erfährt mein Arbeitgeber, worüber wir reden?',
+    answer: 'Nein. Alle Gespräche unterliegen der ärztlichen Schweigepflicht. Bei Unternehmens-finanzierten Beratungen erhält der Arbeitgeber lediglich die Information, dass ein Termin stattgefunden hat (für die Abrechnung) — niemals den Inhalt. Auf Wunsch lässt sich auch das über eine Pauschalabrechnung vermeiden.',
+  },
+  {
+    question: 'Was kostet eine Beratungssitzung?',
+    answer: 'Eine 60-Minuten-Sitzung liegt typischerweise bei 120–180 €. Bei Unternehmen mit Rahmenvertrag oft günstiger oder pauschal abgerechnet. Selbstzahler:innen erhalten einen klaren Kostenüberblick im Erstgespräch. Krankenkassen erstatten psychologische Beratung in der Regel nicht — wohl aber präventive Coaching-Angebote, die als BGM-Maßnahme förderfähig sind.',
+  },
+  {
+    question: 'Wie viele Sitzungen brauche ich?',
+    answer: 'Das hängt vom Thema ab. Für klar umrissene Themen reichen oft 3–5 Sitzungen. Bei tiefergehenden Themen oder begleitenden Prozessen (z.B. parallel zu BEM) können es 8–12 sein. Wir besprechen das im Erstgespräch und prüfen den Fortschritt regelmäßig.',
+  },
+  {
+    question: 'Können wir uns auch online treffen?',
+    answer: 'Ja. Wir bieten Beratungen sowohl in Präsenz in der Praxis in Bremen-Findorff als auch per Video an. Für viele Beschäftigte und Führungskräfte ist die Online-Option deutlich niederschwelliger und zeitsparender.',
+  },
+  {
+    question: 'Wie schnell bekomme ich einen Termin?',
+    answer: 'In der Regel innerhalb von 1–2 Wochen. Bei akuten Krisensituationen versuchen wir, kurzfristiger einen Termin anzubieten — rufen Sie uns in diesem Fall direkt an unter 0421 354366.',
+  },
+];
+
+const psychologieBio = 'Dr. med. Jörg Janssen ist Facharzt für Arbeitsmedizin und Allgemeinmedizin, ausgebildeter personzentrierter und systemischer Coach und psychologischer Berater. Diese Kombination ist im deutschen Arbeitsmedizin-Umfeld selten — und ermöglicht eine Form der Begleitung, die medizinische, organisationale und persönliche Perspektive zusammenbringt.';
+---
+
+<BaseLayout
+  title="Psychologische Beratung & Coaching Bremen — vertraulich, methodisch fundiert | Samedos"
+  description="Psychologische Beratung und Coaching in Bremen — Stress, Burnout-Prävention, BEM-Begleitung, Coaching bei beruflichen Krisen. Ärztliche Schweigepflicht, niederschwellig, online oder in Präsenz."
+  alternateHref="/en/services/psychological-counseling"
+>
+
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Start",       "item": "https://samedos.de/" },
+        { "@type": "ListItem", "position": 2, "name": "Leistungen",  "item": "https://samedos.de/leistungen" },
+        { "@type": "ListItem", "position": 3, "name": "Psychologische Beratung", "item": "https://samedos.de/leistungen/psychologische-beratung" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalProcedure",
+      "name": "Psychologische Beratung & Coaching",
+      "alternateName": ["Coaching", "Mental Health Counseling", "Stress Counseling"],
+      "procedureType": "https://schema.org/PreventativeProcedure",
+      "description": "Niederschwellige psychologische Beratung und Coaching für Beschäftigte und Führungskräfte — Stressmanagement, Burnout-Prävention, BEM-Begleitung, Coaching bei beruflichen Krisen. Keine Psychotherapie.",
+      "performer": {
+        "@type": "MedicalBusiness",
+        "name": "Samedos Arbeitsmedizin",
+        "url": "https://samedos.de"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bremen" },
+        { "@type": "City", "name": "Bremerhaven" },
+        { "@type": "City", "name": "Oldenburg" },
+        { "@type": "City", "name": "Delmenhorst" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+      }))
+    })} />
+  </Fragment>
+
+  <!-- ═══ Hero (H1 ohne em-dash, Tagline in Subline) ═══ -->
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/" class="hover:text-white/80 transition-colors">Start</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/leistungen" class="hover:text-white/80 transition-colors">Leistungen</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">Psychologische Beratung</li>
+        </ol>
+      </nav>
+
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Psychologische Beratung Bremen
+      </p>
+      <h1 class="text-[clamp(1.9rem,4vw,3rem)] text-white max-w-3xl leading-[1.15]" data-animate data-delay="1">
+        Psychologische Beratung &amp; Coaching in Bremen
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
+        Niederschwellige Unterstützung für Beschäftigte und Führungskräfte bei Stress, Belastung und beruflicher Veränderung — durch einen erfahrenen Arbeitsmediziner mit Coaching-Qualifikation.
+      </p>
+
+      <ul class="mt-8 space-y-2.5 max-w-2xl" data-animate data-delay="3">
+        {[
+          'Coaching, Beratung und Krisenintervention im beruflichen Kontext',
+          'Vertraulich, ärztliche Schweigepflicht, ohne Stigmatisierung',
+          'Einzelgespräche oder Begleitprogramme — direkt über Ihr Unternehmen oder als Selbstzahler',
+        ].map(item => (
+          <li class="flex items-start gap-3 text-white/85 text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0" aria-hidden="true"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div class="flex flex-wrap items-center gap-4 mt-9" data-animate data-delay="4">
+        <a
+          href="/kontakt?betreff=psychologie#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Vertrauliches Erstgespräch anfragen →
+        </a>
+        <a href="tel:+49421354366" class="text-white/75 hover:text-mint text-[0.95rem] transition-colors">
+          0421 354366 anrufen
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Was ist psychologische Beratung in der Arbeitsmedizin ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Unser Ansatz</p>
+        <h2 class="text-[1.7rem]">Niederschwellige Unterstützung dort, wo Belastung entsteht</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="1">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Die Situation</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Stress, Überlastung, Konflikte und Veränderungsprozesse gehören zum Berufsalltag. Was unterschiedlich ist: Wie gut Menschen Strategien haben, mit diesen Belastungen umzugehen. Wenn diese Strategien nicht (mehr) reichen, ist ein Gespräch oft der wirkungsvollste erste Schritt.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="2">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Unser Ansatz</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Wir bieten <strong class="text-navy">keinen Ersatz für Psychotherapie</strong>, sondern <strong class="text-navy">psychologische Beratung und Coaching</strong> im Vorfeld klinischer Krankheitsbilder. Genau der Bereich, in dem viele Beschäftigte nicht mehr ohne Unterstützung weiterkommen, aber auch noch nicht in akuter Krise sind.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="3">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Der Vorteil</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Anders als externe Coaches oder Therapeuten bringen wir die arbeitsmedizinische Perspektive mit. Wir verstehen Berufskontext, organisationale Dynamik und die Schnittstellen zu BEM und Gefährdungsbeurteilung — und arbeiten unter ärztlicher Schweigepflicht.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Abgrenzung Coaching / Beratung vs. Psychotherapie ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-6" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Rechtliche Abgrenzung</p>
+        <h2 class="text-[1.7rem]">Psychologische Beratung, Coaching, Psychotherapie — was ist der Unterschied?</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        Diese drei Begriffe werden im Alltag oft verwechselt — rechtlich und fachlich sind sie aber klar getrennt. Die richtige Einordnung hilft Ihnen einzuschätzen, ob unser Angebot zu Ihrem Bedarf passt.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {abgrenzungArten.map((a, i) => (
+          <div class={`bg-white border rounded-2xl p-6 flex flex-col ${a.flag === 'Nicht im Angebot' ? 'border-border opacity-90' : 'border-border'}`} data-animate data-delay={String(i + 1)}>
+            <span class={`inline-flex w-fit items-center px-3 py-1 rounded-full text-[0.72rem] font-medium tracking-wide uppercase mb-3 ${a.flag === 'Nicht im Angebot' ? 'bg-bg-soft text-muted border border-border' : 'bg-mint/15 text-navy'}`}>{a.flag}</span>
+            <h3 class="text-[1.1rem] mb-3">{a.titel}</h3>
+            <p class="text-muted text-[0.92rem] leading-relaxed mb-3">{a.teaser}</p>
+            <p class="text-muted text-[0.88rem] leading-relaxed mt-auto">{a.body}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-8 bg-mint-soft border border-mint/30 rounded-2xl p-6 flex gap-4 items-start" data-animate data-delay="4">
+        <span class="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-mint/20 grid place-items-center" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2">
+            <path d="M12 2L4 7v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V7l-8-5z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        <p class="text-navy text-[0.95rem] leading-relaxed">
+          Wir bewegen uns klar im Beratungs- und Coaching-Bereich. Wenn sich im Erstgespräch herausstellt, dass ein psychotherapeutischer Behandlungsbedarf besteht, sprechen wir das offen an und helfen bei der Vermittlung — niemand wird mit dieser Situation allein gelassen.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Schwerpunktthemen ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Mitarbeitercoaching Bremen</p>
+        <h2 class="text-[1.7rem]">Unsere Schwerpunktthemen</h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {schwerpunkte.map((s, i) => (
+          <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate data-delay={String(i)}>
+            <h3 class="text-[1.1rem] mb-3 leading-snug">{s.titel}</h3>
+            <p class="text-muted text-[0.93rem] leading-relaxed mb-5">{s.teaser}</p>
+            <ul class="space-y-2.5 text-[0.9rem] text-muted mb-5">
+              {s.items.map(p => (
+                <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{p}</li>
+              ))}
+            </ul>
+            {s.inlineLink && (
+              <a href={s.inlineLink.href} class="text-mint hover:underline font-medium text-[0.9rem] mt-auto">
+                {s.inlineLink.label}
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Methoden ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Methodischer Werkzeugkasten</p>
+        <h2 class="text-[1.7rem]">Mit welchen Methoden wir arbeiten</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        Wir kombinieren mehrere methodische Zugänge — je nach Thema, Person und Phase. Hier die Hauptansätze, die wir nutzen.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {methoden.map((m, i) => (
+          <div class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i % 4)}>
+            <h3 class="text-[1.02rem] mb-3 leading-snug">{m.titel}</h3>
+            <p class="text-muted text-[0.9rem] leading-relaxed">{m.teaser}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Anlässe ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Anlässe</p>
+        <h2 class="text-[1.7rem]">Wann ist psychologische Beratung sinnvoll?</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-10 max-w-3xl" data-animate data-delay="1">
+        Es gibt keinen falschen Zeitpunkt, um sich zu melden. Hier sind typische Anlässe, mit denen Beschäftigte und Führungskräfte zu uns kommen.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white border border-border rounded-2xl p-7" data-animate data-delay="2">
+          <p class="font-heading font-semibold text-navy text-[1rem] mb-4">Für Beschäftigte</p>
+          <ul class="space-y-2.5 text-[0.93rem] text-muted">
+            {anlaesseBeschaeftigte.map(a => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0"></span>{a}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-7" data-animate data-delay="3">
+          <p class="font-heading font-semibold text-navy text-[1rem] mb-4">Für Führungskräfte &amp; Unternehmen</p>
+          <ul class="space-y-2.5 text-[0.93rem] text-muted">
+            {anlaesseFuehrungskraefte.map(a => (
+              <li class="flex items-start gap-3"><span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0"></span>{a}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Vorgehen ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Ablauf</p>
+        <h2 class="text-[1.7rem]">Wie eine Beratung bei uns abläuft</h2>
+      </div>
+      <ol class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {phases.map((p, i) => (
+          <li class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i)}>
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="font-heading font-bold text-mint text-[1.3rem]">{p.nr}</span>
+              <span class="text-muted text-[0.75rem] tracking-wide uppercase">{p.dauer}</span>
+            </div>
+            <p class="font-heading font-semibold text-navy text-[1.05rem] mb-2">Phase {p.nr.replace(/^0/, '')} — {p.titel}</p>
+            <p class="text-muted text-[0.9rem] leading-relaxed">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ Vertraulichkeit ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Trust &amp; Schutz</p>
+        <h2 class="text-[1.7rem]">Vertraulichkeit ist die Grundlage</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        Wir wissen, dass das Thema sensibel ist. Hier deshalb klar und transparent, wie wir mit Informationen umgehen.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {vertraulichkeit.map((v, i) => (
+          <div class="bg-white border border-border rounded-2xl p-6 flex gap-4" data-animate data-delay={String(i % 4)}>
+            <span class="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-mint/15 grid place-items-center" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <div>
+              <p class="font-heading font-semibold text-navy text-[1rem] mb-1">{v.titel}</p>
+              <p class="text-muted text-[0.92rem] leading-relaxed">{v.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ E-A-T / Dr. Janssen ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-12 items-start" data-animate>
+
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
+          <img
+            src={optimizedSanityImage(doctor?.photo?.asset?.url, { width: 720, quality: 80 }) ?? '/images/team/joerg-janssen.png'}
+            alt={doctor?.photo?.alt ?? 'Dr. med. Jörg Janssen, Arbeitsmediziner und psychologischer Berater in Bremen'}
+            class="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        </div>
+
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Ihr Ansprechpartner</p>
+          <h2 class="text-[1.7rem] mb-4">Ihr Ansprechpartner für psychologische Beratung in Bremen</h2>
+
+          <p class="text-muted leading-relaxed mb-6">{psychologieBio}</p>
+
+          <div class="bg-white border border-border rounded-2xl p-6 mb-6 space-y-5">
+
+            {psychologieQualifications.length > 0 && (
+              <div>
+                <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">Methoden- &amp; Beratungs-relevante Qualifikationen</p>
+                <ul class="space-y-2">
+                  {psychologieQualifications.map((q) => (
+                    <li class="flex items-start gap-3 text-[0.88rem] text-muted">
+                      <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                      <span>
+                        <strong class="text-navy font-medium">{q.titel}</strong>
+                        {(q.institution || q.jahr) && (
+                          <span class="text-muted"> — {[q.institution, q.jahr].filter(Boolean).join(', ')}</span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {doctor?.sprachen && doctor.sprachen.length > 0 && (
+              <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
+                <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Sprachen</p>
+                {doctor.sprachen.map((s) => (
+                  <span class="text-muted text-[0.88rem]">{sprachenLabelsDE[s] ?? s}</span>
+                ))}
+              </div>
+            )}
+
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            {doctor?.slug?.current && (
+              <a
+                href={`/ueber-uns/${doctor.slug.current}`}
+                class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+              >
+                Vollständige Qualifikationen ansehen →
+              </a>
+            )}
+            <a
+              href="/kontakt?betreff=psychologie#anfrage"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              Vertrauliches Erstgespräch anfragen →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="mb-10 text-center" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">FAQ</p>
+        <h2 class="text-[1.7rem]">Häufige Fragen zur psychologischen Beratung</h2>
+      </div>
+      <div class="space-y-3">
+        {faqs.map((faq, i) => (
+          <details class="group bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay={String(i % 4)}>
+            <summary class="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none font-heading font-semibold text-navy text-[0.97rem] hover:bg-bg-soft transition-colors select-none">
+              {faq.question}
+              <span class="shrink-0 w-6 h-6 rounded-full border border-border flex items-center justify-center text-mint transition-transform group-open:rotate-45" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 1v10M1 6h10"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-5 pt-1 text-muted text-[0.95rem] leading-relaxed border-t border-border">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cross-Links ═══ -->
+  <ServiceCrossLinks current="psychologie" lang="de" />
+
+  <!-- ═══ CTA ═══ -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20">
+    <div
+      class="relative rounded-[28px] px-8 sm:px-12 py-12 sm:py-14 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Ein vertrauliches Erstgespräch ist der einfachste erste Schritt</h2>
+      <p class="text-white/80 max-w-[640px] mx-auto mb-8">
+        60 Minuten Zeit, ein offenes Ohr, eine erste Einschätzung. Vertraulich, ohne Verpflichtung zu Folgeterminen, ohne Mitteilung an Dritte.
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a
+          href="/kontakt?betreff=psychologie#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Vertrauliches Erstgespräch anfragen →
+        </a>
+        <a
+          href="tel:+49421354366"
+          class="inline-flex items-center gap-2 px-[22px] py-3.5 rounded-full border-[1.5px] border-white/70 text-white font-medium text-[0.97rem] transition-all hover:bg-white hover:text-navy"
+        >
+          0421 354366 anrufen
+        </a>
+      </div>
+      <p class="text-white/50 text-[0.85rem] mt-7">
+        Wir betreuen Beschäftigte und Unternehmen in Bremen, Bremerhaven, Oldenburg, Delmenhorst und Umgebung.
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

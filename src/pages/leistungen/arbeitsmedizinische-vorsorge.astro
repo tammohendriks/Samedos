@@ -1,0 +1,620 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceCrossLinks from '../../components/ServiceCrossLinks.astro';
+import { getTeamMemberBySlug, optimizedSanityImage } from '../../sanity/client';
+
+const doctor = await getTeamMemberBySlug('dr-joerg-janssen');
+
+const sprachenLabelsDE: Record<string, string> = {
+  de: 'Deutsch', en: 'Englisch', es: 'Spanisch', nl: 'Niederländisch', fr: 'Französisch',
+};
+
+const vorsorgeQualifications = (doctor?.qualifikationen ?? [])
+  .filter((q) => q.vorsorgeRelevant)
+  .sort((a, b) => (b.jahr ?? 0) - (a.jahr ?? 0));
+
+const vorsorgeArten = [
+  {
+    titel: 'Pflichtvorsorge',
+    paragraph: '§ 4 ArbMedVV',
+    teaser: 'Vom Arbeitgeber zwingend zu veranlassen bei bestimmten Tätigkeiten mit besonderen gesundheitlichen Gefährdungen. Ohne aktuelle Pflichtvorsorge darf die Tätigkeit nicht ausgeübt werden.',
+    examples: [
+      'Arbeiten mit Asbest, Blei, Quecksilber',
+      'Tätigkeiten mit Infektionsgefährdung (TRBA)',
+      'Lärmexposition über Auslösewerten',
+      'Schweißarbeiten unter beengten Verhältnissen',
+    ],
+  },
+  {
+    titel: 'Angebotsvorsorge',
+    paragraph: '§ 5 ArbMedVV',
+    teaser: 'Vom Arbeitgeber anzubieten bei bestimmten Tätigkeiten — die Teilnahme ist für Beschäftigte freiwillig, aber das Angebot muss dokumentiert werden.',
+    examples: [
+      'Bildschirmarbeit (keine Pflicht mehr seit 2013)',
+      'Tätigkeiten mit MSE-Belastung',
+      'Stoffe der Kat. 3 nach Gefahrstoffverordnung',
+      'Feuchtarbeit',
+    ],
+  },
+  {
+    titel: 'Wunschvorsorge',
+    paragraph: '§ 5a ArbMedVV',
+    teaser: 'Auf Verlangen der Beschäftigten zu ermöglichen, wenn ein Gesundheitsschaden durch die Tätigkeit nicht ausgeschlossen werden kann. Trotz „Wunsch" eine Verpflichtung des Arbeitgebers.',
+    examples: [
+      'Beschäftigte, die sich durch ihre Tätigkeit belastet fühlen',
+      'Bei wahrgenommenen Gefährdungen ohne formale Schwellenüberschreitung',
+    ],
+  },
+];
+
+const topGCodes = [
+  {
+    code: 'G25',
+    titel: 'Fahr-, Steuer- und Überwachungstätigkeit',
+    teaser: 'Für Beschäftigte, die Fahrzeuge führen, Krane bedienen, Maschinen steuern oder Sicherheits-/Überwachungsaufgaben wahrnehmen. Klassische Anwendung: Berufskraftfahrer, Gabelstaplerfahrer, Kranführer, Wachpersonal.',
+    items: [
+      'Anamnese, körperliche Untersuchung',
+      'Sehtest (auch im Dunkeln, ggf. mit Farbsehtest)',
+      'Hörtest',
+      'Reaktionstest',
+    ],
+  },
+  {
+    code: 'G37',
+    titel: 'Bildschirmarbeitsplätze',
+    teaser: 'Vorsorge für Beschäftigte mit überwiegender Bildschirmarbeit. Seit 2013 reine Angebots- und Wunschvorsorge. Inhaltlicher Fokus: Sehen und Sehkomfort.',
+    items: [
+      'Sehtest (Nähe, Ferne, Bildschirmabstand)',
+      'Stellungnahme zur Bildschirmtauglichkeit',
+      'Beratung zu Sehhilfen für Bildschirmarbeit',
+    ],
+  },
+  {
+    code: 'G41',
+    titel: 'Arbeiten mit Absturzgefahr',
+    teaser: 'Für Beschäftigte, die in Höhen über 3 Metern arbeiten — Gerüstbauer, Dachdecker, Industriekletterer, Offshore-Personal. Sehr strenge Kriterien, weil ein Versagen lebensgefährlich ist.',
+    items: [
+      'Eingehende körperliche Untersuchung',
+      'EKG, Blutdruck, Lungenfunktion',
+      'Gleichgewichts-/Schwindel-Tests',
+      'Sehtest, Hörtest',
+    ],
+  },
+  {
+    code: 'G42',
+    titel: 'Tätigkeiten mit Infektionsgefährdung',
+    teaser: 'Pflichtvorsorge für Beschäftigte mit Kontakt zu Krankheitserregern — Pflegekräfte, Laborpersonal, Reinigungskräfte mit Risikokontakt, Tierärzte, Forschung. Häufig mit Impfangeboten verbunden.',
+    items: [
+      'Anamnese, körperliche Untersuchung',
+      'Impfstatus-Prüfung und ggf. Impfungen',
+      'Beratung zu Schutzmaßnahmen',
+      'Dokumentation der Erregerexposition',
+    ],
+  },
+  {
+    code: 'G46',
+    titel: 'Belastungen des Muskel- und Skelett-Systems',
+    teaser: 'Angebotsvorsorge für Beschäftigte mit körperlich belastenden Tätigkeiten — Bauberufe, Lagerlogistik, Pflege, Produktion. Ziel: Früherkennung von Verschleißerscheinungen.',
+    items: [
+      'Anamnese mit MSE-Schwerpunkt',
+      'Funktionelle Untersuchung der belasteten Strukturen',
+      'Ergonomische Beratung',
+      'Ggf. weiterführende Bildgebung',
+    ],
+  },
+  {
+    code: 'G24',
+    titel: 'Hauterkrankungen',
+    teaser: 'Angebotsvorsorge für Beschäftigte mit hautbelastenden Tätigkeiten — Friseure, Metallarbeiter, Bauberufe, Lebensmittelverarbeitung, Pflege. Hautkrankheiten sind die häufigste Berufskrankheits-Anzeige.',
+    items: [
+      'Anamnese, Hautstatus',
+      'Beratung zu Hautschutz, Hautreinigung, Hautpflege',
+      'Ggf. Provokationstests',
+      'Hinweise zu Schutzhandschuhen und Hautschutzplänen',
+    ],
+  },
+];
+
+const weitereGCodes = [
+  { code: 'G20', bez: 'Lärm',                              branchen: 'Produktion, Metallverarbeitung, Bauwesen' },
+  { code: 'G23', bez: 'Obstruktive Atemwegserkrankungen',  branchen: 'Bäckerei, Schweißer, Metallindustrie' },
+  { code: 'G26', bez: 'Atemschutzgeräte',                  branchen: 'Feuerwehr, Industrie-Wartung, Asbestsanierung' },
+  { code: 'G31', bez: 'Überdruck',                         branchen: 'Taucher, Caisson-Arbeiter' },
+  { code: 'G39', bez: 'Schweißrauche',                     branchen: 'Schweißer, Schlosser' },
+  { code: 'G44', bez: 'Hartholzstäube',                    branchen: 'Tischler, Möbelbau' },
+  { code: 'G45', bez: 'Styrol',                            branchen: 'Bootsbau, Kunststoffverarbeitung' },
+];
+
+const phases = [
+  {
+    nr: '01',
+    titel: 'Termin vereinbaren',
+    dauer: 'meist innerhalb 1–2 Wochen',
+    text: 'Telefonisch oder per Formular. Wir klären vorab, welche Art von Vorsorge benötigt wird und welche Unterlagen Sie mitbringen sollten.',
+  },
+  {
+    nr: '02',
+    titel: 'Untersuchung',
+    dauer: 'je nach G-Code 30–90 Min',
+    text: 'In unserer Praxis in Bremen-Findorff oder bei Bedarf direkt vor Ort in Ihrem Unternehmen. Anamnese, körperliche Untersuchung, ggf. apparative Diagnostik.',
+  },
+  {
+    nr: '03',
+    titel: 'Bescheinigung & Doku',
+    dauer: 'am gleichen Tag',
+    text: 'Bescheinigung für die Vorsorgekartei, Eintrag in die elektronische Dokumentation, ggf. Rückmeldung an Sie als Arbeitgeber zu Maßnahmenempfehlungen — datenschutzkonform und ohne medizinische Details.',
+  },
+];
+
+const faqs = [
+  {
+    question: 'Ist arbeitsmedizinische Vorsorge für mein Unternehmen Pflicht?',
+    answer: 'Das hängt von den Tätigkeiten Ihrer Beschäftigten ab. Pflichtvorsorge nach § 4 ArbMedVV ist bei bestimmten Tätigkeiten mit besonderen gesundheitlichen Gefährdungen zwingend (z.B. Asbest, Lärm über Auslösewerten, Infektionsgefährdung). Angebotsvorsorge nach § 5 ArbMedVV müssen Sie bei weiteren Tätigkeiten anbieten — auch wenn der Beschäftigte ablehnt, müssen Sie das Angebot dokumentieren. Im Erstgespräch klären wir, was für Ihr Unternehmen gilt.',
+  },
+  {
+    question: 'Was kostet eine G-Untersuchung bei Samedos?',
+    answer: 'Die Kosten variieren je nach G-Code und Umfang. Eine G25-Untersuchung liegt typischerweise zwischen 80 und 120 €, eine G41 mit eingehender Untersuchung bei 150–200 €. Eine vollständige Übersicht finden Sie in unserer Preisliste — bei größeren Volumen vereinbaren wir gerne Paketpreise.',
+  },
+  {
+    question: 'Wo findet die Untersuchung statt?',
+    answer: 'Wahlweise in unserer Praxis in Bremen-Findorff oder direkt bei Ihnen vor Ort. Für Einzeltermine oder kleinere Gruppen ist die Praxis effizienter. Für größere Mitarbeiterzahlen oder spezielle Arbeitsumgebungen (Baustelle, Hafen, Windkraft) kommen wir gerne zu Ihnen — sprechen Sie uns einfach an.',
+  },
+  {
+    question: 'Wie lange dauert eine G-Untersuchung?',
+    answer: 'Je nach G-Code zwischen 20 und 90 Minuten. Eine G37-Bildschirmvorsorge ist meist in 20–30 Minuten erledigt, eine G41 mit eingehender körperlicher Untersuchung kann 60–90 Minuten dauern. Wir planen entsprechend ein und sagen Ihnen vorab, womit Sie rechnen sollten.',
+  },
+  {
+    question: 'Was müssen Beschäftigte zur Untersuchung mitbringen?',
+    answer: 'Personalausweis, Brille oder Kontaktlinsen (falls getragen), bei Bedarf das letzte Vorsorgezertifikat, eine Liste der aktuell eingenommenen Medikamente und ggf. aktuelle Befunde von Fachärzten. Bei strahlenschutzrelevanten Untersuchungen den Strahlenpass. Bei Folgeuntersuchungen die Vorsorgekartei-Bescheinigung der letzten Untersuchung.',
+  },
+  {
+    question: 'Wer trägt die Kosten der Vorsorgeuntersuchung?',
+    answer: 'Die Kosten der arbeitsmedizinischen Vorsorge nach ArbMedVV trägt grundsätzlich der Arbeitgeber. Die Untersuchungen finden während der Arbeitszeit statt und gelten als Arbeitszeit. Wir rechnen direkt mit Ihrem Unternehmen ab — die Beschäftigten haben mit Abrechnung und Bezahlung nichts zu tun.',
+  },
+];
+---
+
+<BaseLayout
+  title="Arbeitsmedizinische Vorsorge Bremen — G25, G37, G41 und weitere | Samedos"
+  description="Arbeitsmedizinische Vorsorgeuntersuchungen in Bremen für KMU — G25, G37, G41, G42, G46 und weitere DGUV-Grundsätze. Termine innerhalb von 1–2 Wochen, in der Praxis oder vor Ort."
+  alternateHref="/en/services/occupational-health-examinations"
+>
+
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Start",       "item": "https://samedos.de/" },
+        { "@type": "ListItem", "position": 2, "name": "Leistungen",  "item": "https://samedos.de/leistungen" },
+        { "@type": "ListItem", "position": 3, "name": "Arbeitsmedizinische Vorsorge", "item": "https://samedos.de/leistungen/arbeitsmedizinische-vorsorge" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "MedicalProcedure",
+      "name": "Arbeitsmedizinische Vorsorgeuntersuchung",
+      "alternateName": ["G-Untersuchung", "Vorsorgeuntersuchung", "DGUV-Vorsorge", "Occupational Health Examination"],
+      "procedureType": "https://schema.org/PreventativeProcedure",
+      "description": "Arbeitsmedizinische Vorsorgeuntersuchungen nach ArbMedVV und DGUV-Grundsätzen — G25 (Fahr-, Steuer-, Überwachungstätigkeit), G37 (Bildschirmarbeit), G41 (Absturzgefahr), G42 (Infektionsgefährdung), G46 (Muskel-Skelett-Belastung), G24 (Hauterkrankungen) und weitere.",
+      "performer": {
+        "@type": "MedicalBusiness",
+        "name": "Samedos Arbeitsmedizin",
+        "url": "https://samedos.de"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Bremen" },
+        { "@type": "City", "name": "Bremerhaven" },
+        { "@type": "City", "name": "Oldenburg" },
+        { "@type": "City", "name": "Delmenhorst" }
+      ]
+    })} />
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqs.map(f => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+      }))
+    })} />
+  </Fragment>
+
+  <!-- ═══ Hero ═══ -->
+  <section class="pt-20 pb-16" style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);">
+    <div class="max-w-[1200px] mx-auto px-6">
+
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="flex items-center gap-2 text-white/50 text-[0.82rem]">
+          <li><a href="/" class="hover:text-white/80 transition-colors">Start</a></li>
+          <li aria-hidden="true">›</li>
+          <li><a href="/leistungen" class="hover:text-white/80 transition-colors">Leistungen</a></li>
+          <li aria-hidden="true">›</li>
+          <li class="text-white/80" aria-current="page">Arbeitsmedizinische Vorsorge</li>
+        </ol>
+      </nav>
+
+      <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5" data-animate>
+        Vorsorge Bremen
+      </p>
+      <h1 class="text-[clamp(1.9rem,4vw,3rem)] text-white max-w-3xl leading-[1.15]" data-animate data-delay="1">
+        Arbeitsmedizinische Vorsorge in Bremen
+      </h1>
+      <p class="text-white/75 text-[1.1rem] mt-5 max-w-2xl" data-animate data-delay="2">
+        Vorsorgeuntersuchungen nach ArbMedVV und DGUV-Grundsätzen für mittelständische Unternehmen aus Bremen und Umgebung. Termine in der Praxis oder vor Ort.
+      </p>
+
+      <ul class="mt-8 space-y-2.5 max-w-2xl" data-animate data-delay="3">
+        {[
+          'Alle gängigen G-Untersuchungen — G25, G37, G41, G42, G46, G24 und weitere',
+          'Rechtssichere Dokumentation für Berufsgenossenschaft und Aufsicht',
+          'Direkt vor Ort bei Ihnen — Baustelle, Hafen, Büro, wo immer Sie uns brauchen',
+        ].map(item => (
+          <li class="flex items-start gap-3 text-white/85 text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0" aria-hidden="true"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div class="flex flex-wrap items-center gap-4 mt-9" data-animate data-delay="4">
+        <a
+          href="/kontakt?betreff=vorsorge#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Termin anfragen →
+        </a>
+        <a href="tel:+49421354366" class="text-white/75 hover:text-mint text-[0.95rem] transition-colors">
+          0421 354366 anrufen
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Was ist Vorsorge ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-10" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Grundlagen</p>
+        <h2 class="text-[1.7rem]">Was ist arbeitsmedizinische Vorsorge?</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="1">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Der Zweck</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Schutz der Beschäftigten vor arbeitsbedingten Erkrankungen. Frühzeitige Erkennung gesundheitlicher Risiken, individuelle Beratung — und Rechtssicherheit für den Arbeitgeber.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="2">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Die Rechtsgrundlage</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Geregelt durch die <strong class="text-navy">Verordnung zur arbeitsmedizinischen Vorsorge (ArbMedVV)</strong> in Verbindung mit dem Arbeitsschutzgesetz (ArbSchG). Der Arbeitgeber ist zuständig — die Durchführung erfolgt durch eine:n Arbeitsmediziner:in.
+          </p>
+        </div>
+        <div class="bg-white border border-border rounded-2xl p-6" data-animate data-delay="3">
+          <p class="font-heading font-semibold text-navy mb-2 text-[1rem]">Die Praxis</p>
+          <p class="text-muted text-[0.95rem] leading-relaxed">
+            Die meisten Untersuchungen folgen den <strong class="text-navy">DGUV-Grundsätzen</strong> (G-Untersuchungen). Bei Samedos führen wir alle gängigen durch — in der Praxis in Bremen-Findorff oder direkt vor Ort.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Pflicht-, Angebots- und Wunschvorsorge ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-6" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Drei Vorsorge-Arten</p>
+        <h2 class="text-[1.7rem]">Pflicht-, Angebots- und Wunschvorsorge — was ist der Unterschied?</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        Die ArbMedVV unterscheidet drei Arten der Vorsorge — je nachdem, wer sie veranlasst und ob sie Pflicht ist. Die richtige Einordnung ist für Ihre Compliance entscheidend.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {vorsorgeArten.map((art, i) => (
+          <div class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i + 1)}>
+            <p class="text-mint font-heading font-semibold text-[0.78rem] tracking-[0.14em] uppercase mb-2">{art.paragraph}</p>
+            <h3 class="text-[1.1rem] mb-3">{art.titel}</h3>
+            <p class="text-muted text-[0.92rem] leading-relaxed mb-4">{art.teaser}</p>
+            <p class="font-heading font-semibold text-navy text-[0.85rem] mb-2 mt-auto">Beispiele:</p>
+            <ul class="space-y-1.5 text-[0.88rem] text-muted">
+              {art.examples.map(ex => (
+                <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{ex}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-8 bg-mint-soft border border-mint/30 rounded-2xl p-6 flex gap-4 items-start" data-animate data-delay="4">
+        <span class="shrink-0 mt-0.5 w-9 h-9 rounded-full bg-mint/20 grid place-items-center" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+          </svg>
+        </span>
+        <p class="text-navy text-[0.95rem] leading-relaxed">
+          Sie sind sich nicht sicher, welche Vorsorge-Art für welche Tätigkeit in Ihrem Betrieb greift? Im <strong>kostenfreien Erstgespräch</strong> klären wir das gemeinsam und erstellen eine sauber dokumentierte Vorsorgeplanung für Ihr Unternehmen.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Top 6 G-Untersuchungen ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="mb-6" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">G-Untersuchung Bremen</p>
+        <h2 class="text-[1.7rem]">Unsere häufigsten G-Untersuchungen</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        Die DGUV-Grundsätze definieren rund 40 G-Untersuchungen für unterschiedliche Tätigkeitsfelder. Wir führen alle gängigen durch — hier eine Übersicht der häufigsten in Bremen und Umgebung.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {topGCodes.map((g, i) => (
+          <div class="bg-white border border-border rounded-2xl p-7 flex flex-col" data-animate data-delay={String(i % 3)}>
+            <div class="flex items-baseline gap-3 mb-3">
+              <span class="font-heading font-bold text-mint text-[1.4rem]">{g.code}</span>
+              <span class="text-muted text-[0.78rem] tracking-wide uppercase">Bremen</span>
+            </div>
+            <h3 class="text-[1.05rem] mb-3 leading-snug">{g.titel}</h3>
+            <p class="text-muted text-[0.92rem] leading-relaxed mb-5">{g.teaser}</p>
+            <p class="font-heading font-semibold text-navy text-[0.85rem] mb-2 mt-auto">Untersuchungsumfang:</p>
+            <ul class="space-y-1.5 text-[0.88rem] text-muted">
+              {g.items.map(item => (
+                <li class="flex items-start gap-3"><span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-mint shrink-0"></span>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Weitere G-Untersuchungen ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="mb-6" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">DGUV Vorsorge Bremen</p>
+        <h2 class="text-[1.7rem]">Weitere Vorsorgeuntersuchungen</h2>
+      </div>
+      <p class="text-muted text-[1rem] leading-relaxed mb-8 max-w-3xl" data-animate data-delay="1">
+        Neben den häufigsten G-Codes führen wir weitere arbeitsmedizinische Vorsorgeuntersuchungen durch. Hier eine Auswahl — bei Fragen zu spezifischen Tätigkeiten sprechen Sie uns gerne an.
+      </p>
+
+      <!-- Desktop table -->
+      <div class="hidden md:block bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay="2">
+        <table class="w-full text-left text-[0.92rem]">
+          <thead class="bg-bg-soft border-b border-border">
+            <tr>
+              <th class="px-6 py-3 font-heading font-semibold text-navy w-24">G-Code</th>
+              <th class="px-6 py-3 font-heading font-semibold text-navy">Bezeichnung</th>
+              <th class="px-6 py-3 font-heading font-semibold text-navy">Typische Branchen</th>
+            </tr>
+          </thead>
+          <tbody>
+            {weitereGCodes.map((g, i) => (
+              <tr class={i % 2 === 1 ? 'bg-bg-soft/40' : ''}>
+                <td class="px-6 py-3 font-heading font-bold text-mint">{g.code}</td>
+                <td class="px-6 py-3 text-navy">{g.bez}</td>
+                <td class="px-6 py-3 text-muted">{g.branchen}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="md:hidden space-y-3" data-animate data-delay="2">
+        {weitereGCodes.map(g => (
+          <div class="bg-white border border-border rounded-xl p-5">
+            <div class="flex items-baseline gap-3 mb-2">
+              <span class="font-heading font-bold text-mint text-[1.05rem]">{g.code}</span>
+              <span class="font-heading font-semibold text-navy text-[0.95rem] leading-snug">{g.bez}</span>
+            </div>
+            <p class="text-muted text-[0.85rem]">{g.branchen}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-muted text-[0.9rem] mt-6 max-w-3xl" data-animate data-delay="3">
+        Eine vollständige Liste finden Sie in der <a href="/preise#sonderuntersuchungen" class="text-mint hover:underline">Preisliste</a> oder fragen Sie direkt unverbindlich an.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ Ablauf ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1100px] mx-auto px-6">
+      <div class="text-center mb-12" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Ablauf</p>
+        <h2 class="text-[1.7rem]">Wie läuft eine Vorsorgeuntersuchung ab?</h2>
+      </div>
+      <ol class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {phases.map((p, i) => (
+          <li class="bg-white border border-border rounded-2xl p-6 flex flex-col" data-animate data-delay={String(i)}>
+            <div class="flex items-baseline justify-between mb-3">
+              <span class="font-heading font-bold text-mint text-[1.3rem]">{p.nr}</span>
+              <span class="text-muted text-[0.75rem] tracking-wide uppercase">{p.dauer}</span>
+            </div>
+            <p class="font-heading font-semibold text-navy text-[1.05rem] mb-2">Phase {p.nr.replace(/^0/, '')} — {p.titel}</p>
+            <p class="text-muted text-[0.9rem] leading-relaxed">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═══ Vor Ort beim Kunden ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[1000px] mx-auto px-6">
+      <div class="mb-8" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Vor Ort</p>
+        <h2 class="text-[1.7rem]">Vorsorgeuntersuchungen direkt bei Ihnen vor Ort</h2>
+      </div>
+      <p class="text-muted text-[1.02rem] leading-relaxed mb-8" data-animate data-delay="1">
+        Für größere Mitarbeiterzahlen oder logistisch komplexere Einsätze kommen wir direkt zu Ihnen — auf die Baustelle, in den Hafen, in die Werkhalle. Die Vor-Ort-Termine sparen Zeit, reduzieren Ausfall- und Anfahrtswege und werden von Mitarbeitenden meist sehr geschätzt.
+      </p>
+      <p class="font-heading font-semibold text-navy text-[1rem] mb-4">Typische Anwendungsfälle:</p>
+      <ul class="space-y-3" data-animate data-delay="2">
+        {[
+          'Baustellen-Crews (G25, G41, G42)',
+          'Hafen- und Werftarbeiter (G25, G41)',
+          'Größere Produktions-Schichten',
+          'Outdoor-Industrien (Windkraft-Wartung, Logistik)',
+        ].map(p => (
+          <li class="flex items-start gap-3 text-muted text-[0.97rem]">
+            <span class="mt-1.5 w-2 h-2 rounded-full bg-mint shrink-0"></span>{p}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ E-A-T / Dr. Janssen ═══ -->
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-12 items-start" data-animate>
+
+        <div class="rounded-3xl overflow-hidden aspect-[4/5] max-w-[340px] mx-auto lg:mx-0">
+          <img
+            src={optimizedSanityImage(doctor?.photo?.asset?.url, { width: 720, quality: 80 }) ?? '/images/team/joerg-janssen.png'}
+            alt={doctor?.photo?.alt ?? 'Dr. med. Jörg Janssen, Facharzt für Arbeitsmedizin in Bremen'}
+            class="w-full h-full object-cover object-top"
+            loading="lazy"
+          />
+        </div>
+
+        <div>
+          <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">Ihr Ansprechpartner</p>
+          <h2 class="text-[1.7rem] mb-4">Ihr Arbeitsmediziner für Vorsorgeuntersuchungen in Bremen</h2>
+
+          <p class="text-muted leading-relaxed mb-6">
+            {doctor?.bio ?? 'Dr. med. Jörg Janssen ist Facharzt für Arbeitsmedizin und Allgemeinmedizin mit über 20 Jahren Erfahrung in der arbeitsmedizinischen Betreuung von Unternehmen in Bremen und Umgebung — von Pflicht- und Angebotsvorsorge bis hin zu spezialisierten Untersuchungen.'}
+          </p>
+
+          <div class="bg-white border border-border rounded-2xl p-6 mb-6 space-y-5">
+
+            {vorsorgeQualifications.length > 0 && (
+              <div>
+                <p class="font-heading font-semibold text-navy mb-3 text-[0.95rem]">Vorsorge-relevante Qualifikationen</p>
+                <ul class="space-y-2">
+                  {vorsorgeQualifications.map((q) => (
+                    <li class="flex items-start gap-3 text-[0.88rem] text-muted">
+                      <span class="mt-1.5 w-2 h-2 bg-mint rounded-full shrink-0" aria-hidden="true"></span>
+                      <span>
+                        <strong class="text-navy font-medium">{q.titel}</strong>
+                        {(q.institution || q.jahr) && (
+                          <span class="text-muted"> — {[q.institution, q.jahr].filter(Boolean).join(', ')}</span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {doctor?.sprachen && doctor.sprachen.length > 0 && (
+              <div class="border-t border-border pt-4 flex flex-wrap gap-x-6 gap-y-1">
+                <p class="font-heading font-semibold text-navy text-[0.95rem] w-full mb-1">Sprachen</p>
+                {doctor.sprachen.map((s) => (
+                  <span class="text-muted text-[0.88rem]">{sprachenLabelsDE[s] ?? s}</span>
+                ))}
+              </div>
+            )}
+
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            {doctor?.slug?.current && (
+              <a
+                href={`/ueber-uns/${doctor.slug.current}`}
+                class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full border border-navy text-navy font-medium text-[0.9rem] transition-all hover:bg-navy hover:text-white"
+              >
+                Vollständige Qualifikationen ansehen →
+              </a>
+            )}
+            <a
+              href="/kontakt?betreff=vorsorge#anfrage"
+              class="inline-flex items-center gap-2 px-[18px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+            >
+              Vorsorgetermin anfragen →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section class="bg-bg-soft py-16">
+    <div class="max-w-[800px] mx-auto px-6">
+      <div class="mb-10 text-center" data-animate>
+        <p class="text-mint font-heading font-semibold text-[1rem] tracking-[0.14em] uppercase mb-3.5">FAQ</p>
+        <h2 class="text-[1.7rem]">Häufige Fragen zur arbeitsmedizinischen Vorsorge</h2>
+      </div>
+      <div class="space-y-3">
+        {faqs.map((faq, i) => (
+          <details class="group bg-white border border-border rounded-2xl overflow-hidden" data-animate data-delay={String(i % 4)}>
+            <summary class="flex items-center justify-between gap-4 px-6 py-4 cursor-pointer list-none font-heading font-semibold text-navy text-[0.97rem] hover:bg-bg-soft transition-colors select-none">
+              {faq.question}
+              <span class="shrink-0 w-6 h-6 rounded-full border border-border flex items-center justify-center text-mint transition-transform group-open:rotate-45" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 1v10M1 6h10"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="px-6 pb-5 pt-1 text-muted text-[0.95rem] leading-relaxed border-t border-border">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cross-Links zu anderen Services ═══ -->
+  <ServiceCrossLinks current="vorsorge" lang="de" />
+
+  <!-- ═══ CTA ═══ -->
+  <section class="max-w-[1200px] mx-auto px-6 py-20">
+    <div
+      class="relative rounded-[28px] px-8 sm:px-12 py-12 sm:py-14 text-center overflow-hidden text-white"
+      style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+      data-animate
+    >
+      <div
+        class="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full pointer-events-none"
+        style="background: radial-gradient(circle, rgba(100,197,174,.25), transparent 70%);"
+        aria-hidden="true"
+      ></div>
+      <h2 class="text-white text-[clamp(1.5rem,2.6vw,2rem)] mb-4">Termine in der Regel innerhalb von 1–2 Wochen</h2>
+      <p class="text-white/80 max-w-[640px] mx-auto mb-8">
+        Sprechen Sie uns an — wir koordinieren Vorsorgetermine schnell und unkompliziert. Einzelne Beschäftigte oder ganze Crews, in der Praxis oder vor Ort.
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a
+          href="/kontakt?betreff=vorsorge#anfrage"
+          class="inline-flex items-center gap-2 px-[24px] py-3.5 rounded-full bg-mint text-navy font-bold text-[0.97rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+        >
+          Termin anfragen →
+        </a>
+        <a
+          href="tel:+49421354366"
+          class="inline-flex items-center gap-2 px-[22px] py-3.5 rounded-full border-[1.5px] border-white/70 text-white font-medium text-[0.97rem] transition-all hover:bg-white hover:text-navy"
+        >
+          0421 354366 anrufen
+        </a>
+      </div>
+      <p class="text-white/50 text-[0.85rem] mt-7">
+        Wir betreuen Unternehmen in Bremen, Bremerhaven, Oldenburg, Delmenhorst und Umgebung.
+      </p>
+    </div>
+  </section>
+
+</BaseLayout>

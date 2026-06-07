@@ -1,14 +1,16 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ValueCard from '../../components/ValueCard.astro';
-import { getTeamMemberBySlug } from '../../sanity/client';
-const heroSrc = '/Titelbild.png';
+import { Image } from 'astro:assets';
+import { getTeamMemberBySlug, optimizedSanityImage } from '../../sanity/client';
+import heroSrc from '../../assets/images/hero/Titelbild.png';
 const heroAlt = 'The Samedos team';
 
 const janssen = await getTeamMemberBySlug('dr-joerg-janssen');
-const janssenPhoto = janssen?.photoAlt?.asset?.url
-  ?? janssen?.photo?.asset?.url
-  ?? '/images/team/joerg-janssen.png';
+const janssenPhoto = optimizedSanityImage(
+    janssen?.photoAlt?.asset?.url ?? janssen?.photo?.asset?.url,
+    { width: 880, quality: 80 },
+  ) ?? '/images/team/joerg-janssen.png';
 const janssenPhotoAlt = janssen?.photoAlt?.alt ?? janssen?.photo?.alt ?? 'Dr. med. Jörg Janssen';
 
 const values = [
@@ -99,7 +101,7 @@ const values = [
           </p>
           <div class="flex gap-4 flex-wrap" data-animate data-delay="4">
             <a
-              href="/en/contact"
+              href="/en/contact#anfrage"
               class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
             >
               Book appointment →
@@ -120,15 +122,17 @@ const values = [
         </div>
 
         <div class="relative rounded-3xl overflow-hidden aspect-[4/5] max-w-[440px] mx-auto lg:mx-0 lg:max-w-none shadow-[0_20px_60px_rgba(20,43,73,.2)]" data-animate data-delay="2">
-          <img
+          <Image
             src={heroSrc}
             alt={heroAlt}
-            class="w-full h-full object-cover"
+            widths={[440, 720, 1080]}
+            sizes="(max-width: 1024px) 440px, 540px"
+            formats={['avif', 'webp']}
+            quality={80}
             loading="eager"
-            fetchpriority="high"
             decoding="async"
-            width="880"
-            height="1100"
+            fetchpriority="high"
+            class="w-full h-full object-cover"
           />
         </div>
 
@@ -263,7 +267,7 @@ const values = [
           Offshore medical details →
         </a>
         <a
-          href="/en/contact"
+          href="/en/contact#anfrage"
           class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border-[1.5px] border-white text-white font-medium text-[0.95rem] transition-all hover:bg-white hover:text-navy"
         >
           Book appointment

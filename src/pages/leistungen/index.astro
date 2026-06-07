@@ -4,6 +4,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const categories = [
   {
     number: '01.',
+    subjectKey: 'vorsorge',
+    detailHref: '/leistungen/arbeitsmedizinische-vorsorge',
     title: 'Arbeitsmedizinische Vorsorge',
     description:
       'Gesetzlich vorgeschriebene Untersuchungen und Beratung nach ASiG und DGUV Vorschrift 2 — für Unternehmen jeder Größe.',
@@ -18,20 +20,8 @@ const categories = [
   },
   {
     number: '02.',
-    title: 'Betriebliches Gesundheitsmanagement',
-    description:
-      'Ganzheitliche Konzepte zur langfristigen Gesunderhaltung Ihrer Belegschaft — von der Analyse bis zur Umsetzung.',
-    items: [
-      'Betriebliches Eingliederungsmanagement (BEM)',
-      'BGM-Konzepte & Gesundheitsförderung',
-      'Impfberatung & Betriebsimpfungen',
-      'Ergonomie am Arbeitsplatz',
-      'Suchtberatung',
-      'Erste-Hilfe-Ausbildung (Koordination)',
-    ],
-  },
-  {
-    number: '03.',
+    subjectKey: 'offshore',
+    detailHref: '/leistungen/offshore-untersuchung',
     title: 'Spezialuntersuchungen',
     description:
       'Fachuntersuchungen für besondere Tätigkeiten und Branchen — national wie international anerkannt.',
@@ -45,15 +35,35 @@ const categories = [
     ],
   },
   {
-    number: '04.',
-    title: 'Psychologische Betreuung & Beratung',
+    number: '03.',
+    subjectKey: 'bgm',
+    detailHref: '/leistungen/betriebliches-gesundheitsmanagement',
+    title: 'Betriebliches Gesundheitsmanagement',
     description:
-      'Ergänzende Leistungen rund um mentale Gesundheit, Work-Life-Balance und Auslandseinsätze.',
+      'Ganzheitliche Konzepte zur langfristigen Gesunderhaltung Ihrer Belegschaft — von der Analyse bis zur Umsetzung.',
     items: [
-      'Psychosomatische Grundversorgung',
-      'Psychologische & familienzentrierte Beratung',
-      'Reiseimpfberatung',
-      'Akupunktur',
+      'Betriebliches Eingliederungsmanagement (BEM)',
+      'BGM-Konzepte & Gesundheitsförderung',
+      'Impfberatung & Betriebsimpfungen',
+      'Ergonomie am Arbeitsplatz',
+      'Suchtberatung',
+      'Erste-Hilfe-Ausbildung (Koordination)',
+    ],
+  },
+  {
+    number: '04.',
+    subjectKey: 'psychologie',
+    detailHref: '/leistungen/psychologische-beratung',
+    title: 'Psychologische Beratung & Coaching',
+    description:
+      'Niederschwellige Unterstützung bei Stress, Belastung und beruflicher Veränderung — vertraulich, methodisch fundiert, mit arbeitsmedizinischem Hintergrund.',
+    items: [
+      'Stress, Belastung & Burnout-Prävention',
+      'BEM-Begleitung & Wiedereingliederung',
+      'Coaching bei beruflichen Krisen',
+      'Personzentriertes, systemisches und wingwave®-Coaching',
+      'Krisenintervention nach belastenden Ereignissen',
+      'Vertraulich unter ärztlicher Schweigepflicht',
     ],
   },
 ];
@@ -103,19 +113,17 @@ const categories = [
             <p class="text-muted">{cat.description}</p>
             <div class="flex flex-wrap gap-3 mt-6">
               <a
-                href="/kontakt"
+                href={`/kontakt?betreff=${cat.subjectKey}#anfrage`}
                 class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-navy text-white font-medium text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(20,43,73,.25)]"
               >
                 Jetzt anfragen →
               </a>
-              {cat.number === '03.' && (
-                <a
-                  href="/leistungen/offshore-untersuchung"
-                  class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border border-navy text-navy font-medium text-[0.95rem] transition-all hover:bg-navy hover:text-white"
-                >
-                  Offshore-Untersuchung →
-                </a>
-              )}
+              <a
+                href={cat.detailHref}
+                class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full border border-navy text-navy font-medium text-[0.95rem] transition-all hover:bg-navy hover:text-white"
+              >
+                Mehr erfahren →
+              </a>
             </div>
           </div>
           <div class={`bg-white border border-border rounded-2xl p-8 ${i % 2 === 1 ? 'lg:[direction:ltr]' : ''}`}>
@@ -149,7 +157,7 @@ const categories = [
         Wir beraten Sie gerne — unverbindlich und kostenlos. Nehmen Sie einfach Kontakt auf.
       </p>
       <a
-        href="/kontakt"
+        href="/kontakt#anfrage"
         class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
       >
         Kontakt aufnehmen →
