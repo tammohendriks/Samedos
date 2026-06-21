@@ -1,0 +1,102 @@
+---
+interface Props {
+  lang?: 'de' | 'en';
+  /** Falls die Map mehrfach auf einer Seite eingebaut würde — eindeutiger
+   *  Identifier. Default reicht für ein single-instance pro Seite. */
+  id?: string;
+}
+
+const { lang = 'de', id = 'maps' } = Astro.props;
+const isEN = lang === 'en';
+
+const mapSrc = 'https://maps.google.com/maps?q=Timmersloher+Stra%C3%9Fe+82,+28215+Bremen&output=embed';
+const t = isEN
+  ? {
+      heading:     'Load map',
+      body:        'Loading the map will establish a connection to Google Maps. Technical data (including your IP address) will be transmitted to Google. More information in our',
+      privacy:     'privacy policy',
+      privacyHref: '/en/privacy',
+      cta:         'Show map',
+      iframeTitle: 'Samedos location on Google Maps',
+    }
+  : {
+      heading:     'Karte laden',
+      body:        'Beim Laden der Karte wird eine Verbindung zu Google Maps hergestellt. Dabei werden technische Daten (u. a. Ihre IP-Adresse) an Google übertragen. Weitere Informationen in unserer',
+      privacy:     'Datenschutzerklärung',
+      privacyHref: '/datenschutz',
+      cta:         'Karte anzeigen',
+      iframeTitle: 'Samedos Standort auf Google Maps',
+    };
+---
+
+<div
+  class="rounded-2xl overflow-hidden border border-border shadow-sm h-[420px] relative"
+  data-maps-container
+  data-maps-id={id}
+  data-maps-src={mapSrc}
+  data-maps-title={t.iframeTitle}
+>
+  <div
+    data-maps-placeholder
+    class="absolute inset-0 flex flex-col items-center justify-center gap-5 p-8 text-center"
+    style="background: linear-gradient(135deg, #142B49 0%, #29466B 100%);"
+  >
+    <div class="w-14 h-14 rounded-full bg-mint/20 grid place-items-center" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#64C5AE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 21s-7-5-7-11a7 7 0 0114 0c0 6-7 11-7 11z"/><circle cx="12" cy="10" r="3"/>
+      </svg>
+    </div>
+    <div>
+      <p class="text-white font-heading font-bold text-[1.1rem] mb-2">{t.heading}</p>
+      <p class="text-white/70 text-[0.88rem] max-w-md leading-relaxed">
+        {t.body}{' '}
+        <a href={t.privacyHref} class="text-mint hover:underline">{t.privacy}</a>.
+      </p>
+    </div>
+    <button
+      type="button"
+      data-maps-load
+      class="inline-flex items-center gap-2 px-[22px] py-3 rounded-full bg-mint text-navy font-bold text-[0.95rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)]"
+    >
+      {t.cta}
+    </button>
+  </div>
+</div>
+
+<script>
+  function initMapsLoaders() {
+    document.querySelectorAll<HTMLElement>('[data-maps-container]').forEach((container) => {
+      if (container.dataset.inited === 'true') return;
+      container.dataset.inited = 'true';
+
+      const loadBtn     = container.querySelector<HTMLButtonElement>('[data-maps-load]');
+      const placeholder = container.querySelector<HTMLElement>('[data-maps-placeholder]');
+      if (!loadBtn || !placeholder) return;
+
+      const src   = container.dataset.mapsSrc   ?? '';
+      const title = container.dataset.mapsTitle ?? 'Map';
+
+      loadBtn.addEventListener('click', () => {
+        const iframe = document.createElement('iframe');
+        iframe.src = src;
+        iframe.width = '100%';
+        iframe.height = '100%';
+        iframe.style.border = '0';
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.loading = 'lazy';
+        iframe.referrerPolicy = 'no-referrer-when-downgrade';
+        iframe.title = title;
+
+        placeholder.style.opacity = '0';
+        placeholder.style.transition = 'opacity 300ms ease';
+        setTimeout(() => {
+          placeholder.remove();
+          container.appendChild(iframe);
+        }, 300);
+      });
+    });
+  }
+
+  initMapsLoaders();
+  document.addEventListener('astro:after-swap', initMapsLoaders);
+</script>

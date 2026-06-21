@@ -8,36 +8,146 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   lang="en"
   alternateHref="/datenschutz"
 >
-  <div class="max-w-[800px] mx-auto px-6 py-24 space-y-10">
+  <div class="max-w-[800px] mx-auto px-6 py-24 space-y-12 [&_h2]:text-[1.4rem] [&_h2]:mb-4 [&_a]:text-mint [&_a:hover]:underline [&_strong]:text-navy">
+
     <div>
       <h1>Privacy Policy</h1>
-      <p class="text-muted mt-4">The full privacy policy will be added shortly.</p>
+      <p class="text-muted mt-4">
+        This privacy policy explains which personal data is processed when you visit our website
+        and on what legal basis. A full legal privacy policy will be added in due course; for any
+        questions please contact us at <a href="mailto:info@samedos.de">info@samedos.de</a>.
+      </p>
     </div>
 
     <section>
-      <h2 class="text-[1.4rem] mb-4">Google Maps / Street View (360° Tour)</h2>
+      <h2>Website Hosting</h2>
       <div class="space-y-4 text-muted leading-relaxed">
         <p>
-          On <a href="/en/tour" class="text-mint hover:underline">/en/tour</a> we offer a virtual 360°
-          tour of our practice. For this we use an embedding service provided by Google Ireland Limited
-          (Gordon House, Barrow Street, Dublin 4, Ireland).
+          Our website is hosted by <strong>Vercel Inc.</strong>, 440 N Barranca Avenue #4133,
+          Covina, CA 91723, USA. Vercel operates servers in the European Union for our website.
         </p>
         <p>
-          <strong class="text-navy">Important:</strong> The tour is loaded <strong class="text-navy">only after your explicit consent</strong>.
-          A connection to Google servers is established only when you click the "Start tour" button.
-          Technical data is then transmitted, in particular your IP address, browser and device
-          information, and the URL you are visiting. Google may also transfer this data to third
-          countries, in particular the United States.
+          When you visit our site, technical data (IP address, browser type, requested URL,
+          date/time) is automatically transmitted to Vercel and briefly stored in server logs.
+          This is technically required to deliver the website.
         </p>
         <p>
-          <strong class="text-navy">Legal basis:</strong> Art. 6 (1) (a) GDPR (consent). You may withdraw
-          your consent at any time by closing or leaving the page.
+          <strong>Legal basis:</strong> Art. 6(1)(f) GDPR (legitimate interest in error-free,
+          secure operation). The data transfer to the US is based on the Standard Contractual
+          Clauses under Art. 46 GDPR and our data processing agreement with Vercel.
         </p>
         <p>
-          For more information, see Google's privacy policy:
-          <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank" class="text-mint hover:underline">policies.google.com/privacy</a>.
+          More information:
+          <a href="https://vercel.com/legal/privacy-policy" rel="noopener noreferrer" target="_blank">vercel.com/legal/privacy-policy</a>
         </p>
       </div>
     </section>
+
+    <section>
+      <h2>Content Management (CMS)</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          Our website content is managed via <strong>Sanity AS</strong>, Strandgaten 6, 5013
+          Bergen, Norway.
+        </p>
+        <p>
+          Sanity stores and delivers website content (texts, images, job postings). No personal
+          data of website visitors is collected.
+        </p>
+        <p>
+          <strong>Legal basis:</strong> Art. 6(1)(f) GDPR. A data processing agreement is in
+          place.
+        </p>
+        <p>
+          More information:
+          <a href="https://www.sanity.io/legal/privacy" rel="noopener noreferrer" target="_blank">sanity.io/legal/privacy</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Contact Form &amp; Email Delivery</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          When you use our contact form, the data you provide (name, email, optional phone,
+          company name, message) is processed to handle your enquiry. Technical email delivery
+          is handled by <strong>Resend, Inc.</strong>, 2261 Market Street #4382, San Francisco,
+          CA 94114, USA.
+        </p>
+        <p>
+          Resend forwards messages to our practice email and sends you an automated confirmation.
+          Data transfer to the US is based on the Standard Contractual Clauses under Art. 46
+          GDPR.
+        </p>
+        <p>
+          <strong>Legal basis:</strong> Art. 6(1)(b) GDPR (request handling) and Art. 6(1)(a)
+          GDPR (your explicit consent by submitting the form).
+        </p>
+        <p>
+          <strong>Retention:</strong> Enquiries are kept for as long as needed to handle them;
+          Resend stores technical delivery logs for max. 30 days.
+        </p>
+        <p>
+          More information:
+          <a href="https://resend.com/legal/privacy-policy" rel="noopener noreferrer" target="_blank">resend.com/legal/privacy-policy</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Google Maps (Click-to-Load)</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          On our contact page (<a href="/en/contact">/en/contact</a>) we show our location via a
+          Google Maps view. Additionally, on <a href="/en/tour">/en/tour</a> we offer a virtual
+          360° tour via Google Street View. Both services are provided by
+          <strong>Google Ireland Limited</strong>, Gordon House, Barrow Street, Dublin 4,
+          Ireland.
+        </p>
+        <p>
+          <strong>Important:</strong> The map / tour is loaded <strong>only after your explicit
+          consent</strong>. Only when you click the "Show map" or "Start tour" button is a
+          connection to Google servers established. At that point, technical data — including
+          your IP address, browser and device information, and the page visited — is transmitted
+          to Google. Google may forward this data to third countries, especially the United
+          States.
+        </p>
+        <p>
+          No data is transferred to Google before your consent.
+        </p>
+        <p>
+          <strong>Legal basis:</strong> Art. 6(1)(a) GDPR (consent). You may revoke your consent
+          at any time by closing or leaving the page.
+        </p>
+        <p>
+          More information:
+          <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">policies.google.com/privacy</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Local Storage</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          Our website uses your browser's local storage for a single technical function:
+        </p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Dismissed notifications:</strong> when you dismiss our "We are hiring"
+            notice, we remember this for 7 days so the notice doesn't reappear.
+          </li>
+        </ul>
+        <p>
+          This data is stored only locally in your browser and is never transmitted to us or to
+          third parties. You can delete this data at any time via your browser settings.
+        </p>
+        <p>
+          <strong>Legal basis:</strong> Art. 6(1)(f) GDPR (legitimate interest in functionality
+          and comfort).
+        </p>
+      </div>
+    </section>
+
   </div>
 </BaseLayout>

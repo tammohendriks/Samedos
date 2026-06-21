@@ -7,36 +7,155 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Datenschutzerklärung der Samedos GmbH gemäß DSGVO."
   alternateHref="/en/privacy"
 >
-  <div class="max-w-[800px] mx-auto px-6 py-24 space-y-10">
+  <div class="max-w-[800px] mx-auto px-6 py-24 space-y-12 [&_h2]:text-[1.4rem] [&_h2]:mb-4 [&_a]:text-mint [&_a:hover]:underline [&_strong]:text-navy">
+
     <div>
       <h1>Datenschutzerklärung</h1>
-      <p class="text-muted mt-4">Die vollständige Datenschutzerklärung wird ergänzt.</p>
+      <p class="text-muted mt-4">
+        Diese Datenschutzerklärung informiert Sie darüber, welche personenbezogenen Daten beim
+        Besuch unserer Website verarbeitet werden — und auf welcher Rechtsgrundlage. Eine
+        vollständige juristische Datenschutzerklärung wird ergänzt; bei Fragen kontaktieren Sie
+        uns gerne unter <a href="mailto:info@samedos.de">info@samedos.de</a>.
+      </p>
     </div>
 
     <section>
-      <h2 class="text-[1.4rem] mb-4">Google Maps / Street View (360°-Rundgang)</h2>
+      <h2>Hosting und Bereitstellung der Website</h2>
       <div class="space-y-4 text-muted leading-relaxed">
         <p>
-          Auf der Seite <a href="/rundgang" class="text-mint hover:underline">/rundgang</a> bieten wir
-          Ihnen einen virtuellen 360°-Rundgang durch unsere Praxis an. Dafür nutzen wir einen
-          Einbettungs-Dienst der Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland).
+          Unsere Website wird gehostet durch <strong>Vercel Inc.</strong>, 440 N Barranca Avenue
+          #4133, Covina, CA 91723, USA. Vercel betreibt für unsere Website Server in der
+          Europäischen Union.
         </p>
         <p>
-          <strong class="text-navy">Wichtig:</strong> Die Einbindung erfolgt <strong class="text-navy">nur nach Ihrer ausdrücklichen Zustimmung</strong>.
-          Erst wenn Sie auf den Button „Rundgang starten" klicken, wird eine Verbindung zu Google-Servern
-          aufgebaut. Dabei werden technische Daten übertragen, insbesondere Ihre IP-Adresse, Browser-
-          und Geräteinformationen sowie die aufgerufene Seite. Google kann diese Daten auch in Drittländer,
-          insbesondere in die USA, übermitteln.
+          Bei jedem Aufruf der Website werden technische Daten (IP-Adresse, Browsertyp,
+          aufgerufene URL, Datum/Uhrzeit) automatisch an Vercel übermittelt und kurzzeitig in
+          Server-Logs verarbeitet. Dies ist technisch erforderlich, um die Website bereitzustellen.
         </p>
         <p>
-          <strong class="text-navy">Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).
-          Sie können Ihre Einwilligung jederzeit durch Schließen oder Verlassen der Seite widerrufen.
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an
+          einer technisch fehlerfreien Darstellung und Sicherheit unserer Website). Der
+          Datentransfer in die USA erfolgt auf Basis der Standardvertragsklauseln nach Art. 46
+          DSGVO sowie unseres Auftragsverarbeitungsvertrags mit Vercel.
         </p>
         <p>
-          Weitere Informationen finden Sie in Googles Datenschutzerklärung:
-          <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank" class="text-mint hover:underline">policies.google.com/privacy</a>.
+          Weitere Informationen:
+          <a href="https://vercel.com/legal/privacy-policy" rel="noopener noreferrer" target="_blank">vercel.com/legal/privacy-policy</a>
         </p>
       </div>
     </section>
+
+    <section>
+      <h2>Inhaltsverwaltung (CMS)</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          Für die Verwaltung der Inhalte unserer Website nutzen wir <strong>Sanity AS</strong>,
+          Strandgaten 6, 5013 Bergen, Norwegen.
+        </p>
+        <p>
+          Sanity speichert und liefert die Inhalte unserer Website (z. B. Texte, Bilder,
+          Stellenanzeigen). Personenbezogene Daten von Website-Besucher:innen werden hierbei
+          nicht erhoben.
+        </p>
+        <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO. Auftragsverarbeitungsvertrag
+          liegt vor.
+        </p>
+        <p>
+          Weitere Informationen:
+          <a href="https://www.sanity.io/legal/privacy" rel="noopener noreferrer" target="_blank">sanity.io/legal/privacy</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Kontaktformular und E-Mail-Versand</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          Bei Nutzung des Kontaktformulars werden die von Ihnen angegebenen Daten (Name,
+          E-Mail-Adresse, ggf. Telefonnummer, Unternehmensname und Nachricht) zur Bearbeitung
+          Ihrer Anfrage verarbeitet. Der technische Versand der E-Mail erfolgt über
+          <strong>Resend, Inc.</strong>, 2261 Market Street #4382, San Francisco, CA 94114, USA.
+        </p>
+        <p>
+          Resend leitet die Nachrichten an unsere Praxis-E-Mail-Adresse weiter und versendet
+          automatisierte Empfangsbestätigungen an Sie zurück. Der Datentransfer in die USA
+          erfolgt auf Basis der Standardvertragsklauseln nach Art. 46 DSGVO.
+        </p>
+        <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Anbahnung / Erfüllung
+          einer Anfrage) sowie Art. 6 Abs. 1 lit. a DSGVO (Ihre ausdrückliche Einwilligung durch
+          Absenden des Formulars).
+        </p>
+        <p>
+          <strong>Speicherdauer:</strong> Anfragen werden in der Praxis solange aufbewahrt, wie
+          zur Bearbeitung erforderlich; Resend speichert technische Versand-Logs für maximal 30
+          Tage.
+        </p>
+        <p>
+          Weitere Informationen:
+          <a href="https://resend.com/legal/privacy-policy" rel="noopener noreferrer" target="_blank">resend.com/legal/privacy-policy</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Google Maps (Klick-zum-Laden)</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          Auf unserer Kontaktseite (<a href="/kontakt">/kontakt</a>) zeigen wir unseren Standort
+          per Google-Maps-Karte. Zusätzlich bieten wir auf der Seite
+          <a href="/rundgang">/rundgang</a> einen virtuellen 360°-Rundgang über Google
+          Street View an. Beide Dienste werden betrieben durch <strong>Google Ireland Limited</strong>,
+          Gordon House, Barrow Street, Dublin 4, Irland.
+        </p>
+        <p>
+          <strong>Wichtig:</strong> Die Einbindung erfolgt <strong>nur nach Ihrer ausdrücklichen
+          Zustimmung</strong>. Erst wenn Sie auf den Button „Karte anzeigen" bzw. „Rundgang
+          starten" klicken, wird eine Verbindung zu Google-Servern aufgebaut. Dabei werden
+          technische Daten — insbesondere Ihre IP-Adresse, Browser- und Geräteinformationen
+          sowie die aufgerufene Seite — an Google übermittelt. Google kann diese Daten auch in
+          Drittländer, insbesondere in die USA, übermitteln.
+        </p>
+        <p>
+          Vor Ihrer Zustimmung werden keinerlei Daten an Google übertragen.
+        </p>
+        <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. a DSGVO (Einwilligung). Sie können
+          Ihre Einwilligung jederzeit durch Schließen oder Verlassen der Seite widerrufen.
+        </p>
+        <p>
+          Weitere Informationen:
+          <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">policies.google.com/privacy</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Lokale Speicherung (LocalStorage)</h2>
+      <div class="space-y-4 text-muted leading-relaxed">
+        <p>
+          Unsere Website nutzt den lokalen Speicher Ihres Browsers (LocalStorage) für eine
+          rein technische Funktion:
+        </p>
+        <ul class="list-disc pl-6 space-y-2">
+          <li>
+            <strong>Ausblendung von Hinweisen:</strong> Sobald Sie unseren „Wir stellen
+            ein"-Hinweis ausblenden, merken wir uns das für 7 Tage, damit der Hinweis nicht
+            erneut erscheint.
+          </li>
+        </ul>
+        <p>
+          Diese Daten werden ausschließlich lokal in Ihrem Browser gespeichert und nicht an uns
+          oder Dritte übertragen. Sie können die Daten jederzeit über die Einstellungen Ihres
+          Browsers löschen.
+        </p>
+        <p>
+          <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an
+          Funktion und Komfort).
+        </p>
+      </div>
+    </section>
+
   </div>
 </BaseLayout>
