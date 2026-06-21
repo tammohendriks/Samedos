@@ -1,0 +1,104 @@
+---
+interface Props {
+  lang?: 'de' | 'en';
+}
+
+const { lang = 'de' } = Astro.props;
+
+const texts = {
+  de: {
+    label:       'Wir stellen ein',
+    sublabel:    'Verstärkung für unser Team gesucht',
+    href:        '/karriere#stellen',
+    aria:        'Zu den offenen Stellen',
+    dismissAria: 'Hinweis ausblenden',
+  },
+  en: {
+    label:       'We are hiring',
+    sublabel:    'Join our team in Bremen',
+    href:        '/karriere#stellen',
+    aria:        'View open positions',
+    dismissAria: 'Dismiss notification',
+  },
+};
+
+const t = texts[lang];
+---
+
+<div
+  id="hiring-notification"
+  class="fixed bottom-5 right-5 z-40 opacity-0 translate-y-2 pointer-events-none transition-all duration-500 max-w-[calc(100vw-2.5rem)]"
+  data-hiring-tab
+>
+  <div class="flex items-stretch bg-mint shadow-[0_8px_32px_rgba(20,43,73,.18)] rounded-full overflow-hidden hover:shadow-[0_12px_40px_rgba(20,43,73,.28)] hover:-translate-y-px transition-all">
+    <a
+      href={t.href}
+      aria-label={t.aria}
+      class="flex items-center gap-3 pl-5 pr-4 py-3 group"
+    >
+      <span class="w-8 h-8 rounded-full bg-navy/10 grid place-items-center shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M20 7h-3V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM9 5h6v2H9z"/>
+        </svg>
+      </span>
+      <span class="flex flex-col leading-tight">
+        <span class="font-heading font-bold text-navy text-[0.92rem]">{t.label}</span>
+        <span class="text-navy/70 text-[0.72rem] hidden sm:block">{t.sublabel}</span>
+      </span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="ml-1 transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+    <button
+      data-hiring-dismiss
+      type="button"
+      aria-label={t.dismissAria}
+      class="px-3 border-l border-navy/10 text-navy/60 hover:text-navy hover:bg-navy/5 transition-colors shrink-0"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  function initHiringTab() {
+    const tab = document.querySelector<HTMLElement>('[data-hiring-tab]');
+    if (!tab || tab.dataset.inited === 'true') return;
+    tab.dataset.inited = 'true';
+
+    const dismiss = tab.querySelector<HTMLElement>('[data-hiring-dismiss]');
+
+    const KEY = 'samedos-hiring-dismissed-until';
+    const dismissedUntil = parseInt(localStorage.getItem(KEY) ?? '0', 10);
+    const now = Date.now();
+
+    // 7-day snooze after dismiss
+    if (dismissedUntil > now) {
+      tab.remove();
+      return;
+    }
+
+    // Don't show on the careers page — would be redundant
+    if (location.pathname.includes('/karriere')) {
+      tab.remove();
+      return;
+    }
+
+    // Gentle entrance after 800 ms
+    setTimeout(() => {
+      tab.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+    }, 800);
+
+    dismiss?.addEventListener('click', () => {
+      tab.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+      localStorage.setItem(KEY, String(now + sevenDays));
+      setTimeout(() => tab.remove(), 500);
+    });
+  }
+
+  initHiringTab();
+  document.addEventListener('astro:after-swap', initHiringTab);
+</script>
