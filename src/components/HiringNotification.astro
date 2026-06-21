@@ -86,10 +86,39 @@ const t = texts[lang];
       return;
     }
 
-    // Gentle entrance after 800 ms
-    setTimeout(() => {
-      tab.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
-    }, 800);
+    let isShown = false;
+
+    function show() {
+      if (isShown) return;
+      isShown = true;
+      tab!.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+    }
+
+    // Trigger when the user has scrolled past 50% of the viewport height.
+    // Keeps the hero CTAs unobstructed on mobile until the user is past them.
+    const threshold = () => window.innerHeight * 0.5;
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (window.scrollY >= threshold()) {
+          show();
+          window.removeEventListener('scroll', onScroll);
+        }
+        ticking = false;
+      });
+    }
+
+    // Anchor-deep-link case: page may load already scrolled past the threshold
+    if (window.scrollY >= threshold()) {
+      show();
+    } else {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      // Fallback for very short pages where the user can't physically scroll 50%
+      setTimeout(show, 8000);
+    }
 
     dismiss?.addEventListener('click', () => {
       tab.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
