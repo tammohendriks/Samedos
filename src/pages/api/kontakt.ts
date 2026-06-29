@@ -113,7 +113,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   }
 
-  if (!vorname || !nachname || !email || !betreff || !nachricht) {
+  if (!vorname || !nachname || !email || !unternehmen || !betreff || !nachricht) {
     return new Response(JSON.stringify({ ok: false, error: 'Pflichtfelder fehlen.' }), { status: 400 });
   }
 
