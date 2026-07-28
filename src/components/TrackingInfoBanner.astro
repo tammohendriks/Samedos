@@ -1,0 +1,112 @@
+---
+interface Props {
+  lang?: 'de' | 'en';
+}
+
+const { lang = 'de' } = Astro.props;
+
+const texts = {
+  de: {
+    body:         'Diese Website verwendet keine Cookies und keine Tracking-Tools. Wir werten lediglich anonyme Server-Logs unseres Hosting-Anbieters aus.',
+    detailsLabel: 'Details',
+    detailsHref:  '/datenschutz',
+    understood:   'Verstanden',
+    aria:         'Datenschutz-Info',
+  },
+  en: {
+    body:         'This website uses no cookies and no tracking tools. We only analyse anonymised server logs from our hosting provider.',
+    detailsLabel: 'Details',
+    detailsHref:  '/en/privacy',
+    understood:   'Understood',
+    aria:         'Privacy information',
+  },
+};
+
+const t = texts[lang];
+---
+
+<aside
+  data-tracking-banner
+  role="region"
+  aria-label={t.aria}
+  class="fixed inset-x-0 bottom-0 z-50 opacity-0 translate-y-4 pointer-events-none transition-all duration-500"
+>
+  <div class="max-w-[900px] mx-auto m-4">
+    <div class="bg-white border border-border rounded-2xl shadow-[0_16px_48px_rgba(20,43,73,.15)] p-5 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+
+        <div class="flex items-start gap-3.5 flex-1 min-w-0">
+          <span class="w-10 h-10 rounded-full bg-mint/20 grid place-items-center shrink-0" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#142B49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </span>
+          <p class="text-navy text-[0.9rem] leading-relaxed">
+            {t.body}{' '}
+            <a href={t.detailsHref} class="text-navy underline underline-offset-2 hover:text-mint transition-colors">
+              {t.detailsLabel}
+            </a>.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          data-tracking-banner-dismiss
+          class="inline-flex items-center justify-center px-[22px] py-2.5 rounded-full bg-mint text-navy font-bold text-[0.9rem] transition-all hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(100,197,174,.35)] shrink-0"
+        >
+          {t.understood}
+        </button>
+
+      </div>
+    </div>
+  </div>
+</aside>
+
+<script>
+  function initTrackingBanner() {
+    const banner = document.querySelector<HTMLElement>('[data-tracking-banner]');
+    if (!banner || banner.dataset.inited === 'true') return;
+    banner.dataset.inited = 'true';
+
+    const dismissBtn = banner.querySelector<HTMLElement>('[data-tracking-banner-dismiss]');
+    const KEY = 'samedos-tracking-info-seen-v1';
+
+    const HIDDEN = ['opacity-0', 'translate-y-4', 'pointer-events-none'] as const;
+
+    function show() {
+      banner!.classList.remove(...HIDDEN);
+    }
+
+    function hide() {
+      banner!.classList.add(...HIDDEN);
+    }
+
+    if (localStorage.getItem(KEY) === '1') {
+      // Already dismissed: keep hidden, stay in DOM so the footer reopen
+      // button can show it again without a page reload.
+      // (Nothing to do; the element starts hidden via the class list above.)
+    } else {
+      setTimeout(show, 800);
+    }
+
+    dismissBtn?.addEventListener('click', () => {
+      localStorage.setItem(KEY, '1');
+      hide();
+    });
+
+    // Footer "Datenschutz-Info" reopen link
+    document.querySelectorAll<HTMLElement>('[data-tracking-info-reopen]').forEach((el) => {
+      if (el.dataset.reopenBound === 'true') return;
+      el.dataset.reopenBound = 'true';
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem(KEY);
+        show();
+      });
+    });
+  }
+
+  initTrackingBanner();
+  document.addEventListener('astro:after-swap', initTrackingBanner);
+</script>

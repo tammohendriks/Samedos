@@ -99,6 +99,15 @@ const designCredit    = isEnglish ? 'Design & concept by' : 'Gestaltung & Konzep
               <a href={link.href} class="text-white/70 hover:text-mint transition-colors">{link.label}</a>
             </li>
           ))}
+          <li>
+            <button
+              type="button"
+              data-tracking-info-reopen
+              class="text-white/70 hover:text-mint transition-colors text-left"
+            >
+              {isEnglish ? 'Privacy info' : 'Datenschutz-Info'}
+            </button>
+          </li>
         </ul>
       </div>
 
